@@ -133,3 +133,45 @@ body {
     left: 50%;
     transform: translateX(-50%);
 }
+
+/* Modal tùy chỉnh */
+.custom-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
+    z-index: 1050;
+}
+
+/* Ẩn modal khi có lớp d-none */
+.custom-modal .d-none {
+    display: none !important;
+}
+
+/* Phần nội dung của modal */
+.custom-modal .modal-dialog {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Canh giữa và padding */
+.custom-modal .modal-content {
+    padding: 20px;
+    max-width: 600px;
+    width: 100%;
+}
+
+/* Đảm bảo modal responsive */
+@media (max-width: 768px) {
+    .custom-modal .modal-content {
+        width: 90%;
+        height: auto;
+    }
+}
