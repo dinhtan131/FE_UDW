@@ -1,146 +1,135 @@
+/* Toàn bộ trang */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
+    background-color: #f5f5f5;
+    color: #333;
 }
 
+/* Sidebar */
 .sidebar {
-    position: sticky;
-    top: 0; 
-    width: 60px; /* Đặt chiều rộng tùy chỉnh, điều chỉnh con số này theo ý muốn */
+    width: 60px;
     height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: #dbd7d7;
+    padding-top: 20px;
     display: flex;
-    flex-direction: inherit;
+    flex-direction: column;
     align-items: center;
-    overflow-y: auto; 
+    border-right: 1px solid #d8d8d8;
+    justify-content: space-between;
+}
+
+.sidebar-icons img, .logo img, .bottom-icons img {
+    width: 30px;
+    height: 30px;
+    filter: brightness(1.5);
+}
+
+.sidebar-icons .nav-item {
+    margin-bottom: 20px;
+}
+
+.sidebar-icons .nav-item img {
+    transition: filter 0.3s;
+}
+
+.sidebar-icons .nav-item img:hover {
+    filter: brightness(2);
 }
 
 .sidebar-icons {
-    flex-grow: 1; /* Để các icon chiếm hết không gian còn lại */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Trải đều các icon từ trên xuống dưới */
-    align-items: center;
-    width: 100%;
-}
-.sidebar-icons img {
-    width: 40px;      /* Kích thước chiều rộng của icon */
-    height: 40px;     /* Kích thước chiều cao của icon */
-}
-
-
-.nav {
-    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    row-gap: 10px;
+    justify-content: center;
     flex-grow: 1;
-    flex-shrink: 0;
-}
-.nav-link {
-    color: #333;
-    font-size: 1.5rem;
-    text-align: center;
-    padding: 10px;
 }
 
-
-.nav-link:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-}
-.nav-link.active {
-    background-color: rgba(0, 0, 0, 0.2);
+.bottom-icons {
+    margin-bottom: 20px;
 }
 
+/* Content Wrapper để giới hạn chiều rộng của Navbar và Content */
+.content-wrapper {
+    max-width: 600px; /* Giới hạn chiều rộng */
+    margin: 0 auto; /* Căn giữa .content-wrapper */
+    padding-top: 60px; /* Tạo khoảng cách cho navbar cố định */
+    padding-bottom: 20px; /* Thêm khoảng cách phía dưới để cách biệt với main-container */
+    box-sizing: border-box;
+}
+
+/* Navbar cố định ở trên cùng */
 .navbar {
-    font-weight: bold;
-
+    position: fixed;
+    top: 0;
+    width: 600px; /* Chiếm toàn bộ chiều rộng của .content-wrapper */
+    z-index: 1000;
+    background-color: #e7e7e7;
+    border-bottom: 1px solid #d1c7c7;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    box-sizing: border-box;
 }
 
-.nav-icons, .bottom-icons {
-    list-style: none;
+/* Content Container */
+.content-container {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 20px;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    background-color: #ffffff;
+}
+
+/* Nút "Post" */
+.btn-outline-secondary {
+    color: #333;
+    border-color: #ddd;
+    font-size: 0.9rem;
+    padding: 5px 10px;
+}
+
+.btn-outline-secondary:hover {
+    color: #fff;
+    background-color: #333;
+    border-color: #333;
+}
+
+/* Main content (Post Feed) */
+.main-container {
+    margin: 0 auto;
+    margin-top: 20px;
+    width: 600px;
+    color: #050101;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding-top: 20px;
 }
 
 .post-feed .card {
-    border: 1px solid #ddd;
-    border-radius: 10px;
+    background-color: #ffffff;
+    border: none;
+    color: #000000;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    border-radius: 0;
 }
 
-.card-title {
-    font-weight: bold;
-    font-size: 1rem;
+.post-feed .card-body {
+    padding: 1rem;
+    border-bottom: 1px solid #e2dcdc;
 }
 
-.card-text {
-    font-size: 14px;
-    color: #555;
+.post-feed .card:last-child {
+    border-bottom: none;
 }
 
-.avatar {
-    font-size: 2rem;
-}
-
-.btn-outline-secondary {
-    font-weight: bold;
-    border-radius: 20px;
-}
-
-.logo {
-    width: 100%; /* Chiều rộng bằng 100% của sidebar */
-    text-align: center; /* Căn giữa logo nếu cần */
-}
-
-.logo img {
-    width: 100%;     /* Chiều rộng bằng 100% phần tử cha */
-    height: auto;    /* Chiều cao tự động thay đổi để giữ tỷ lệ */
-    object-fit: contain; /* Đảm bảo logo không bị cắt xén nếu tỷ lệ không khớp */
-}
-
-@media (min-width: 768px) {
-    .logo {
-        width: 100%;
-    }
-}
-
-@media (min-width: 1200px) {
-    .logo {
-        width: 100%;
-    }
-}   
-
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Nền mờ */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Đảm bảo popup ở trên các phần tử khác */
-}
-.modal-content {
-    background: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-    width: 1000px;
-    height: 500px;
-    max-width: 90%;
-    text-align: center;
-    position: relative;
-}
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 20px;
-    cursor: pointer;
-}
-.d-none {
-    display: none;
+/* Dropdown căn giữa */
+.dropdown-menu-center {
+    left: 50%;
+    transform: translateX(-50%);
 }

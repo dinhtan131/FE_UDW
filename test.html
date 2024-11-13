@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Left Sidebar Navbar with Bootstrap</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    /* Định dạng chung cho navbar */
+    .navbar-left {
+      background-color: white;
+      color: white;
+      height: 100vh;
+      width: 45px; /* Chiều rộng cố định */
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* Căn giữa nội dung theo chiều ngang */
+    }
+
+    /* Định dạng cho phần logo */
+    .logo {
+    }
+
+    .logo img {
+      width: 35px   ; /* Kích thước phù hợp cho logo */
+      height: auto;
+    }
+
+    /* Định dạng cho các icon menu chính */
+    .main-menu .menu-item img, .bottom-section .menu-item img {
+      width: 35px; /* Kích thước phù hợp cho các icon */
+      height: auto;
+    }
+
+    /* Căn chỉnh phần menu và phần cuối */
+    .main-menu, .bottom-section {
+      text-align: center;
+    }
+
+    /* Giảm padding giữa các icon */
+    .menu-item {
+      padding: 5px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="d-flex">
+    <!-- Navbar bên trái -->
+    <div class="navbar-left d-flex flex-column">
+      
+      <!-- Logo -->
+      <div class="logo mb-0 d-flex align-items-center justify-content-center" style="flex:1">
+        <img src="logo.svg" alt="Threads Logo">
+      </div>
+      
+      <!-- Menu chính -->
+      <div class="main-menu flex-fill d-flex flex-column justify-content-around" style="flex: 20;">
+        <div class="menu-item"><img src="home.svg" alt="Home Icon"></div>
+        <div class="menu-item"><img src="search.svg" alt="Home Icon"></div>
+        <div class="menu-item"><img src="plus.svg" alt="Home Icon"></div>
+        <div class="menu-item"><img src="profile.svg" alt="Home Icon"></div>
+        <div class="menu-item"><img src="heart.svg" alt="Home Icon"></div>
+      </div>
+      
+      <!-- Phần cuối -->
+      <div class="bottom-section flex-fill d-flex flex-column justify-content-around" style="flex: 0.1;">
+        <div class="menu-item"><img src="pin.svg" alt="Home Icon"></div>
+        <div class="menu-item"><img src="menu.svg" alt="Home Icon"></div>
+      </div>
+    </div>
+
+    <!-- Nội dung chính của trang -->
+    <div class="flex-grow-1 p-4">
+      <h1>Nội dung chính</h1>
+      <p>Đây là khu vực nội dung chính của trang.</p>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
