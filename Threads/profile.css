@@ -1,0 +1,331 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+  scroll-behavior: smooth;
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  background-color: rgb(17, 17, 17);
+  color: white;
+}
+
+.banner {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 50px;
+  margin-top: 15px;
+}
+.banner img {
+  height: 20px;
+  cursor: pointer;
+}
+.banner img:hover {
+  transform: scale(1.1);
+  transition: 0.5s;
+}
+
+.user-info {
+  display: flex;
+  margin-bottom: 10px;
+  gap: 5px;
+}
+.user-info h5 {
+  margin-top: 3px;
+  font-weight: 400;
+}
+.user-info-div {
+  float: left;
+  margin-right: 365px;
+}
+
+.user-info button {
+  background-color: rgb(46, 46, 46);
+  border-radius: 10px;
+  border: none;
+  padding: 5px 5px;
+  font-size: 10px;
+  color: grey;
+  cursor: pointer;
+}
+
+.user-logo img {
+  height: 75px;
+  width: 75px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.user-logo i {
+  position: absolute;
+  cursor: pointer;
+  margin-top: 57px;
+  margin-right: 3px;
+  color: rgb(0, 174, 255);
+}
+
+.user-bio {
+  margin-top: 10px;
+  display: flex;
+}
+
+.user-bio p {
+  font-size: 17px;
+}
+.follower-bio {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  color: grey;
+}
+
+.follower-bio a {
+  text-decoration: none;
+  color: grey;
+  margin-right: 10px;
+}
+
+.follower-bio a:hover {
+  border-bottom: 1px solid grey;
+}
+
+.follower-bio i {
+  cursor: pointer;
+  color: white;
+}
+
+.follower-bio p {
+  color: grey;
+}
+
+.follower-bio-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.threads-replies {
+  margin-top: 30px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.threads-replies button {
+  font-size: 15px;
+  padding-bottom: 10px;
+}
+
+.threads {
+  cursor: pointer;
+  border: none;
+  border-bottom: 1px solid grey;
+  padding: 0px 130px;
+  color: grey;
+}
+
+.threads:focus {
+  color: white;
+  border-bottom: 1px solid white;
+}
+
+.replies {
+  cursor: pointer;
+  border: none;
+  border-bottom: 1px solid grey;
+  padding: 0px 130px;
+  color: grey;
+}
+
+.replies:focus {
+  color: white;
+  border-bottom: 1px solid white;
+}
+
+.thread-main {
+  margin-bottom: 10px;
+}
+.thread-main.hide {
+  display: none;
+}
+.thread-profile-logo img {
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  padding: 5px 5px;
+  margin-right: 10px;
+}
+
+.thread-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 7px;
+}
+
+.thread-title a:hover {
+  border-bottom: 1px solid rgb(255, 255, 255);
+  cursor: pointer;
+}
+.thread-title i {
+  font-size: 10px;
+  margin-left: 5px;
+  color: rgb(0, 174, 255);
+}
+
+.thread-name a {
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  font-size: 15px;
+}
+
+.thread-time {
+  display: flex;
+  align-items: center;
+  margin-left: 410px;
+  gap: 10px;
+}
+
+.thread-time h3 {
+  color: grey;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.thread-time i {
+  color: white;
+  cursor: pointer;
+}
+
+.thread-posts {
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid grey;
+  padding-left: 32px;
+  margin-left: 22px;
+  cursor: pointer;
+}
+.thread-posts img {
+  width: 550px;
+  border-radius: 5px;
+}
+.thread-posts h1 {
+  font-size: 17px;
+  margin-bottom: 10px;
+  font-weight: 400;
+}
+.thread-posts span {
+  color: rgb(0, 140, 255);
+}
+.thread-posts span:hover {
+  border-bottom: 1px solid rgb(0, 140, 255);
+}
+.thread-container {
+  display: flex;
+}
+
+.interaction {
+  margin-top: 15px;
+}
+.interaction i {
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.interaction-2 {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  padding-left: 32px;
+  margin-left: 22px;
+  border-bottom: 1px solid grey;
+  padding-bottom: 15px;
+}
+.interaction-2 a {
+  text-decoration: none;
+  color: grey;
+  font-size: 13px;
+  margin-right: 10px;
+  border-bottom: 1px solid transparent;
+}
+.interaction-2 a:hover {
+  border-bottom: 1px solid grey;
+}
+
+.replies-post {
+  display: none;
+}
+
+.replies-post.show {
+  align-items: center;
+}
+.replies-post h1 {
+  font-size: 15px;
+  font-weight: 400;
+  color: grey;
+}
+
+.qrcode {
+  bottom: 0;
+  right: 0;
+  margin-right: 100px;
+  margin-bottom: 50px;
+  position: fixed;
+}
+.qrcode img {
+  height: 150px;
+  background-color: white;
+  border-radius: 7px;
+}
+
+.qrcode img:hover {
+  transform: scale(1.1);
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+button {
+  background-color: rgb(17, 17, 17);
+  color: white;
+}
+
+a {
+  color: white;
+}
+
+.bgchange {
+  background-color: rgb(255, 255, 255);
+  color: black;
+}
+
+.textchange {
+  color: black;
+}
+/* Sidebar styling */
+.sidebar {
+  width: 60px; /* Độ rộng của sidebar */
+  height: 100vh; /* Chiều cao toàn màn hình */
+  background-color: grey; /* Màu nền của sidebar */
+  position: fixed; /* Cố định sidebar */
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column; /* Căn icon theo chiều dọc */
+  align-items: center; /* Căn giữa icon theo chiều ngang */
+  justify-content: center; /* Căn giữa icon theo chiều dọc */
+  gap: 20px; /* Khoảng cách giữa các icon */
+  z-index: 1000; /* Đảm bảo sidebar nằm trên các phần tử khác */
+}
+
+.sidebar i {
+  color: #333;
+  cursor: pointer;
+}
+
+.sidebar i:hover {
+  color: #007bff; /* Màu khi hover icon */
+}
