@@ -1,0 +1,31 @@
+<!-- partials/modal.ejs -->
+<div class="custom-modal d-none" id="<%= modalId %>" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content dark-modal-content" style="width: 700px; max-width: 100%; height: 350px;">
+            <div class="modal-header d-flex justify-content-between align-items-center">
+                <button type="button" class="close-btn text-muted" aria-label="Close">Cancel</button>
+                <h5 class="modal-title text-center" id="<%= modalId %>Label">New thread</h5>
+                <button type="button" class="btn-close-icon" aria-label="Close">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="user-info d-flex align-items-center mb-3">
+                    <img src="icons/profile.svg" alt="User Avatar" class="avatar">
+                    <span class="username">mesol.7</span>
+                </div>
+                <textarea class="form-control thread-input" placeholder="What's new?" rows="3"></textarea>
+                <div class="icon-options d-flex justify-content-between align-items-center mt-3">
+                    <div class="icons-left d-flex">
+                        <i class="bi bi-image"></i>
+                        <i class="bi bi-emoji-smile"></i>
+                        <i class="bi bi-hash"></i>
+                        <i class="bi bi-geo-alt"></i>
+                    </div>
+                    <button class="btn btn-primary post-btn" disabled>Post</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

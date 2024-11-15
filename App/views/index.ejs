@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threads Clone</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <%- include('partials/sidebar') %>
+
+    <div class="content-wrapper">
+        <%- include('partials/navbar') %>
+    </div>
+    
+
+    <main class="main-container">
+        <div class="content-container">
+
+            <img src="icons/profile.svg" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;">
+
+            <button class="btn btn-outline-secondary ml-auto">Post</button>
+        </div>
+
+        <div class="post-feed">
+            <% posts.forEach(post => { %>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="avatar">
+                                <i class="bi bi-person-circle" style="font-size: 2rem; color: #333;"></i>
+                            </div>
+                            <div class="ml-2">
+                                <h5 class="card-title mb-0" style="color: #333;"><%= post.username %></h5>
+                                <small class="text-muted">3h ago</small>
+                            </div>
+                        </div>
+                        <p class="card-text"><%= post.content %></p>
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <i class="bi bi-heart mr-2"></i><span>7</span>
+                                <i class="bi bi-chat mr-2"></i><span>3</span>
+                                <i class="bi bi-share"></i>
+                            </div>
+                            <i class="bi bi-three-dots"></i>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </main>
+    <%- include('partials/modal', {
+        modalId: 'postModal',
+        modalTitle: 'New Threads',
+        modalBody: '<p>Đây là nội dung của modal popup.</p>'
+    }) %>
+    <script src="/js/main.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
