@@ -1,6 +1,6 @@
 body {
-    background-color: #f8f9fa;
-    color: #000;
+    background-color: black;
+    color: white;
 }
 
 .tabs .btn {
@@ -16,13 +16,13 @@ body {
 
 .tabs .btn.active {
     background-color: #000;
-    color: #fff;
+    color: black;
     border: none;
 }
 
 .tabs .btn-outline-dark {
-    color: #000;
-    border-color: #000;
+    color: white;
+    border-color: white;
 }
 
 .follow-requests .user-list {
@@ -42,7 +42,7 @@ body {
 
 .user-info .user-name {
     font-weight: bold;
-    color: #000;
+    color: white;
     font-size: 1.2rem;
 }
 
@@ -98,3 +98,27 @@ hr {
     transform: scale(1.2); 
     border-bottom: 2px solid blue;
 }
+/* Sidebar styling */
+.sidebar {
+    width: 60px; /* Độ rộng của sidebar */
+    height: 100vh; /* Chiều cao toàn màn hình */
+    background-color: grey; /* Màu nền của sidebar */
+    position: fixed; /* Cố định sidebar */
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column; /* Căn icon theo chiều dọc */
+    align-items: center; /* Căn giữa icon theo chiều ngang */
+    justify-content: center; /* Căn giữa icon theo chiều dọc */
+    gap: 20px; /* Khoảng cách giữa các icon */
+    z-index: 1000; /* Đảm bảo sidebar nằm trên các phần tử khác */
+  }
+  
+  .sidebar i {
+    color: #333;
+    cursor: pointer;
+  }
+  
+  .sidebar i:hover {
+    color: #007bff; /* Màu khi hover icon */
+  }

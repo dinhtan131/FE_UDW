@@ -6,15 +6,28 @@
     <title>Follow Requests</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/Search/styles.css">
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
 </head>
 <body>
-
+    <div class="sidebar">
+        <a href="../Home/home.html"><i class="fa-solid fa-house fa-2x"></i></a>
+        <a href="../Search/search.html"><i class="fa-solid fa-magnifying-glass fa-2x"></i></a>
+        <a href="../Search/activity.html"><i class="fa-solid fa-bell fa-2x"></i></a>
+        <a href="../Home/messages.html"><i class="fa-solid fa-comment fa-2x"></i></a>
+        <a href="../Profile/profile.html"><i class="fa-solid fa-user fa-2x"></i></a>
+      </div>
     <div class="container">
         <div class="tabs d-flex justify-content-around">
-            <a href="/Search/activity.html" class="btn btn-dark active">All</a>
-            <a href="/Search/Replies/replies.html" class="btn btn-outline-dark">Replies</a>
-            <a href="/Search/Mentions/mentions.html" class="btn btn-outline-dark">Mentions</a>
-            <a href="/Search/Likes/likes.html" class="btn btn-outline-dark">Likes</a>
+            <a href="/Search/activity.html" class="btn btn-outline-dark ">All</a>
+            <a href="/Search/replies.html" class="btn btn-outline-dark">Replies</a>
+            <a href="/Search/mentions.html" class="btn btn-outline-dark">Mentions</a>
+            <a href="/Search/likes.html" class="btn btn-dark active">Likes</a>
         </div>
 
         <div class="follow-requests">
@@ -257,23 +270,6 @@
             </div>
             <hr>
         </div>
-    </div>
-    <div class="navbar fixed-bottom bg-white d-flex justify-content-around border-top max-width-container-mobile">
-        <a href="/Threads/home.html" class="nav-item text-center">
-            <img class ="icons" src="/img/home.jpg" alt="Home">
-        </a>
-        <a href="/Search/search.html" class="nav-item text-center">
-            <img class ="icons" src="/img/search.jpg" alt="Search">
-        </a>
-        <a href="#" class="nav-item text-center">
-            <img class ="icons" src="/img/post.jpg" alt="Post">
-        </a>
-        <a href="/Search/activity.html" class="nav-item text-center">
-            <img class ="icons" src="/img/heart.jpg" alt="Notifications" active>
-        </a>
-        <a href="#" class="nav-item text-center">
-            <img class ="icons" src="/img/user.jpg" alt="Profile">
-        </a>
     </div>
     <!-- Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
