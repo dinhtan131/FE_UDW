@@ -1,0 +1,3 @@
+Đầu tiên lên https://nodejs.org/en cài Nodejs về trước
+Vào command line thư mục này cài các gói bằng "npm i"
+Chạy "node app.js"
