@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threads Clone</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <link href="home.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <!-- partials/sidebar.ejs -->
+<nav class="sidebar d-none d-md-flex flex-column">
+    <!-- Logo ở phần trên cùng -->
+    <div class="logo mb-4">
+        <img src="icons/logo.svg" alt="Threads Logo" class="img-fluid">
+    </div>
+
+    <!-- Wrapper cho các icon để căn giữa dọc -->
+    <div class="sidebar-icons d-flex flex-column align-items-center justify-content-center">
+        <div class="nav flex-column">
+            <div class="nav-item mb-3">
+                <a class="nav-link" href="/">
+                    <img src="icons/home.svg" alt="Home Icon">
+                </a>
+            </div>
+            <div class="nav-item mb-3">
+                <div class="nav-link" href="/search">
+                    <img src="icons/search.svg" alt="Search Icon">
+                </div>
+            </div>
+            <div class="nav-item mb-3">
+                <div class="nav-link plus-button" href="#">
+                    <img src="icons/plus.svg" class="plus-button" alt="Add Icon">
+                </div>
+            </div>
+            <div class="nav-item mb-3">
+                <div class="nav-link" href="/activity">
+                    <img src="icons/heart.svg" alt="Favorites Icon">
+                </div>
+            </div>
+            <div class="nav-item mb-3"> 
+                <div class="nav-link" href="/profile">
+                    <img src="icons/profile.svg" alt="Profile Icon">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pin and Menu Icons at the bottom -->
+    <div class="bottom-icons d-flex flex-column align-items-center">
+        <div class="nav-item mb-3">
+            <div class="nav-link" href="#">
+                <img src="icons/pin.svg" alt="Pin Icon">
+            </div>
+        </div>
+        <div class="nav-item">
+            <div class="nav-link" href="#">
+                <img src="icons/menu.svg" alt="Menu Icon">
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+
+    <div class="content-wrapper">
+        <!-- partials/navbar.ejs -->
+<nav class="navbar navbar-light mb-3 px-3">
+    <div class="w-100 text-center position-relative">
+        <!-- Dropdown cho "For you" -->
+        <span class="navbar-brand mb-0 h4 nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+            For you
+        </span>
+        <div class="dropdown-menu dropdown-menu-center">
+            <a class="dropdown-item" href="#">Follow</a>
+            <a class="dropdown-item" href="#">Another action</a>
+        </div>
+    </div>
+</nav>
+
+    </div>
+    
+
+    <main class="main-container">
+        <div class="content-container">
+            <img src="icons/profile.svg" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;"> 
+            <p class="plus-button" style ="opacity: 0.5;">What's new</p>
+            <button class="btn btn-outline-secondary ml-auto plus-button">Post</button>
+        </div>
+
+        <div class="post-feed">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="avatar">
+                                <i class="bi bi-person-circle" style="font-size: 2rem; color: #333;"></i>
+                            </div>
+                            <div class="ml-2">
+                                <h5 class="card-title mb-0" style="color: #333;">Nguyễn Đình Thuận</h5>
+                                <small class="text-muted">3h ago</small>
+                            </div>
+                        </div>
+                        <p class="card-text">First Threads</p>
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <i class="bi bi-heart mr-2"></i><span>7</span>
+                                <i class="bi bi-chat mr-2"></i><span>3</span>
+                                <i class="bi bi-share"></i>
+                            </div>
+                            <i class="bi bi-three-dots"></i>
+                        </div>
+                    </div>
+                </div>
+
+        </div>
+    </main>
+
+
+    <!-- partials/modal.ejs -->
+    <div class="custom-modal d-none" id="postModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content dark-modal-content" style="width: 700px; max-width: 100%; height: 350px;">
+                <div class="modal-header d-flex justify-content-between align-items-center">
+                    <button type="button" class="close-btn text-muted" aria-label="Close">Cancel</button>
+                    <h5 class="modal-title text-center" id="Label">New thread</h5>
+                    <button type="button" class="btn-close-icon" aria-label="Close">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="user-info d-flex align-items-center mb-3">
+                        <img src="icons/profile.svg" alt="User Avatar" class="avatar">
+                        <span class="username">mesol.7</span>
+                    </div>
+                    <textarea class="form-control thread-input" placeholder="What's new?" rows="3"></textarea>
+                    <div class="icon-options d-flex justify-content-between align-items-center mt-3">
+                        <div class="icons-left d-flex">
+                            <i class="bi bi-image"></i>
+                            <i class="bi bi-emoji-smile"></i>
+                            <i class="bi bi-hash"></i>
+                            <i class="bi bi-geo-alt"></i>
+                        </div>
+                        <button class="btn btn-primary post-btn" disabled>Post</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script> 
+        const posts = [
+        { username: "user1", content: "Hello Threads!" },
+        { username: "user2", content: "Another day, another post!" },
+        { username: "user3", content: "Love this app!" },
+        { username: "user1", content: "Hello Threads!" },
+        { username: "user2", content: "Another day, another post!" },
+        { username: "user1", content: "Hello Threads!" },
+        { username: "user2", content: "Another day, another post!" },
+        { username: "user1", content: "Hello Threads!" },
+        { username: "user2", content: "Another day, another post!" },
+        { username: "user1", content: "Hello Threads!" },
+        { username: "user2", content: "Another day, another post!" },
+        { username: "user1", content: "Hello Threads!" },
+        { username: "user2", content: "Another day, another post!" },
+        { username: "user1", content: "Hello Threads!" },
+        { username: "user2", content: "Another day, another post!" },
+        { username: "user1", content: "Hello Threads!" },
+        { username: "user2", content: "Another day, another post!" },
+        { username: "user1", content: "Hello Threads!" },
+        { username: "user2", content: "Another day, another post!" }
+    ];
+    </script>
+    <script src="home.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
