@@ -52,36 +52,40 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Lấy phần tử post-feed
-const postFeed = document.querySelector('.post-feed');
 
-// Tạo nội dung thẻ card mẫu
-const cardTemplate = `
-    <div class="card">
-        <div class="card-body">
-            <div class="d-flex align-items-center mb-2">
-                <div class="avatar">
-                    <i class="bi bi-person-circle" style="font-size: 2rem; color: #333;"></i>
+// Lấy phần tử activity-list
+const activityList = document.querySelector('.activity-list');
+
+// Dữ liệu mẫu cho các phần tử activity
+const activities = [
+    { username: "min.baee06", time: "9h ago", action: "Started a thread", likes: "3.4K", comments: "54", shares: "10" },
+    { username: "user1", time: "1d ago", action: "Liked a post", likes: "1.2K", comments: "30", shares: "5" },
+    { username: "user2", time: "2d ago", action: "Shared a thread", likes: "500", comments: "15", shares: "2" },
+    // Thêm các mục khác vào đây nếu muốn hoặc lặp lại mục đầu để đủ 10 phần tử
+];
+
+// Lặp qua danh sách dữ liệu và tạo thẻ HTML cho mỗi phần tử
+for (let i = 0; i < 10; i++) {
+    const activity = activities[i % activities.length]; // Lặp lại các phần tử nếu ít hơn 10
+    const cardHTML = `
+        <div class="card mb-2 bg-dark text-light">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <img src="icons/profile.svg" alt="Avatar" class="rounded-circle mr-3" style="width: 40px; height: 40px;">
+                    <div>
+                        <h6 class="mb-0 text-white">${activity.username}</h6>
+                        <small class="text-muted">${activity.time}</small><br>
+                        <small class="text-muted">${activity.action}</small>
+                    </div>
                 </div>
-                <div class="ml-2">
-                    <h5 class="card-title mb-0" style="color: #333;">Nguyễn Đình Thuận</h5>
-                    <small class="text-muted">3h ago</small>
-                </div>
-            </div>
-            <p class="card-text">First Threads</p>
-            <div class="d-flex justify-content-between">
                 <div>
-                    <i class="bi bi-heart mr-2"></i><span>7</span>
-                    <i class="bi bi-chat mr-2"></i><span>3</span>
-                    <i class="bi bi-share"></i>
+                    <i class="bi bi-heart mr-2"></i><span>${activity.likes}</span>
+                    <i class="bi bi-chat mr-2"></i><span>${activity.comments}</span>
+                    <i class="bi bi-share"></i><span>${activity.shares}</span>
                 </div>
-                <i class="bi bi-three-dots"></i>
             </div>
         </div>
-    </div>
-`;
-
-// Lặp để tạo 5 thẻ card và thêm vào post-feed
-for (let i = 0; i < 10; i++) {
-    postFeed.innerHTML += cardTemplate;
+    `;
+    // Thêm card vào activityList
+    activityList.innerHTML += cardHTML;
 }

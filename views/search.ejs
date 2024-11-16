@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threads Clone</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/modal.css" rel="stylesheet">
+    <link href="css/navbar_sidebar.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <%- include('partials/sidebar') %>
+
+    <div class="content-wrapper">
+        <%- include('partials/navbar', { showDropdown: false, navbarTitle: "Search" }) %>
+
+    </div>
+    
+
+    <main class="main-container">
+        <!-- <div class="content-container">
+            <img src="icons/profile.svg" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;"> 
+            <p class="plus-button" style ="opacity: 0.5;">What's new</p>
+            <button class="btn btn-outline-secondary ml-auto plus-button">Post</button>
+        </div> -->
+
+        <div class="post-feed">
+            <div class="post-feed">
+                <!-- Ô tìm kiếm -->
+                <div class="search-bar mb-3 p-2">
+                    <input type="text" class="form-control bg-dark text-light" placeholder="Search" style="border: none; border-radius: 8px; padding: 10px;">
+                </div>
+            
+                <!-- Tiêu đề gợi ý tài khoản -->
+                <h6 class="text-muted px-2">Follow suggestions</h6>
+            
+                <!-- Danh sách gợi ý tài khoản -->
+                <div class="suggestion-list">
+                    <!-- Mẫu tài khoản -->
+                    <div class="card mb-3 bg-dark text-light">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <img src="icons/profile.svg" alt="Avatar" class="rounded-circle mr-3" style="width: 40px; height: 40px;">
+                                <div>
+                                    <h6 class="mb-0 text-white">doc.sach.moi.ngay</h6>
+                                    <small class="text-muted">Đọc Sách Mỗi Ngày</small><br>
+                                    <small class="text-muted">216K followers</small>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline-light btn-sm">Follow</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Thêm các thẻ card khác theo cấu trúc tương tự -->
+                    <div class="card mb-3 bg-dark text-light">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <img src="icons/profile.svg" alt="Avatar" class="rounded-circle mr-3" style="width: 40px; height: 40px;">
+                                <div>
+                                    <h6 class="mb-0 text-white">huutri.nguyenn</h6>
+                                    <small class="text-muted">Nguyễn Hữu Trí</small><br>
+                                    <small class="text-muted">48.2K followers</small>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline-light btn-sm">Follow</button>
+                        </div>
+                    </div>
+            
+                    <!-- Tạo thêm các tài khoản mẫu khác theo nhu cầu -->
+                </div>
+            </div>
+            
+        </div>
+    </main>
+    <%- include('partials/modal', {
+        modalId: 'postModal',
+        modalTitle: 'New Threads',
+        modalBody: '<p>Đây là nội dung của modal popup.</p>'
+    }) %>
+    <script src="/js/main.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

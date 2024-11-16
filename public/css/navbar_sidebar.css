@@ -1,0 +1,105 @@
+/* Sidebar */
+.sidebar {
+    width: 60px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: #dbd7d7;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-right: 1px solid #d8d8d8;
+    justify-content: space-between;
+}
+
+.sidebar-icons img, .logo img, .bottom-icons img {
+    width: 30px;
+    height: 30px;
+    filter: brightness(1.5);
+}
+
+.sidebar-icons .nav-item {
+    margin-bottom: 20px;
+}
+
+.sidebar-icons .nav-item img {
+    transition: filter 0.3s;
+}
+
+.sidebar-icons .nav-item img:hover {
+    filter: brightness(2);
+}
+
+.sidebar-icons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.bottom-icons {
+    margin-bottom: 20px;
+}
+
+/* Content Wrapper để giới hạn chiều rộng của Navbar và Content */
+.content-wrapper {
+    max-width: 600px; /* Giới hạn chiều rộng */
+    margin: 0 auto; /* Căn giữa .content-wrapper */
+    padding-top: 60px; /* Tạo khoảng cách cho navbar cố định */
+    padding-bottom: 20px; /* Thêm khoảng cách phía dưới để cách biệt với main-container */
+    box-sizing: border-box;
+}
+
+/* Navbar cố định ở trên cùng */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 600px; /* Chiếm toàn bộ chiều rộng của .content-wrapper */
+    z-index: 1000;
+    background-color: #e7e7e7;
+    border-bottom: 1px solid #d1c7c7;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    box-sizing: border-box;
+}
+
+/* Dropdown căn giữa */
+.dropdown-menu-center {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+
+@media (max-width: 500px) {
+    .sidebar {
+        width: 100vw; /* Chiếm toàn bộ chiều rộng màn hình */
+        height: 60px; /* Giảm chiều cao cho phù hợp với vị trí cạnh dưới */
+        position: fixed;
+        left: 0;
+        bottom: 0; /* Đặt ở cạnh dưới */
+        flex-direction: row; /* Sắp xếp các icon theo hàng ngang */
+        border-right: none; /* Bỏ viền phải */
+        border-top: 1px solid #d8d8d8; /* Thêm viền trên */
+        padding-top: 0;
+        padding-bottom: 0;
+        justify-content: space-around; /* Căn đều các icon */
+    }
+
+    /* Điều chỉnh các icon để phù hợp với hàng ngang */
+    .sidebar-icons {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+        width: 100%; /* Chiếm toàn bộ chiều rộng của sidebar */
+    }
+
+    .bottom-icons {
+        display: none; /* Ẩn các icon ở phần dưới khi sidebar ở cạnh dưới */
+    }
+}

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threads Clone</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/modal.css" rel="stylesheet">
+    <link href="css/navbar_sidebar.css" rel="stylesheet">
+    <link href="css/profile.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <%- include('partials/sidebar') %>
+
+    <div class="content-wrapper">
+        <%- include('partials/navbar', { 
+            showDropdown: false, 
+            navbarTitle: "Profile", 
+            dropdownOptions: [
+                { href: "#", label: "Follow", active: false },
+            ] 
+        }) %>
+
+    </div>
+    
+
+    <main class="main-container">
+        <!-- <div class="content-container">
+            <img src="icons/profile.svg" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;"> 
+            <p class="plus-button" style ="opacity: 0.5;">What's new</p>
+            <button class="btn btn-outline-secondary ml-auto plus-button">Post</button>
+        </div> -->
+
+        <div class="post-feed">
+            <div class="post-feed">
+                <!-- Thông tin người dùng -->
+                <div class="profile-header d-flex align-items-center justify-content-between">
+                    <div>
+                        <h5 class="text-white mb-0">Nguyễn Đình Thuận</h5>
+                        <small class="text-muted">mesol.7</small><br>
+                        <small class="text-muted">0 followers</small>
+                    </div>
+                    <img src="icons/profile.svg" alt="User Profile Picture" class="rounded-circle" style="width: 60px; height: 60px;">
+                </div>
+            
+                <!-- Nút chỉnh sửa hồ sơ -->
+                <div class="text-center my-3">
+                    <button class="btn btn-outline-secondary">Edit profile</button>
+                </div>
+            
+                <!-- Tabs: Threads, Replies, Reposts -->
+                <ul class="nav nav-tabs justify-content-center mb-3">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Threads</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Replies</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Reposts</a>
+                    </li>
+                </ul>
+            
+                <!-- Phần tạo bài viết mới -->
+                <div class="d-flex align-items-center mb-3 px-3">
+                    <img src="icons/profile.svg" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;">
+                    <input type="text" class="form-control bg-dark text-light plus-button" placeholder="What's new?" style="border: none;">
+                    <button class="btn btn-outline-secondary ml-2 plus-button">Post</button>
+                </div>
+            
+                <!-- Hoàn thiện hồ sơ -->
+                <div class="profile-completion bg-dark p-3 rounded">
+                    <h6 class="text-white">Finish your profile</h6>
+                    <div class="d-flex justify-content-between">
+                        <!-- Thẻ "Create thread" -->
+                        <div class="card bg-dark text-center text-light p-3 mx-1" style="width: 100px;">
+                            <i class="bi bi-pencil" style="font-size: 1.5rem;"></i>
+                            <p class="mt-2 mb-0">Create thread</p>
+                            <small class="text-muted">Say what’s on your mind or share a recent highlight.</small>
+                            <button class="btn btn-outline-light btn-sm mt-2">Create</button>
+                        </div>
+            
+                        <!-- Thẻ "Follow 5 profiles" -->
+                        <div class="card bg-dark text-center text-light p-3 mx-1" style="width: 100px;">
+                            <i class="bi bi-people" style="font-size: 1.5rem;"></i>
+                            <p class="mt-2 mb-0">Follow 5 profiles</p>
+                            <small class="text-muted">Fill your feed with threads that interest you.</small>
+                            <button class="btn btn-outline-light btn-sm mt-2">See profiles</button>
+                        </div>
+            
+                        <!-- Thẻ "Add bio" -->
+                        <div class="card bg-dark text-center text-light p-3 mx-1" style="width: 100px;">
+                            <i class="bi bi-pencil-square" style="font-size: 1.5rem;"></i>
+                            <p class="mt-2 mb-0">Add bio</p>
+                            <small class="text-muted">Introduce yourself and tell people what you're into.</small>
+                            <button class="btn btn-outline-light btn-sm mt-2">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+    <%- include('partials/modal', {
+        modalId: 'postModal',
+        modalTitle: 'New Threads',
+        modalBody: '<p>Đây là nội dung của modal popup.</p>'
+    }) %>
+    <script src="/js/main.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
