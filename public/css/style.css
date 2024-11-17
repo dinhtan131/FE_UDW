@@ -72,3 +72,10 @@ p .plus-button{
 .form-control{
     background-color: #ffffff !important;
 }
+
+
+.replies {
+    margin-left: 2rem; /* Điều chỉnh mức thụt lề */
+    border-left: 2px solid #333; /* Tạo đường viền để phân biệt */
+    padding-left: 15px;
+}

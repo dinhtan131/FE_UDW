@@ -67,6 +67,9 @@ app.get('/profile', (req, res) => {
     res.render('profile');
 });
 
+app.get('/thread', (req, res) => {
+    res.render('thread');
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

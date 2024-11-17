@@ -1,0 +1,34 @@
+.custom-modal-content {
+    width: 700px;
+    height: 350px;
+    max-width: 90%;
+    margin: auto;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+#followTabs {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.nav-tabs .nav-item {
+    margin: 0 10px; /* Tạo khoảng cách giữa các tab */
+}
+
+.modal-body {
+    text-align: center;
+    flex-grow: 1; /* Để nội dung giãn đều trong modal */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

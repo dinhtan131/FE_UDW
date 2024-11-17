@@ -53,36 +53,3 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// Lấy phần tử activity-list
-const activityList = document.querySelector('.activity-list');
-
-// Dữ liệu mẫu cho các phần tử activity
-const activities = [
-    { username: "min.baee06", time: "9h ago", action: "Started a thread", likes: "3.4K", comments: "54", shares: "10" },
-    { username: "user1", time: "1d ago", action: "Liked a post", likes: "1.2K", comments: "30", shares: "5" },
-    { username: "user2", time: "2d ago", action: "Shared a thread", likes: "500", comments: "15", shares: "2" },
-    // Thêm các mục khác vào đây nếu muốn hoặc lặp lại mục đầu để đủ 10 phần tử
-];
-
-// Lặp qua danh sách dữ liệu và tạo thẻ HTML cho mỗi phần tử
-for (let i = 0; i < 10; i++) {
-    const activity = activities[i % activities.length]; // Lặp lại các phần tử nếu ít hơn 10
-    const cardHTML = `
-        <div class="card mb-2 " style= "bachground-color: #ffffff"; color: #000000" >
-            <div class="card-body d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center">
-                    <img src="icons/profile.svg" alt="Avatar" class="rounded-circle mr-3" style="width: 40px; height: 40px;">
-                    <div>
-                        <h6 class="mb-1" style="color: #000000">${activity.username}</h6>
-                        <small style="color: #000000">${activity.time}</small><br>
-                        <small style="color: #000000">${activity.action}</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    // Thêm card vào activityList
-    activityList.innerHTML += cardHTML;
-}
-
-

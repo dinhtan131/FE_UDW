@@ -45,7 +45,7 @@
                     <div style="margin-left: 20px;">
                         <h5 class="mb-0">Nguyễn Đình Thuận</h5>
                         <small>mesol.7</small><br>
-                        <small style="opacity: 0.8;">0 followers</small>
+                        <a onclick="openModal()"class="pointer">0 followers</a>
                     </div>
                     <img src="icons/profile.svg" alt="User Profile Picture" class="rounded-circle" style="width: 60px; height: 60px; margin-right: 20px;">
                 </div>
@@ -113,6 +113,7 @@
         modalTitle: 'New Threads',
         modalBody: '<p>Đây là nội dung của modal popup.</p>'
     }) %>
+    <%- include("partials/followListModal") %>
     <script src="/js/main.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
