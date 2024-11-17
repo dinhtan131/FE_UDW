@@ -37,7 +37,25 @@ app.get('/', (req, res) => {
 
 
 app.get('/search', (req, res) => {
-    res.render('search');
+    const followList = [
+        { userIDName: "doc.sach.moi.ngay", UserName: "Đọc sách mỗi ngày", numUserFolower: 216 },
+        { userIDName: "doc.sach.moi.ngay", UserName: "Đọc sách mỗi ngày", numUserFolower: 216 },
+        { userIDName: "doc.sach.moi.ngay", UserName: "Đọc sách mỗi ngày", numUserFolower: 216 },
+        { userIDName: "doc.sach.moi.ngay", UserName: "Đọc sách mỗi ngày", numUserFolower: 216 },
+        { userIDName: "doc.sach.moi.ngay", UserName: "Đọc sách mỗi ngày", numUserFolower: 216 },
+        { userIDName: "doc.sach.moi.ngay", UserName: "Đọc sách mỗi ngày", numUserFolower: 216 },
+        { userIDName: "doc.sach.moi.ngay", UserName: "Đọc sách mỗi ngày", numUserFolower: 216 },
+        { userIDName: "doc.sach.moi.ngay", UserName: "Đọc sách mỗi ngày", numUserFolower: 216 },
+        { userIDName: "doc.sach.moi.ngay", UserName: "Đọc sách mỗi ngày", numUserFolower: 216 },
+        { userIDName: "doc.sach.moi.ngay", UserName: "Đọc sách mỗi ngày", numUserFolower: 216 },
+        { userIDName: "doc.sach.moi.ngay", UserName: "Đọc sách mỗi ngày", numUserFolower: 216 },
+        { userIDName: "doc.sach.moi.ngay", UserName: "Đọc sách mỗi ngày", numUserFolower: 216 },
+        { userIDName: "doc.sach.moi.ngay", UserName: "Đọc sách mỗi ngày", numUserFolower: 216 },
+        { userIDName: "doc.sach.moi.ngay", UserName: "Đọc sách mỗi ngày", numUserFolower: 216 },
+        { userIDName: "doc.sach.moi.ngay", UserName: "Đọc sách mỗi ngày", numUserFolower: 216 },
+        { userIDName: "doc.sach.moi.ngay", UserName: "Đọc sách mỗi ngày", numUserFolower: 216 }
+    ];
+    res.render('search', {followList});
 });
 
 

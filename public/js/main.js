@@ -68,20 +68,15 @@ const activities = [
 for (let i = 0; i < 10; i++) {
     const activity = activities[i % activities.length]; // Lặp lại các phần tử nếu ít hơn 10
     const cardHTML = `
-        <div class="card mb-2 bg-dark text-light">
+        <div class="card mb-2 " style= "bachground-color: #ffffff"; color: #000000" >
             <div class="card-body d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
                     <img src="icons/profile.svg" alt="Avatar" class="rounded-circle mr-3" style="width: 40px; height: 40px;">
                     <div>
-                        <h6 class="mb-0 text-white">${activity.username}</h6>
-                        <small class="text-muted">${activity.time}</small><br>
-                        <small class="text-muted">${activity.action}</small>
+                        <h6 class="mb-1" style="color: #000000">${activity.username}</h6>
+                        <small style="color: #000000">${activity.time}</small><br>
+                        <small style="color: #000000">${activity.action}</small>
                     </div>
-                </div>
-                <div>
-                    <i class="bi bi-heart mr-2"></i><span>${activity.likes}</span>
-                    <i class="bi bi-chat mr-2"></i><span>${activity.comments}</span>
-                    <i class="bi bi-share"></i><span>${activity.shares}</span>
                 </div>
             </div>
         </div>
@@ -89,3 +84,5 @@ for (let i = 0; i < 10; i++) {
     // Thêm card vào activityList
     activityList.innerHTML += cardHTML;
 }
+
+

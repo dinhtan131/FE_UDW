@@ -35,43 +35,30 @@
             <div class="post-feed">
                 <!-- Ô tìm kiếm -->
                 <div class="search-bar mb-3 p-2">
-                    <input type="text" class="form-control bg-dark text-light" placeholder="Search" style="border: none; border-radius: 8px; padding: 10px;">
+                    <input type="text" class="form-control bg-dark text-light" placeholder="Search" style="border: 1px solid #e2dcdc; border-radius: 10px; padding: 10px;">
                 </div>
             
                 <!-- Tiêu đề gợi ý tài khoản -->
-                <h6 class="text-muted px-2">Follow suggestions</h6>
+                <h6 class="px-2">Follow suggestions</h6>
             
                 <!-- Danh sách gợi ý tài khoản -->
                 <div class="suggestion-list">
                     <!-- Mẫu tài khoản -->
-                    <div class="card mb-3 bg-dark text-light">
+                    <% followList.forEach(user => { %>
+                    <div class="card mb-3 " style="background-color: #ffffff !important;">
                         <div class="card-body d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center">
                                 <img src="icons/profile.svg" alt="Avatar" class="rounded-circle mr-3" style="width: 40px; height: 40px;">
                                 <div>
-                                    <h6 class="mb-0 text-white">doc.sach.moi.ngay</h6>
-                                    <small class="text-muted">Đọc Sách Mỗi Ngày</small><br>
-                                    <small class="text-muted">216K followers</small>
+                                    <h6 class="mb-1" style="color: #000000"><%= user.userIDName %></h6>
+                                    <small  style="color: #000000"><%= user.UserName %></small><br>
+                                    <small  style="color: #000000"><%= user.numUserFolower %></small> follower
                                 </div>
                             </div>
-                            <button class="btn btn-outline-light btn-sm">Follow</button>
+                            <button class="btn btn-outline-light btn-sm" style="color: #000000; border: 2px solid #e2dcdc;" >Follow</button>
                         </div>
                     </div>
-                    
-                    <!-- Thêm các thẻ card khác theo cấu trúc tương tự -->
-                    <div class="card mb-3 bg-dark text-light">
-                        <div class="card-body d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                <img src="icons/profile.svg" alt="Avatar" class="rounded-circle mr-3" style="width: 40px; height: 40px;">
-                                <div>
-                                    <h6 class="mb-0 text-white">huutri.nguyenn</h6>
-                                    <small class="text-muted">Nguyễn Hữu Trí</small><br>
-                                    <small class="text-muted">48.2K followers</small>
-                                </div>
-                            </div>
-                            <button class="btn btn-outline-light btn-sm">Follow</button>
-                        </div>
-                    </div>
+                    <% }); %>
             
                     <!-- Tạo thêm các tài khoản mẫu khác theo nhu cầu -->
                 </div>

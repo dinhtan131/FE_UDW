@@ -1,6 +1,6 @@
 /* Toàn bộ trang */
 body {
-    background-color: #f5f5f5;
+    background-color: #ffffff;
     color: #333;
 }
 
@@ -69,4 +69,6 @@ p .plus-button{
     color: rgb(215, 215, 215) !important;
 }
 
-
+.form-control{
+    background-color: #ffffff !important;
+}
