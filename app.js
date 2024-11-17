@@ -71,6 +71,18 @@ app.get('/thread', (req, res) => {
     res.render('thread');
 });
 
+app.get('/login', (req, res) => {
+    res.render('login');
+});
+
+app.get('/register', (req, res) => {
+    res.render('register');
+});
+
+app.get('/forgotPassWord', (req, res) => {
+    res.render('forgotPassWord');
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
