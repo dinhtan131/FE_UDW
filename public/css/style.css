@@ -35,16 +35,7 @@ p .plus-button{
 }
 
 /* Main content (Post Feed) */
-.main-container {
-    margin: 0 auto;
-    margin-top: 20px;
-    width: 600px;
-    color: #050101;
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding-top: 20px;
-}
+
 
 .post-feed .card {
     background-color: #ffffff;

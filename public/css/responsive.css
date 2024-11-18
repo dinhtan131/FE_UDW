@@ -1,0 +1,82 @@
+
+@media (min-width: 768px){
+    .main-container {
+        margin: 0 auto;
+        margin-top: 20px;
+        width:600px;
+        color: #050101;
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding-top: 20px;
+    }
+
+    .navbar {
+        position: fixed;
+        top: 0;
+        width: 600px;
+        z-index: 1000;
+        background-color: #ffffff;
+        border-bottom: none;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 50px;
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        position: fixed;
+        top: 0;
+        width: 100%; /* Chiếm toàn bộ chiều rộng của .content-wrapper */
+        z-index: 1000;
+        background-color: #ffffff;
+        border-bottom: none;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 50px;
+        box-sizing: border-box;
+    }
+    /* Đảm bảo `.content-container` và các phần tử con bên trong điều chỉnh theo kích thước màn hình */
+    .content-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .content-container img {
+        width: 30px; /* Giảm kích thước avatar */
+        height: 30px;
+        margin-bottom: 10px;
+    }
+
+    .plus-button {
+        width: 100%; /* Đảm bảo nút Post chiếm toàn bộ chiều rộng */
+        margin-top: 10px;
+    }
+
+    .post-feed .card {
+        margin-bottom: 10px;
+    }
+
+    .post-feed .card-body {
+        padding: 10px;
+    }
+
+    .card-title {
+        font-size: 1rem;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+    }
+
+    .bi {
+        font-size: 1.2rem;
+        margin-right: 5px;
+    }
+}

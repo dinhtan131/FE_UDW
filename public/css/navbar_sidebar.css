@@ -88,7 +88,7 @@
 .navbar {
     position: fixed;
     top: 0;
-    width: 600px; /* Chiếm toàn bộ chiều rộng của .content-wrapper */
+    width: 30%; /* Chiếm toàn bộ chiều rộng của .content-wrapper */
     z-index: 1000;
     background-color: #ffffff;
     border-bottom: none;

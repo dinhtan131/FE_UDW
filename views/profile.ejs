@@ -13,6 +13,7 @@
     <link href="css/modal.css" rel="stylesheet">
     <link href="css/navbar_sidebar.css" rel="stylesheet">
     <link href="css/profile.css" rel="stylesheet">
+    <link href="css/responsive.css" rel="stylesheet">
 </head>
 
 <body>
@@ -21,6 +22,12 @@
     <%- include('partials/bottom_bar') %>
 
     <div class="content-wrapper">
+        
+
+    </div>
+    
+
+    <main class="main-container">
         <%- include('partials/navbar', { 
             showDropdown: false, 
             navbarTitle: "Profile", 
@@ -28,11 +35,6 @@
                 { href: "#", label: "Follow", active: false },
             ] 
         }) %>
-
-    </div>
-    
-
-    <main class="main-container">
         <!-- <div class="content-container">
             <img src="icons/profile.svg" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;"> 
             <p class="plus-button" style ="opacity: 0.5;">What's new</p>
