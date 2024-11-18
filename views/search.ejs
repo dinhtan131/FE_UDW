@@ -17,6 +17,7 @@
 <body>
     <!-- Sidebar -->
     <%- include('partials/sidebar') %>
+    <%- include('partials/bottom_bar') %>
 
     <div class="content-wrapper">
         <%- include('partials/navbar', { showDropdown: false, navbarTitle: "Search" }) %>
@@ -52,7 +53,7 @@
                                 <div>
                                     <h6 class="mb-1" style="color: #000000"><%= user.userIDName %></h6>
                                     <small  style="color: #000000"><%= user.UserName %></small><br>
-                                    <small  style="color: #000000"><%= user.numUserFolower %></small> follower
+                                    <small  style="color: #000000"><%= user.numUserFolower %> Follower</small>
                                 </div>
                             </div>
                             <button class="btn btn-outline-light btn-sm" style="color: #000000; border: 2px solid #e2dcdc;" >Follow</button>
@@ -72,6 +73,7 @@
         modalBody: '<p>Đây là nội dung của modal popup.</p>'
     }) %>
     <script src="/js/main.js"></script>
+    <script src="/js/sidebar_bottombar.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
