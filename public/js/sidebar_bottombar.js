@@ -3,7 +3,7 @@ function handleResize() {
     const bottomBar = document.querySelector('.bottom-bar');
     
     // Kiểm tra kích thước màn hình
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth < 768) {
         sidebar.style.display = 'none';
         bottomBar.style.display = 'flex';
     } else {
@@ -16,20 +16,22 @@ function handleResize() {
 window.addEventListener('resize', handleResize);
 window.addEventListener('DOMContentLoaded', handleResize);
 
-let lastScrollPosition = 0;
+let lastScrollPosition = 0; // Lưu trữ vị trí cuộn cuối cùng
+const threshold = 30; // Ngưỡng cuộn để bắt đầu ẩn (có thể tùy chỉnh)
+const halfScreenHeight = window.innerHeight / 2; // Một nửa chiều cao màn hình
 
 function handleScroll() {
     const bottomBar = document.querySelector('.bottom-bar');
-    
-    // Kiểm tra vị trí cuộn hiện tại
-    const currentScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
 
-    // Nếu cuộn xuống và `bottom bar` đang hiển thị, ẩn nó đi
-    if (currentScrollPosition > lastScrollPosition) {
+    // Lấy vị trí cuộn hiện tại
+    const currentScrollPosition = window.scrollY || document.documentElement.scrollTop;
+
+    // Điều kiện ẩn/hiện
+    if (currentScrollPosition > lastScrollPosition + threshold) {
+        // Nếu cuộn xuống và đã vượt quá ngưỡng, ẩn thanh
         bottomBar.classList.add('hidden');
-    }
-    // Nếu cuộn lên và `bottom bar` đang ẩn, hiển thị lại
-    else {
+    } else if (currentScrollPosition < lastScrollPosition - threshold || currentScrollPosition < halfScreenHeight) {
+        // Nếu cuộn lên hoặc ở gần đầu trang, hiển thị lại
         bottomBar.classList.remove('hidden');
     }
 
@@ -39,3 +41,4 @@ function handleScroll() {
 
 // Gắn sự kiện scroll
 window.addEventListener('scroll', handleScroll);
+

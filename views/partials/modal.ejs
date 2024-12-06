@@ -14,7 +14,7 @@
                     <img src="icons/profile.svg" alt="User Avatar" class="avatar">
                     <span class="username">mesol.7</span>
                 </div>
-                <textarea class="form-control thread-input" placeholder="What's new?" rows="3"></textarea>
+                <textarea class="form-control thread-input" id="content" placeholder="What's new?" rows="3"></textarea>
                 <div class="icon-options d-flex justify-content-between align-items-center mt-3">
                     <div class="icons-left d-flex">
                         <i class="bi bi-image"></i>
@@ -22,10 +22,51 @@
                         <i class="bi bi-hash"></i>
                         <i class="bi bi-geo-alt"></i>
                     </div>
-                    <button class="btn btn-primary post-btn" disabled>Post</button>
+                    <button class="btn btn-primary post-btn" id="submitPost" disabled>Post</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<script>
+    // Lắng nghe sự kiện khi nội dung thay đổi trong textarea
+    document.querySelector('.thread-input').addEventListener('input', function () {
+        const content = this.value.trim();
+        const postBtn = document.getElementById('submitPost');
+        postBtn.disabled = !content.length; // Kích hoạt nút Post nếu có nội dung
+    });
+
+    document.getElementById('submitPost').addEventListener('click', async function () {
+        const content = document.getElementById('content').value.trim();  // Lấy nội dung từ textarea
+        if (!content) {
+            //alert("Please enter some text before posting.");
+            return;
+        }
+
+        // Gửi dữ liệu bài đăng lên backend
+        try {
+            const response = await fetch('/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',  // Quan trọng: Đảm bảo gửi cookie kèm theo
+                body: JSON.stringify({
+                    content: content,  // Chỉ gửi nội dung bài đăng
+                })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                $('#<%= modalId %>').modal('hide');  // Đóng modal khi tạo bài đăng thành công
+                location.reload();  // Làm mới trang hoặc sử dụng Ajax để cập nhật feed mà không phải reload trang
+            } else {
+                alert('Error: ' + data.message);  // Nếu có lỗi trả về từ server
+            }
+        } catch (error) {
+            console.error('Error posting thread:', error);
+            //alert('Failed to create post');
+        }
+    });
+</script>

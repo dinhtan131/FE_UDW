@@ -105,32 +105,3 @@
     left: 50%;
     transform: translateX(-50%);
 }
-
-
-@media (max-width: 500px) {
-    .sidebar {
-        width: 100vw; /* Chiếm toàn bộ chiều rộng màn hình */
-        height: 60px; /* Giảm chiều cao cho phù hợp với vị trí cạnh dưới */
-        position: fixed;
-        left: 0;
-        bottom: 0; /* Đặt ở cạnh dưới */
-        flex-direction: row; /* Sắp xếp các icon theo hàng ngang */
-        border-right: none; /* Bỏ viền phải */
-        border-top: 1px solid #d8d8d8; /* Thêm viền trên */
-        padding-top: 0;
-        padding-bottom: 0;
-        justify-content: space-around; /* Căn đều các icon */
-    }
-
-    /* Điều chỉnh các icon để phù hợp với hàng ngang */
-    .sidebar-icons {
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-around;
-        width: 100%; /* Chiếm toàn bộ chiều rộng của sidebar */
-    }
-
-    .bottom-icons {
-        display: none; /* Ẩn các icon ở phần dưới khi sidebar ở cạnh dưới */
-    }
-}
