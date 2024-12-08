@@ -80,3 +80,66 @@
         margin-right: 5px;
     }
 }
+/* Modal chỉnh sửa hồ sơ */
+.profile-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
+    z-index: 1050;
+}
+
+/* Ẩn modal */
+.profile-modal.hidden {
+    display: none !important;
+}
+
+/* Nội dung modal */
+.profile-modal .profile-modal-dialog {
+    background-color: #ffffff; /* Màu nền trắng */
+    border-radius: 12px; /* Bo góc */
+    padding: 20px;
+    width: 400px; /* Chiều rộng modal */
+    max-width: 90%; /* Responsive cho màn hình nhỏ */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng */
+    position: relative;
+}
+
+/* Header modal */
+.profile-modal .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+}
+
+/* Nút đóng */
+.profile-modal .close {
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Body modal */
+.profile-modal .modal-body {
+    text-align: left;
+}
+
+/* Form nhóm */
+.profile-modal .form-group {
+    margin-bottom: 15px;
+}
+
+/* Nút trong modal */
+.profile-modal .btn {
+    width: 100%;
+    margin-top: 10px;
+}

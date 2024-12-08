@@ -32,19 +32,48 @@
                 <!-- Thông tin người dùng -->
                 <div class="profile-header d-flex align-items-center justify-content-between">
                     <div style="margin-left: 20px;">
-
                         <h5 class="mb-0"><%= user.username %></h5>
-                        <small><%= user.bio %> </small><br>
-                        <a onclick="openModal()"class="pointer">0 followers</a>
+                        <small><%= user.bio && user.bio.trim() !== '' ? user.bio : 'No bio available' %></small><br>
+                        <a onclick="openModal()" class="pointer">0 followers</a>
                     </div>
-                    <img src="icons/profile.svg" alt="User Profile Picture" class="rounded-circle" style="width: 60px; height: 60px; margin-right: 20px;">
+                    <img src="<%= user.avatar || '/icons/profile.svg' %>" alt="User Profile Picture" 
+                         class="rounded-circle" style="width: 60px; height: 60px; margin-right: 20px;">
                 </div>
-            
-                <!-- Nút chỉnh sửa hồ sơ -->
+                
+               <!-- Nút chỉnh sửa hồ sơ -->
                 <div class="text-center my-3">
-                    <button class="btn btn-outline-secondary">Edit profile</button>
+                    <button class="btn btn-outline-secondary" onclick="openEditProfile()">Edit Profile</button>
                 </div>
-            
+                <!-- Modal chỉnh sửa hồ sơ -->
+                <div id="editProfileModal" class="profile-modal hidden">
+                    <div class="profile-modal-dialog">
+                        <div class="modal-header">
+                            <h5>Chỉnh sửa hồ sơ</h5>
+                            <span class="close" onclick="closeEditProfile()">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/edit-profile" method="POST" enctype="multipart/form-data" id="profileEditForm">
+                                <div class="form-group">
+                                    <label for="username">Username:</label>
+                                    <input type="text" name="username" class="form-control" id="username" value="<%= user.username %>" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="bio">Bio:</label>
+                                    <textarea name="bio" class="form-control" id="bio" rows="3"><%= user.bio %></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="avatar">Avatar mới:</label>
+                                    <input type="file" name="avatar" class="form-control-file" id="avatar">
+                                    <input type="hidden" name="currentAvatar" value="<%= user.avatar %>">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                <button type="button" class="btn btn-secondary" onclick="closeEditProfile()">Hủy</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                
                 <!-- Tabs: Threads, Replies, Reposts -->
                 <ul class="nav nav-tabs justify-content-center mb-3">
                     <li class="nav-item">
@@ -74,7 +103,7 @@
                             <i class="bi bi-pencil" style="font-size: 1.5rem;"></i>
                             <p class="mt-2 mb-3">Create thread</p>
                             <small >Say what’s on your mind or share a recent highlight.</small>
-                            <button class="btn btn-outline-light btn-sm mt-2">Create</button>
+                            <button class="btn btn-sm mt-2" style="border: 2px solid #000000;">Create</button>
                         </div>
             
                         <!-- Thẻ "Follow 5 profiles" -->
@@ -111,3 +140,46 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+<script>
+    function openEditProfile() {
+        document.getElementById('editProfileModal').classList.remove('hidden'); // Hiển thị modal
+    }
+
+    function closeEditProfile() {
+        document.getElementById('editProfileModal').classList.add('hidden'); // Ẩn modal
+    }
+
+    // Đóng modal khi click ra ngoài modal-content
+    window.onclick = function (event) {
+        const modal = document.getElementById('editProfileModal');
+        if (event.target === modal) {
+            closeEditProfile();
+        }
+    };
+
+    // Xử lý submit form qua AJAX
+    document.getElementById('profileEditForm').addEventListener('submit', async function (e) {
+        e.preventDefault(); // Ngăn hành động submit mặc định
+
+        const formData = new FormData(e.target);
+
+        try {
+            const response = await fetch('/edit-profile', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                alert(result.message); // Hiển thị thông báo
+                closeEditProfile(); // Đóng modal
+                location.reload(); // Reload trang để cập nhật dữ liệu
+            } else {
+                alert(result.message || 'Something went wrong.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while updating your profile.');
+        }
+    });
+</script>
