@@ -34,7 +34,6 @@ app.use(express.json());  // Sử dụng Express's built-in JSON parser
 app.use(express.urlencoded({ extended: true }));  // URL-encoded middleware
 
 
-
 // Import các route
 const authRoutes = require('./routes/authRoutes');
 const postRoutes = require('./routes/postRoutes');
@@ -70,7 +69,6 @@ mongoose.connect(process.env.MONGO_URI, {
     process.exit(1);  // Dừng ứng dụng nếu không thể kết nối
 });
 
-// Thiết lập session
 
 
 // Khởi động server

@@ -1,3 +1,5 @@
+console.log("main.js loaded")
+
 document.addEventListener('DOMContentLoaded', () => {
     // Like button toggle
     const likeButtons = document.querySelectorAll('.btn-light');
@@ -53,33 +55,198 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// Lấy phần tử activity-list
-const activityList = document.querySelector('.activity-list');
-// Dữ liệu mẫu cho các phần tử activity
-const activities = [
-    { username: "min.baee06", time: "9h ago", action: "Started a thread", likes: "3.4K", comments: "54", shares: "10" },
-    { username: "user1", time: "1d ago", action: "Liked a post", likes: "1.2K", comments: "30", shares: "5" },
-    { username: "user2", time: "2d ago", action: "Shared a thread", likes: "500", comments: "15", shares: "2" },
-    // Thêm các mục khác vào đây nếu muốn hoặc lặp lại mục đầu để đủ 10 phần tử
-];
-// Lặp qua danh sách dữ liệu và tạo thẻ HTML cho mỗi phần tử
-for (let i = 0; i < 10; i++) {
-    const activity = activities[i % activities.length]; // Lặp lại các phần tử nếu ít hơn 10
-    const cardHTML = `
-        <div class="card mb-2 " style= "bachground-color: #ffffff"; color: #000000" >
-            <div class="card-body d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center">
-                    <img src="icons/profile.svg" alt="Avatar" class="rounded-circle mr-3" style="width: 40px; height: 40px;">
-                    <div>
-                        <h6 class="mb-1" style="color: #000000">${activity.username}</h6>
-                        <small style="color: #000000">${activity.time}</small><br>
-                        <small style="color: #000000">${activity.action}</small>
-                    </div>
-                </div>
+
+$('.like-button').click(function(e) {
+    e.preventDefault();
+    const button = $(this);
+    const card = button.closest('.card');
+    const postId = card.data('post-id');
+
+    $.ajax({
+        url: `/post/${postId}/like`,
+        method: 'POST',
+        success: function(response) {
+            // Cập nhật số lượng like
+            card.find('.like-count').text(response.likesCount);
+
+            // Toggle class 'liked' và màu icon heart
+            if (button.hasClass('liked')) {
+                button.removeClass('liked');
+                button.find('i.bi-heart').removeClass('text-danger');
+            } else {
+                button.addClass('liked');
+                button.find('i.bi-heart').addClass('text-danger');
+            }
+        },
+        error: function(xhr) {
+            alert(xhr.responseJSON.error || 'An error occurred while liking the post.');
+        }
+    });
+});
+
+$(document).ready(function() {
+  $('.view-activity').click(function(e) {
+    e.preventDefault();
+    const postId = $(this).data('post-id');
+
+    // Đoạn AJAX của bạn đặt ở đây
+    $.ajax({
+      url: `/post/${postId}/like`,
+      method: 'GET',
+      success: function(response) {
+        const modalBody = $('#postActivityModal .modal-body');
+        modalBody.empty();
+
+        const headerHtml = `
+          <div>
+            <p>Views: ???</p>
+            <p>Likes: ${response.likesCount}</p>
+          </div>
+        `;
+        modalBody.append(headerHtml);
+
+        response.likes.forEach(user => {
+          const userHtml = `
+            <div class="d-flex align-items-center mb-2">
+              <img src="${'/icons/profile.svg'}" alt="Avatar" class="rounded-circle mr-3" style="width: 40px; height: 40px;">
+              <div>
+                <h6 class="mb-0">${user.username}</h6>
+                <button class="btn btn-sm btn-outline-primary">Follow</button>
+              </div>
             </div>
-        </div>
-    `;
-    // Thêm card vào activityList
-    activityList.innerHTML += cardHTML;
-}   
+          `;
+          modalBody.append(userHtml);
+        });
+
+        $('#postActivityModal').modal('show');
+      },
+      error: function(xhr) {
+        alert(xhr.responseJSON.error || 'Error loading activity');
+      }
+    });
+  });
+});
+
+
+$('#commentModal').on('show.bs.modal', function (event) {
+    console.log('Modal is shown');
+    const button = $(event.relatedTarget); // Nút nhấn mở modal
+    const postId = button.data('post-id');
+    console.log('Post ID:', postId);
+  
+    const modal = $(this);
+    const originalCommentContainer = modal.find('.original-comment');
+    const replyInput = modal.find('.reply-input');
+  
+    // Xóa nội dung cũ mỗi khi mở modal
+    originalCommentContainer.empty();
+    replyInput.val('');
+  
+    // Gửi AJAX lấy nội dung bài viết gốc
+    $.ajax({
+      url: `/api/post/${postId}`,
+      method: 'GET',
+      success: function(response) {
+        const post = response.post;
+        const originalCommentHtml = `
+          <div class="media mb-2">
+            <img src="${'icons/profile.svg'}" class="mr-3 rounded-circle" alt="Avatar" style="width: 30px; height: 30px;">
+            <div class="media-body">
+              <h6 class="mt-0">${post.author.username}</h6>
+              <p>${post.content}</p>
+              <small class="text-muted">${new Date(post.createdAt).toLocaleString()}</small>
+            </div>
+          </div>
+        `;
+        originalCommentContainer.append(originalCommentHtml);
+      },
+      error: function(err) {
+        console.error(err);
+        originalCommentContainer.html('<p class="text-muted">Không tìm thấy bài viết gốc.</p>');
+      }
+    });
+  
+    // Xử lý sự kiện gửi form comment
+    modal.find('.reply-form').off('submit').on('submit', function(e) {
+      e.preventDefault();
+      const form = $(this);
+      const content = replyInput.val().trim();
+  
+      if (!content) {
+        alert('Reply cannot be empty.');
+        return;
+      }
+  
+      // Gửi request thêm comment
+      $.ajax({
+        url: `/post/${postId}/comments`,
+        method: 'POST',
+        data: { content },
+        success: function(response) {
+          const comment = response.comment;
+          // Tạo HTML cho comment mới
+          const newCommentHtml = `
+            <div class="media mb-2">
+              <img src="${ 'icons/profile.svg'}" class="mr-3 rounded-circle" alt="Avatar" style="width: 30px; height: 30px;">
+              <div class="media-body">
+                <h6 class="mt-0">${comment.author.username}</h6>
+                <p>${comment.content}</p>
+                <small class="text-muted">${new Date(comment.createdAt).toLocaleString()}</small>
+              </div>
+            </div>
+          `;
+  
+          // Thêm comment mới vào cuối phần original-comment hoặc tạo 1 khu vực riêng để comment
+          originalCommentContainer.append(newCommentHtml);
+          // Xóa nội dung input
+          replyInput.val('');
+        },
+        error: function(xhr) {
+          alert(xhr.responseJSON.error || 'An error occurred while adding the comment.');
+        }
+      });
+    });
+  }
+);
+  
+$(document).on('click', '.follow-button', function (e) {
+  e.preventDefault();
+  const button = $(this);
+  const userId = button.data('user-id'); // ID của người cần follow/unfollow
+  const isFollowing = button.hasClass('following');
+  const action = isFollowing ? 'unfollow' : 'follow';
+
+  $.ajax({
+    url: `/user/${userId}/${action}`,
+    method: 'POST',
+    success: function (response) {
+      if (response.success) {
+        // Cập nhật trạng thái nút
+        if (action === 'follow') {
+          button.addClass('following').text('Unfollow');
+        } else {
+          button.removeClass('following').text('Follow');
+        }
+      } else {
+        alert(response.message || 'Action failed.');
+      }
+    },
+    error: function (xhr) {
+      alert(xhr.responseJSON?.message || 'Error performing the action');
+    },
+  });
+});
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const cardInfoElements = document.querySelectorAll('.card-info');
+  cardInfoElements.forEach(el => {
+    const postId = el.getAttribute('data-post-id');
+    el.style.cursor = 'pointer'; // Cho người dùng biết vùng này có thể click
+    el.addEventListener('click', () => {
+      window.location.href = '/post/' + postId;
+    });
+  });
+});
 

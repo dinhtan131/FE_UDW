@@ -1,9 +1,14 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-
 // Định nghĩa schema cho người dùng
 const userSchema = new mongoose.Schema({
+  displayName: {
+    type: String,
+    required: false,
+    minlength: 2,
+    maxlength: 40,
+  },
   username: {
     type: String,
     required: true,
@@ -32,23 +37,34 @@ const userSchema = new mongoose.Schema({
     maxlength: 200,
     default: '',
   },
+  followers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
+  following: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
 
-
-userSchema.pre('save', async function(next) {
-    if (this.isModified('password')) {
-      console.log('Mật khẩu người dùng nhập:', this.password);
-        const hashedPassword = await bcrypt.hash(this.password, 10);
-        console.log('Mật khẩu sau khi mã hóa:', hashedPassword); // Xem mật khẩu sau khi mã hóa
-        this.password = hashedPassword;
-    }
-    next();
+// Mã hóa mật khẩu trước khi lưu
+userSchema.pre('save', async function (next) {
+  if (this.isModified('password')) {
+    console.log('Mật khẩu người dùng nhập:', this.password);
+    const hashedPassword = await bcrypt.hash(this.password, 10);
+    console.log('Mật khẩu sau khi mã hóa:', hashedPassword); // Xem mật khẩu sau khi mã hóa
+    this.password = hashedPassword;
+  }
+  next();
 });
-
 
 // Tạo model từ schema
 const User = mongoose.model('User', userSchema);
