@@ -34,11 +34,13 @@ app.use(express.json());  // Sử dụng Express's built-in JSON parser
 app.use(express.urlencoded({ extended: true }));  // URL-encoded middleware
 
 
+
 // Import các route
 const authRoutes = require('./routes/authRoutes');
 const postRoutes = require('./routes/postRoutes');
 const userRoutes = require('./routes/userRoutes');
 
+app.use('/auth', authRoutes);
 // Thiết lập EJS làm view engine và thư mục views
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -52,7 +54,6 @@ app.use(postRoutes);
 app.use(userRoutes);
 
 
-app.use('/auth', authRoutes);
 
 
 
