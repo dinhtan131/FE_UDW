@@ -52,6 +52,7 @@ app.use(postRoutes);
 app.use(userRoutes);
 
 
+app.use('/auth', authRoutes);
 
 
 
