@@ -70,3 +70,12 @@ p .plus-button{
     border-left: 2px solid #333; /* Tạo đường viền để phân biệt */
     padding-left: 15px;
 }
+
+.post-item {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  

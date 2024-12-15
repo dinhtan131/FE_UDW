@@ -14,13 +14,17 @@ const authenticateToken = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+    // Tìm người dùng từ token
     const user = await User.findById(decoded.userId);
     if (!user) {
       console.log("User not found, redirecting to /login");
       return res.redirect("/login");
     }
 
+    // Gắn user vào req và res.locals
     req.user = user;
+    res.locals.user = user; // Gắn vào res.locals để dùng trong EJS
+
     console.log("User authenticated:", user.username);
     next();
   } catch (error) {
@@ -28,5 +32,6 @@ const authenticateToken = async (req, res, next) => {
     return res.redirect("/login");
   }
 };
+
 
 module.exports = { authenticateToken };

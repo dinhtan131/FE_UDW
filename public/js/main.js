@@ -150,7 +150,7 @@ $('#commentModal').on('show.bs.modal', function (event) {
         const post = response.post;
         const originalCommentHtml = `
           <div class="media mb-2">
-            <img src="${'icons/profile.svg'}" class="mr-3 rounded-circle" alt="Avatar" style="width: 30px; height: 30px;">
+            <img src="${'/icons/profile.svg'}" class="mr-3 rounded-circle" alt="Avatar" style="width: 30px; height: 30px;">
             <div class="media-body">
               <h6 class="mt-0">${post.author.username}</h6>
               <p>${post.content}</p>
@@ -187,7 +187,7 @@ $('#commentModal').on('show.bs.modal', function (event) {
           // Tạo HTML cho comment mới
           const newCommentHtml = `
             <div class="media mb-2">
-              <img src="${ 'icons/profile.svg'}" class="mr-3 rounded-circle" alt="Avatar" style="width: 30px; height: 30px;">
+              <img src="${ '/icons/profile.svg'}" class="mr-3 rounded-circle" alt="Avatar" style="width: 30px; height: 30px;">
               <div class="media-body">
                 <h6 class="mt-0">${comment.author.username}</h6>
                 <p>${comment.content}</p>
@@ -215,7 +215,7 @@ $(document).on('click', '.follow-button', function (e) {
   const userId = button.data('user-id'); // ID của người cần follow/unfollow
   const isFollowing = button.hasClass('following');
   const action = isFollowing ? 'unfollow' : 'follow';
-
+  button.prop('disabled', true);
   $.ajax({
     url: `/user/${userId}/${action}`,
     method: 'POST',
@@ -234,6 +234,10 @@ $(document).on('click', '.follow-button', function (e) {
     error: function (xhr) {
       alert(xhr.responseJSON?.message || 'Error performing the action');
     },
+    complete: function () {
+      // Kích hoạt lại nút sau khi quá trình hoàn tất
+      button.prop('disabled', false);
+    }
   });
 });
 
@@ -249,4 +253,94 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 });
+
+
+// Lắng nghe sự kiện thay đổi dropdown
+document.querySelectorAll('.dropdown-item').forEach((item) => {
+  item.addEventListener('click', function (event) {
+      const type = this.getAttribute('data-type');
+      if (type) {
+          console.log('Selected Type:', type);
+          if (window.location.pathname === '/notifications') {
+              fetchNotifications(type);
+          }
+      }
+  });
+});
+
+// Gửi yêu cầu AJAX để lấy thông báo
+function fetchNotifications(type) {
+  $.ajax({
+      url: `/notifications/${type || 'all'}`,
+      method: 'GET',
+      success: function (response) {
+          console.log('Notifications:', response);
+          renderNotifications(response.notifications);
+      },
+      error: function (xhr) {
+          console.error('Error loading notifications:', xhr);
+      }
+  });
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const tabs = document.querySelectorAll(".nav-link-profile");
+  const tabContent = document.getElementById("tab-content");
+  const profileContainer = document.getElementById("profile-container");
+  const userId = profileContainer.getAttribute("data-user-id");
+
+  if (!tabContent) {
+    console.error("Tab content container (#tab-content) not found in DOM.");
+    return;
+  }
+
+
+  async function loadTabData(tab) {
+    tabContent.innerHTML = "<p>Loading...</p>";
+    try {
+      const response = await fetch(`/profile/${userId}/${tab}`, {
+        headers: {
+          Accept: "application/json",
+        },
+      });
+      
+      const result = await response.json();
+
+      if (response.ok) {
+        if (result.data.length > 0) {
+          tabContent.innerHTML = result.data
+            .map(
+              (item) => `
+              <div class="post-item">
+                <p><strong>Content:</strong> ${item.content}</p>
+                <small>Created at: ${new Date(item.createdAt).toLocaleString()}</small>
+              </div>`
+            )
+            .join("");
+        } else {
+          tabContent.innerHTML = `<p>You don't have any ${tab} yet.</p>`;
+        }
+      } else {
+        tabContent.innerHTML = `<p>Error: ${result.message}</p>`;
+      }
+    } catch (error) {
+      console.error("Error loading tab data:", error);
+      tabContent.innerHTML = "<p>Error loading data.</p>";
+    }
+  }
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      tabs.forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+
+      const selectedTab = tab.getAttribute("data-tab");
+      loadTabData(selectedTab);
+    });
+  });
+});
+
 

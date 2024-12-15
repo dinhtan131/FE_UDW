@@ -3,6 +3,8 @@ const router = express.Router();
 const Post = require("../models/postModels"); // Import Post model
 const User = require("../models/userModels"); // Import User model
 const Comment = require("../models/commentModels");
+const Notification = require("../models/notificationModel"); // Import Notification model
+
 const { authenticateToken } = require("../middleware/token"); // Import middleware
 
 router.get("/home", authenticateToken, async (req, res) => {
@@ -46,7 +48,13 @@ router.post("/create", authenticateToken, async (req, res) => {
       author: authorId,
     });
 
+    // Lưu bài đăng vào database
     await newPost.save();
+
+    // Cập nhật trường "posts" trong người dùng (thêm ID bài viết vào danh sách posts)
+    const user = await User.findById(authorId);
+    user.posts.push(newPost._id); // Thêm ID bài viết vào mảng posts của người dùng
+    await user.save(); // Lưu thay đổi vào người dùng
 
     res.status(201).json(newPost); // Trả về bài đăng đã tạo
   } catch (error) {
@@ -55,17 +63,17 @@ router.post("/create", authenticateToken, async (req, res) => {
   }
 });
 
+
 router.post("/post/:postId/comments", authenticateToken, async (req, res) => {
   try {
     const { postId } = req.params;
     const { content } = req.body;
-    const userId = req.user._id; // Sử dụng req.user._id
+    const userId = req.user._id;
 
     if (!content || content.trim() === "") {
       return res.status(400).json({ error: "Comment content cannot be empty" });
     }
 
-    // Kiểm tra bài viết có tồn tại không
     const post = await Post.findById(postId);
     if (!post) {
       return res.status(404).json({ error: "Post not found" });
@@ -87,6 +95,18 @@ router.post("/post/:postId/comments", authenticateToken, async (req, res) => {
     // Populate author của comment trước khi gửi phản hồi
     await comment.populate("author", "username avatar");
 
+    // Tạo thông báo comment
+    const postAuthor = post.author; // Tìm tác giả bài viết
+    const notification = new Notification({
+      user: postAuthor._id, // Người nhận thông báo là tác giả bài viết
+      initiator: userId, // Người thực hiện hành động comment
+      type: 'comment',
+      message: `${comment.author.username} đã bình luận trên bài viết của bạn. Xem chi tiết tại: /post/${postId} (Bình luận bởi ${req.user.username})`,
+      link: `/post/${postId}`, // Dẫn đến bài viết
+    });
+
+    await notification.save();
+
     res.status(201).json({
       message: "Comment added successfully",
       comment,
@@ -98,28 +118,8 @@ router.post("/post/:postId/comments", authenticateToken, async (req, res) => {
   }
 });
 
-router.get("/posts/:postId/likes", authenticateToken, async (req, res) => {
-  try {
-    const { postId } = req.params;
-    const post = await Post.findById(postId).populate(
-      "likes",
-      "username avatar"
-    );
 
-    if (!post) {
-      return res.status(404).json({ error: "Post not found" });
-    }
 
-    // post.likes lúc này là danh sách user đã like
-    res.status(200).json({
-      likesCount: post.likes.length,
-      likes: post.likes,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
 
 router.get("/post/:postId/like", authenticateToken, async (req, res) => {
   try {
@@ -144,36 +144,42 @@ router.get("/post/:postId/like", authenticateToken, async (req, res) => {
 router.post("/post/:postId/like", authenticateToken, async (req, res) => {
   try {
     const { postId } = req.params;
-    const userId = req.user._id; // Sử dụng req.user._id
+    const userId = req.user._id;
 
     const post = await Post.findById(postId);
-
     if (!post) {
       return res.status(404).json({ error: "Post not found" });
     }
 
     const hasLiked = post.likes.includes(userId);
+    const postAuthor = post.author; // Tìm tác giả bài viết
 
-    if (hasLiked) {
-      // Đã like, thực hiện unlike
-      post.likes.pull(userId);
-      await post.save();
-      return res
-        .status(200)
-        .json({ message: "Post unliked", likesCount: post.likes.length });
-    } else {
-      // Chưa like, thực hiện like
+    if (!hasLiked) {
       post.likes.push(userId);
       await post.save();
-      return res
-        .status(200)
-        .json({ message: "Post liked", likesCount: post.likes.length });
+
+      // Tạo thông báo khi like
+      const notification = new Notification({
+        user: postAuthor._id, // Người nhận thông báo là tác giả bài viết
+        initiator: userId, // Người thực hiện hành động like
+        type: 'like',
+        message: `${postAuthor.username} đã thích bài viết của bạn.`,
+        link: `/post/${postId}`,
+      });
+
+      await notification.save();
     }
+
+    return res
+      .status(200)
+      .json({ message: "Post liked", likesCount: post.likes.length });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+
 
 router.get("/api/post/:postId", authenticateToken, async (req, res) => {
   try {

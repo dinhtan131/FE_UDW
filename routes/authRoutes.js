@@ -8,7 +8,7 @@ require("dotenv").config();
 const { authenticateToken } = require("../middleware/token");
 
 // Route gốc, chuyển hướng dựa trên trạng thái đăng nhập
-router.get("/", (req, res) => {
+router.get("/",authenticateToken, (req, res) => {
   const token = req.cookies.token || req.session.token;
   if (!token) {
     return res.redirect("/login");
@@ -141,7 +141,7 @@ router.post("/register", async (req, res) => {
 });
 
 // Route GET logout
-router.get("/logout", (req, res) => {
+router.get("/logout",authenticateToken, (req, res) => {
   res.clearCookie("token");
   req.session.destroy((err) => {
     if (err) {
@@ -153,7 +153,7 @@ router.get("/logout", (req, res) => {
 });
 
 // Đăng xuất
-router.post("/logout", (req, res) => {
+router.post("/logout",authenticateToken, (req, res) => {
   res.clearCookie("token");
   req.session.destroy((err) => {
     if (err) {
@@ -174,7 +174,7 @@ function generateRandomString(length) {
   return result;
 }
 
-router.get("/create-users", async (req, res) => {
+router.get("/create-users",authenticateToken, async (req, res) => {
   try {
     const numberOfUsers = req.body.numberOfUsers || 5; // Số lượng người dùng cần tạo (mặc định là 5)
     const createdUsers = [];

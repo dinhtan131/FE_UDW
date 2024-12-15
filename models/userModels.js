@@ -49,6 +49,24 @@ const userSchema = new mongoose.Schema({
       ref: 'User',
     },
   ],
+  posts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Post', // Liên kết tới Post model
+    }
+  ],
+  replies: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Post', // Liên kết tới Post model (các bài viết mà user đã comment)
+    }
+  ],
+  reposts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Post', // Liên kết tới Post model (các bài viết mà user đã repost)
+    }
+  ],
   createdAt: {
     type: Date,
     default: Date.now,
