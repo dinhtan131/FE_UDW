@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const expressSession = require("express-session");
 require("dotenv").config();
 const { authenticateToken } = require("../middleware/token");
+const nodemailer = require('nodemailer'); // Dùng để gửi email
 
 // Route gốc, chuyển hướng dựa trên trạng thái đăng nhập
 router.get("/",authenticateToken, (req, res) => {
@@ -163,6 +164,7 @@ router.post("/logout",authenticateToken, (req, res) => {
   });
 });
 
+
 // Hàm tạo chuỗi ngẫu nhiên
 function generateRandomString(length) {
   const characters =
@@ -207,6 +209,78 @@ router.get("/create-users",authenticateToken, async (req, res) => {
   } catch (error) {
     console.error("Error creating users:", error);
     res.status(500).json({ message: "Error creating users", error });
+  }
+});
+
+const transporter = require('../config/nodemailer'); // Import file config nodemailer
+
+router.post('/forgot-password', async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).send('Email không tồn tại.');
+        }
+
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '15m' });
+        const resetLink = `http://localhost:3000/auth/reset-password/${token}`;
+
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'Đặt lại mật khẩu',
+            text: `Nhấn vào đường dẫn sau để đặt lại mật khẩu: ${resetLink}`
+        };
+
+        await transporter.sendMail(mailOptions);
+        res.status(200).send('Link đặt lại mật khẩu đã được gửi đến email của bạn.');
+    } catch (error) {
+        console.error('Lỗi gửi email:', error);
+        res.status(500).send('Có lỗi xảy ra, vui lòng thử lại sau.');
+    }
+});
+
+
+router.get('/reset-password/:token', (req, res) => {
+  const { token } = req.params;
+
+  // Kiểm tra token hợp lệ không
+  try {
+      jwt.verify(token, process.env.JWT_SECRET);
+      res.render('resetPassword', { token });
+  } catch (error) {
+      console.error('Token không hợp lệ:', error);
+      res.status(400).send('Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.');
+  }
+});
+
+router.post('/reset-password', async (req, res) => {
+  const { token, newPassword, confirmPassword } = req.body;
+
+  if (newPassword !== confirmPassword) {
+      return res.status(400).send('Mật khẩu xác nhận không trùng khớp.');
+  }
+
+  try {
+      // Giải mã token để lấy userId
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const userId = decoded.userId;
+
+      // Tìm người dùng và cập nhật mật khẩu
+      const user = await User.findById(userId);
+      if (!user) {
+          return res.status(404).send('Người dùng không tồn tại.');
+      }
+
+      user.password = newPassword; // Ghi đè mật khẩu mới
+      await user.save(); // Lưu thay đổi
+
+      res.status(200).send('Mật khẩu đã được cập nhật thành công.');
+  } catch (error) {
+      console.error('Lỗi khi đặt lại mật khẩu:', error);
+      res.status(500).send('Đã xảy ra lỗi, vui lòng thử lại sau.');
   }
 });
 
