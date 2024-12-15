@@ -16,18 +16,10 @@
     <main class="main-container">
         <%- include('partials/navbar', { 
             showDropdown: false, 
-            navbarTitle: "Profile", 
-            dropdownOptions: [
-                { href: "#", label: "Follow", active: false },
-            ] 
+            navbarTitle: "Profile"
         }) %>
-        <!-- <div class="content-container">
-            <img src="icons/profile.svg" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;"> 
-            <p class="plus-button" style ="opacity: 0.5;">What's new</p>
-            <button class="btn btn-outline-secondary ml-auto plus-button">Post</button>
-        </div> -->
 
-        <div class="post-feed">
+        <div class="post-feed" id="profile-container" data-user-id="<%= user._id %>">
             <div class="post-feed">
                 <!-- Thông tin người dùng -->
                 <div class="profile-header d-flex align-items-center justify-content-between">
@@ -36,13 +28,20 @@
                         <small><%= user.bio && user.bio.trim() !== '' ? user.bio : 'No bio available' %></small><br>
                         <a onclick="openModal()" class="pointer">0 followers</a>
                     </div>
-                    <img src="<%= user.avatar || '/icons/profile.svg' %>" alt="User Profile Picture" 
+                    <img src="<%='/icons/profile.svg' %>" alt="User Profile Picture" 
                          class="rounded-circle" style="width: 60px; height: 60px; margin-right: 20px;">
                 </div>
+                
                 
                <!-- Nút chỉnh sửa hồ sơ -->
                 <div class="text-center my-3">
                     <button class="btn btn-outline-secondary" onclick="openEditProfile()">Edit Profile</button>
+                </div>
+
+                <div class="d-flex align-items-center mb-3 px-3">
+                    <img src="/icons/profile.svg" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;">
+                    <input type="text" class="form-control bg-dark text-light plus-button" placeholder="What's new?" style="border: none;">
+                    <button class="btn btn-outline-secondary ml-2 plus-button">Post</button>
                 </div>
                 <!-- Modal chỉnh sửa hồ sơ -->
                 <div id="editProfileModal" class="profile-modal hidden">
@@ -72,58 +71,82 @@
                         </div>
                     </div>
                 </div>
-
-                
-                <!-- Tabs: Threads, Replies, Reposts -->
-                <ul class="nav nav-tabs justify-content-center mb-3">
+                <style >
+                    
+                    .tab-content {
+                        margin-left: 1rem;
+                    display: none; 
+                    }
+                    .tab-content.active {
+                    display: block; 
+                    }
+                </style>
+                <!-- Tabs Navigation -->
+                <ul class="nav nav-tabs justify-content-center mb-3" data-user-id="<%= user._id %>">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">Threads</a>
+                    <a class="nav-link nav-link-profile <%= currentTab === 'threads' ? 'active' : '' %>" href="#" data-tab="threads">Threads</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Replies</a>
+                    <a class="nav-link nav-link-profile <%= currentTab === 'replies' ? 'active' : '' %>" href="#" data-tab="replies">Replies</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Reposts</a>
+                    <a class="nav-link nav-link-profile <%= currentTab === 'reposts' ? 'active' : '' %>" href="#" data-tab="reposts">Reposts</a>
                     </li>
                 </ul>
+                <!-- Tab Content -->
+                <div id="tab-content" data-user-id="<%= user._id %>">
+                    <h4><%= tabTitle %></h4>
+                    <% if (tabData.length > 0) { %>
+                    <% tabData.forEach(item => { %>
+                        <div class="post-item">
+                        <p><strong>Content:</strong> <%= item.content %></p>
+                        <small>Created at: <%= new Date(item.createdAt).toLocaleString() %></small>
+                        </div>
+                    <% }); %>
+                    <% } else { %>
+                    <p>You don't have any <%= currentTab %> yet.</p>
+                    <% } %>
+                </div>
+  
+                
             
                 <!-- Phần tạo bài viết mới -->
-                <div class="d-flex align-items-center mb-3 px-3">
-                    <img src="icons/profile.svg" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;">
-                    <input type="text" class="form-control bg-dark text-light plus-button" placeholder="What's new?" style="border: none;">
-                    <button class="btn btn-outline-secondary ml-2 plus-button">Post</button>
-                </div>
+                
             
                 <!-- Hoàn thiện hồ sơ -->
-                <div class="profile-completion  p-3 rounded">
-                    <h6 class="text-white">Finish your profile</h6>
-                    <div class="d-flex justify-content-between">
+                <% if (isNewUser) { %>
+                    <!-- Hoàn thiện hồ sơ -->
+                    <div class="profile-completion  p-3 rounded">
+                      <h6 class="text-white">Finish your profile</h6>
+                      <div class="d-flex justify-content-between">
                         <!-- Thẻ "Create thread" -->
-                        <div class="card  text-center p-3 mx-1" style="width: 100px;">
-                            <i class="bi bi-pencil" style="font-size: 1.5rem;"></i>
-                            <p class="mt-2 mb-3">Create thread</p>
-                            <small >Say what’s on your mind or share a recent highlight.</small>
-                            <button class="btn btn-sm mt-2" style="border: 2px solid #000000;">Create</button>
+                        <div class="card text-center p-3 mx-1" style="width: 100px;">
+                          <i class="bi bi-pencil" style="font-size: 1.5rem;"></i>
+                          <p class="mt-2 mb-3">Create thread</p>
+                          <small>Say what’s on your mind or share a recent highlight.</small>
+                          <button class="btn btn-sm mt-2" style="border: 2px solid #000000;">Create</button>
                         </div>
-            
+                  
                         <!-- Thẻ "Follow 5 profiles" -->
                         <div class="card text-center p-3 mx-1" style="width: 100px;">
-                            <i class="bi bi-people" style="font-size: 1.5rem;"></i>
-                            <p class="mt-2 mb-3" >Follow 5 profiles</p>
-                            <small>Fill your feed with threads that interest you.</small>
-                            <button class="btn btn-sm mt-2" style="border: 2px solid #000000;">See profiles</button>
+                          <i class="bi bi-people" style="font-size: 1.5rem;"></i>
+                          <p class="mt-2 mb-3">Follow 5 profiles</p>
+                          <small>Fill your feed with threads that interest you.</small>
+                          <button class="btn btn-sm mt-2" style="border: 2px solid #000000;">See profiles</button>
                         </div>
-            
+                  
                         <!-- Thẻ "Add bio" -->
                         <div class="card text-center p-3 mx-1" style="width: 100px;">
-                            <i class="bi bi-pencil-square" style="font-size: 1.5rem;"></i>
-                            <p class="mt-2 mb-0">Add bio</p>
-                            <small>Introduce yourself and tell people what you're into.</small>
-                            <button class="btn btn-sm mt-2" style="border: 2px solid #000000;">Add</button>
+                          <i class="bi bi-pencil-square" style="font-size: 1.5rem;"></i>
+                          <p class="mt-2 mb-0">Add bio</p>
+                          <small>Introduce yourself and tell people what you're into.</small>
+                          <button class="btn btn-sm mt-2" style="border: 2px solid #000000;">Add</button>
                         </div>
+                      </div>
                     </div>
-                </div>
-            </div>
+                  <% } %>
+                  
+
             
         </div>
     </main>
@@ -133,11 +156,11 @@
         modalBody: '<p>Đây là nội dung của modal popup.</p>'
     }) %>
     <%- include("partials/followListModal") %>
-    <script src="/js/main.js"></script>
-    <script src="/js/sidebar_bottombar.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="/js/sidebar_bottombar.js"></script>
+    <script src="/js/main.js"></script>
 </body>
 </html>
 <script>
