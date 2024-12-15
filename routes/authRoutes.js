@@ -225,7 +225,7 @@ router.post('/forgot-password', async (req, res) => {
         }
 
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '15m' });
-        const resetLink = `http://localhost:3000/auth/reset-password/${token}`;
+        const resetLink = `${process.env.APP_URL}/auth/reset-password/${token}`;
 
         const mailOptions = {
             from: process.env.EMAIL_USER,
