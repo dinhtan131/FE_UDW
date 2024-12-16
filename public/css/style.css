@@ -77,5 +77,18 @@ p .plus-button{
     margin: 10px 0;
     border-radius: 5px;
     background-color: #f9f9f9;
+}
+  
+.like-icon {
+    transition: opacity 0.2s ease-in-out;
+}
+  
+.like-icon.liked {
+    opacity: 1;
+}
+  
+#commentModal .media img {
+    width: 40px;
+    height: 40px;
   }
   

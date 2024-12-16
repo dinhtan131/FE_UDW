@@ -1,8 +1,4 @@
-/* modal css
-
-
-*/
-/* Modal tùy chỉnh */
+/* Modal overlay */
 .custom-modal {
     display: flex;
     align-items: center;
@@ -12,150 +8,107 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
+    background-color: rgba(0, 0, 0, 0.3); /* Mờ nhẹ */
     z-index: 1050;
 }
 
-/* Ẩn modal khi có lớp d-none */
-.custom-modal .d-none {
-    display: none !important;
-}
-
-/* Phần nội dung của modal */
-.custom-modal .modal-dialog {
-    background-color: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Canh giữa và padding */
-.custom-modal .modal-content {
-    padding: 20px;
-    max-width: 600px;
-    width: 100%;
-}
-
-/* Đảm bảo modal responsive */
-@media (max-width: 768px) {
-    .custom-modal .modal-content {
-        width: 90%;
-        height: auto;
-    }
-}
-
-/* Modal chung */
-.custom-modal {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
-    z-index: 1050;
-}
-
-
-/* Modal nội dung */
-.dark-modal-content {
-    background-color: #535151; /* Màu nền tối */
-    color: #ffffff;
-    border-radius: 15px;
-    width: 1000px;
+/* Modal Content */
+.light-modal-content {
+    background-color: #fff; /* Nền trắng */
+    color: #000; /* Chữ đen */
+    border-radius: 12px;
+    width: 600px;
     max-width: 100%;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Header của modal */
+/* Header */
 .modal-header {
-    border-bottom: none;
-    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    padding: 15px 20px;
 }
 
 .modal-title {
-    color: #000000;
-    font-size: 18px;
+    font-size: 1.1rem;
+    font-weight: 700;
 }
 
-.close-btn {
-    background: none;
-    border: none;
-    color: #ffffff;
-    font-size: 16px;
-}
-
+.close-btn,
 .btn-close-icon {
     background: none;
     border: none;
-    color: #ffffff;
-    font-size: 16px;
+    color: #000;
+    font-size: 1rem;
+    cursor: pointer;
 }
 
-/* Body của modal */
-.user-info {
-    display: flex;
-    align-items: center;
+.btn-close-icon i {
+    font-size: 1.2rem;
 }
 
-.avatar {
-    width: 30px;
-    height: 30px;
+/* User Info */
+.user-info .avatar {
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     margin-right: 10px;
 }
 
 .username {
     font-weight: bold;
-    color: #ffffff;
+    font-size: 1rem;
 }
 
-/* Input cho bài đăng */
+/* Textarea Input */
 .thread-input {
-    background-color: #333;
-    border: 1px solid #444;
-    color: #ffffff;
+    border: none;
     resize: none;
-    border-radius: 8px;
     width: 100%;
-    padding: 10px;
-    margin-top: 10px;
+    font-size: 1rem;
+    color: #333;
+    outline: none;
 }
 
-/* Icon options */
-.icon-options {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.thread-input::placeholder {
+    color: #aaa;
 }
 
-.icons-left i {
-    font-size: 1.2rem;
-    color: #888;
+/* Icons */
+.icon-options i {
+    font-size: 1.3rem;
     margin-right: 15px;
+    color: #555;
     cursor: pointer;
 }
 
-.icons-left i:hover {
-    color: #ffffff;
+.icon-options i:hover {
+    color: #000;
 }
 
-/* Nút Post */
+.add-to-thread {
+    color: #aaa;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+/* Footer */
+.modal-footer {
+    border-top: none;
+    padding: 10px 20px;
+}
+
 .post-btn {
-    background-color: #807f7f;
-    color: #ffffff;
+    background-color: #fefefe !important;
+    color: rgb(0, 0, 0) !important;
+    font-weight: bold;
     border: none;
+    border-radius: 20px;
     padding: 5px 15px;
-    border-radius: 5px;
     opacity: 0.5;
     cursor: not-allowed;
 }
 
 .post-btn.active {
-    background-color: #1da1f2;
     opacity: 1;
     cursor: pointer;
 }
