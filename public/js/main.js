@@ -300,24 +300,107 @@ document.addEventListener("DOMContentLoaded", () => {
     tabContent.innerHTML = "<p>Loading...</p>";
     try {
       const response = await fetch(`/profile/${userId}/${tab}`, {
-        headers: {
-          Accept: "application/json",
-        },
+        headers: { Accept: "application/json" },
       });
-      
+  
       const result = await response.json();
-
+  
       if (response.ok) {
         if (result.data.length > 0) {
-          tabContent.innerHTML = result.data
-            .map(
-              (item) => `
-              <div class="post-item">
-                <p><strong>Content:</strong> ${item.content}</p>
-                <small>Created at: ${new Date(item.createdAt).toLocaleString()}</small>
-              </div>`
-            )
+          // Tạo nội dung dựa trên tab
+          const contentHTML = result.data
+            .map((item) => {
+              const author = item.author || { username: "Unknown", avatar: "/default-avatar.png" };
+              const likesCount = item.likes ? item.likes.length : 0;
+              const commentsCount = item.comments ? item.comments.length : 0;
+  
+              if (tab === "threads") {
+                return `
+                  <div class="post-item mb-3 border rounded p-3">
+                    <div class="d-flex align-items-center mb-2">
+                      <img src="${author.avatar}" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px;">
+                      <div class="ml-2">
+                        <h6 class="mb-0">${author.username}</h6>
+                        <small class="text-muted">${new Date(item.createdAt).toLocaleString()}</small>
+                      </div>
+                    </div>
+                    <p>${item.content}</p>
+                    ${
+                      item.postImage && item.postImage.length > 0
+                        ? `<div class="post-images mt-2">
+                             ${item.postImage
+                               .map(
+                                 (image) =>
+                                   `<img src="${image}" alt="Post Image" class="img-fluid mb-2 rounded" style="max-width: 100%;">`
+                               )
+                               .join("")}
+                           </div>`
+                        : ""
+                    }
+                    <div class="d-flex justify-content-between mt-2">
+                      <div>
+                        <span class="mr-3"><i class="bi bi-heart"></i> ${likesCount}</span>
+                        <span class="mr-3"><i class="bi bi-chat"></i> ${commentsCount}</span>
+                        <span class="mr-3"><i class="bi bi-repeat"></i> ${item.reposts ? item.reposts.length : 0}</span>
+                      </div>
+                      <div><i class="bi bi-three-dots"></i></div>
+                    </div>
+                  </div>
+                `;
+              }
+              
+  
+              if (tab === "replies") {
+                const post = item.post || {};
+                const parentComment = item.parentComment || {};
+  
+                return `
+                  <div class="post-item mb-3 border rounded p-3">
+                    <div class="text-muted mb-1">
+                      <i class="bi bi-reply"></i>
+                      ${
+                        parentComment.content
+                          ? `Replying to <strong>@${parentComment.author.username}</strong> in comment: "${parentComment.content}"`
+                          : `Commented on <strong>@${post.author.username}</strong>'s post: "${post.content}"`
+                      }
+                    </div>
+                    <p>${item.content}</p>
+                    <div class="d-flex align-items-center">
+                      <img src="${author.avatar}" alt="Avatar" class="rounded-circle" style="width: 30px; height: 30px;">
+                      <small class="ml-2 text-muted">${author.username} · ${new Date(item.createdAt).toLocaleString()}</small>
+                    </div>
+                  </div>
+                `;
+              }
+  
+              if (tab === "reposts") {
+                const originalPost = item.originalPost;
+                if (!originalPost) {
+                  return `<div class="post-item"><p class="text-danger">Original post not found.</p></div>`;
+                }
+  
+                return `
+                  <div class="post-item mb-3 border rounded p-3">
+                    <p class="text-muted mb-1">
+                      <i class="bi bi-repeat"></i> Reposted by <strong>${author.username}</strong> at ${new Date(item.createdAt).toLocaleString()}
+                    </p>
+                    <div class="original-post bg-light p-2 rounded">
+                      <div class="d-flex align-items-center mb-2">
+                        <img src="${originalPost.author.avatar}" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px;">
+                        <div class="ml-2">
+                          <h6 class="mb-0">${originalPost.author.username}</h6>
+                          <small class="text-muted">${new Date(originalPost.createdAt).toLocaleString()}</small>
+                        </div>
+                      </div>
+                      <p>${originalPost.content}</p>
+                    </div>
+                  </div>
+                `;
+              }
+            })
             .join("");
+  
+          tabContent.innerHTML = contentHTML;
         } else {
           tabContent.innerHTML = `<p>You don't have any ${tab} yet.</p>`;
         }
@@ -329,6 +412,8 @@ document.addEventListener("DOMContentLoaded", () => {
       tabContent.innerHTML = "<p>Error loading data.</p>";
     }
   }
+  
+  loadTabData("threads");
 
   tabs.forEach((tab) => {
     tab.addEventListener("click", (e) => {

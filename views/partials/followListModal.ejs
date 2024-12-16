@@ -1,51 +1,86 @@
 <div class="custom-modal d-none" id="followModal">
     <div class="modal-dialog">
-        <div class="modal-content p-4">
-            <!-- Header với các tab -->
-            <div class="modal-header border-0 d-flex justify-content-center position-relative">
-                <button type="button" class="btn-close position-absolute" style="right: 15px; top: 15px;" onclick="closeModal()">x</button>
-                <ul class="nav nav-tabs border-bottom-0" id="followTabs">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#" onclick="showFollowers()">Followers <span id="followerCount">0</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#" onclick="showFollowing()">Following <span id="followingCount">0</span></a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Nội dung modal -->
-            <div class="modal-body text-center">
-                <p id="noFollowersText">mesol.7 doesn't have any followers yet.</p>
-            </div>
+      <div class="modal-content p-4">
+        <!-- Header với các tab -->
+        <div class="modal-header border-0 d-flex justify-content-center position-relative">
+          <button type="button" class="btn-close position-absolute" style="right: 15px; top: 15px;" onclick="closeModal()">x</button>
+          <ul class="nav nav-tabs border-bottom-0" id="followTabs">
+            <li class="nav-item">
+              <a class="nav-link active" href="#" onclick="showFollowers()">Followers <span id="followerCount"><%= followersCount %></span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" onclick="showFollowing()">Following <span id="followingCount"><%= followingCount %></span></a>
+            </li>
+          </ul>
         </div>
+  
+        <!-- Nội dung modal -->
+        <div class="modal-body text-center">
+          <!-- Danh sách Followers -->
+          <div id="followersList">
+            <% if (followers.length > 0) { %>
+              <% followers.forEach(follower => { %>
+                <div class="follower-item d-flex align-items-center mb-2">
+                  <img src="<%='/icons/profile.svg' %>" alt="<%= follower.username %>" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;">
+                  <span><%= follower.username %></span>
+                </div>
+              <% }); %>
+            <% } else { %>
+              <p>No followers yet.</p>
+            <% } %>
+          </div>
+  
+          <!-- Danh sách Following -->
+          <div id="followingList" class="d-none">
+            <% if (following.length > 0) { %>
+              <% following.forEach(followingUser => { %>
+                <div class="following-item d-flex align-items-center mb-2">
+                  <img src="<%= '/icons/profile.svg' %>" alt="<%= followingUser.username %>" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;">
+                  <span><%= followingUser.username %></span>
+                </div>
+              <% }); %>
+            <% } else { %>
+              <p>No following yet.</p>
+            <% } %>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
-
+  </div>
+  
+  
 
 
 <script>
-    // Hàm để mở modal
 function openModal() {
-    document.getElementById('followModal').classList.remove('d-none');
+  document.getElementById("followModal").classList.remove("d-none");
+  showFollowers(); // Hiển thị tab Followers mặc định
 }
 
-// Hàm để đóng modal
 function closeModal() {
-    document.getElementById('followModal').classList.add('d-none');
+  document.getElementById("followModal").classList.add("d-none");
 }
 
-// Hàm hiển thị Followers
 function showFollowers() {
-    document.getElementById('noFollowersText').textContent = "mesol.7 doesn't have any followers yet.";
-    document.getElementById('followerCount').textContent = "0"; // Số lượng followers có thể thay đổi
+  // Hiển thị danh sách Followers
+  document.getElementById("followersList").classList.remove("d-none");
+  document.getElementById("followingList").classList.add("d-none");
+
+  // Thêm class active vào tab Followers
+  const tabs = document.querySelectorAll("#followTabs .nav-link");
+  tabs.forEach((tab) => tab.classList.remove("active"));
+  tabs[0].classList.add("active");
 }
 
-// Hàm hiển thị Following
 function showFollowing() {
-    document.getElementById('followModal').classList.remove('active');
-    document.getElementById('noFollowersText').textContent = "mesol.7 isn't following anyone yet.";
-    document.getElementById('followingCount').textContent = "0"; // Số lượng following có thể thay đổi
+  // Hiển thị danh sách Following
+  document.getElementById("followingList").classList.remove("d-none");
+  document.getElementById("followersList").classList.add("d-none");
+
+  // Thêm class active vào tab Following
+  const tabs = document.querySelectorAll("#followTabs .nav-link");
+  tabs.forEach((tab) => tab.classList.remove("active"));
+  tabs[1].classList.add("active");
 }
 
 </script>

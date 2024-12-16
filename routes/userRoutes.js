@@ -3,22 +3,23 @@ const router = express.Router();
 const Post = require("../models/postModels"); // Import Post model
 const User = require("../models/userModels"); // Import User model
 const Notification = require('../models/notificationModel');
+const Comment = require('../models/commentModels')
 const { authenticateToken } = require("../middleware/token"); // Import middleware
-const upload = require("../middleware/upload"); // Import middleware upload
+const { avatarUpload } = require("../middleware/upload"); // Import middleware avatarUpload
 
 router.post(
   "/edit-profile",
   authenticateToken,
-  upload.single("avatar"), // Xử lý file upload (field name là 'avatar')
+  avatarUpload.single("avatar"), // Xử lý file upload (field name là 'avatar')
   async (req, res) => {
     try {
       const userId = req.user._id; // Lấy ID từ middleware
       const { displayName, bio } = req.body; // Lấy thông tin từ form
 
       // Cập nhật avatar nếu có upload
-      let avatarUrl = req.body.currentAvatar; // Dùng avatar cũ nếu không có file mới
+      let avatarUrl = req.body.currentAvatar; // Giữ nguyên avatar cũ nếu không có file mới
       if (req.file) {
-        avatarUrl = `/uploads/avatars/${req.file.filename}`;
+        avatarUrl = `/avatars/${req.file.filename}`; // Lưu đường dẫn avatar mới
       }
 
       // Cập nhật thông tin người dùng trong database
@@ -32,15 +33,17 @@ router.post(
         return res.status(404).json({ message: "User not found." });
       }
 
-      res
-        .status(200)
-        .json({ message: "Profile updated successfully.", user: updatedUser });
+      res.status(200).json({
+        message: "Profile updated successfully.",
+        user: updatedUser,
+      });
     } catch (error) {
       console.error("Error updating profile:", error);
       res.status(500).json({ message: "Server error." });
     }
   }
 );
+
 
 router.get("/notifications", authenticateToken, async (req, res) => {
   try {
@@ -135,9 +138,13 @@ router.get('/notifications/:type?', authenticateToken, async (req, res) => {
 
 router.get("/profile/:userId/:tab?", authenticateToken, async (req, res) => {
   try {
+   
+
     const userId = req.params.userId;
     const currentTab = req.params.tab || "threads";
-
+    if (!currentTab) {
+      return res.redirect(`/profile/${userId}/threads`);
+    }
     const user = await User.findById(userId)
       .populate({
         path: "posts",
@@ -151,31 +158,74 @@ router.get("/profile/:userId/:tab?", authenticateToken, async (req, res) => {
       })
       .populate({
         path: "reposts",
-        select: "content createdAt",
+        select: "content createdAt originalPost",
         options: { sort: { createdAt: -1 } },
+        populate: [
+          { path: "author", select: "username avatar" }, // Populate tác giả của bài repost
+          {
+            path: "originalPost",
+            populate: { path: "author", select: "username avatar" }, // Populate tác giả bài viết gốc
+          },
+        ],
+      })
+      
+      .populate({
+        path: "followers",
+        select: "username avatar",
+      })
+      .populate({
+        path: "following",
+        select: "username avatar",
       });
 
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
 
-    // Tính toán `isNewUser`
     const postsCount = user.posts.length;
     const repliesCount = user.replies.length;
     const repostsCount = user.reposts.length;
     const isNewUser = postsCount === 0 && repliesCount === 0 && repostsCount === 0;
 
+    const followers = user.followers; // Lấy danh sách followers
+    const following = user.following; // Lấy danh sách following
+    const followersCount = followers.length;
+    const followingCount = following.length;
+
     let tabData = [];
-    let tabTitle = "Threads"; // Default title
+    let tabTitle = "Threads";
     switch (currentTab) {
       case "threads":
-        tabData = user.posts;
+        tabData = await Post.find({ author: userId })
+          .populate("author", "username avatar")
+          .populate("likes", "username")
+          .populate({
+            path: "comments",
+            select: "author content createdAt",
+            populate: { path: "author", select: "username avatar" },
+          })
+          .select("content postImage likes comments createdAt") // Thêm postImage vào kết quả
+          .sort({ createdAt: -1 });
         tabTitle = "Your Threads";
         break;
+
+
       case "replies":
-        tabData = user.replies;
-        tabTitle = "Your Replies";
+        tabData = await Comment.find({ author: userId })
+        .populate({
+          path: "post",
+          select: "content author",
+          populate: { path: "author", select: "username avatar" },
+        })
+        .populate({
+          path: "parentComment",
+          select: "content author",
+          populate: { path: "author", select: "username avatar" },
+        })
+        .populate("author", "username avatar")
+        .sort({ createdAt: -1 });
         break;
+        
       case "reposts":
         tabData = user.reposts;
         tabTitle = "Your Reposts";
@@ -186,16 +236,26 @@ router.get("/profile/:userId/:tab?", authenticateToken, async (req, res) => {
 
     // Nếu yêu cầu từ Fetch API/AJAX, trả về JSON
     if (req.xhr || req.headers.accept.includes("json")) {
-      return res.json({ tab: currentTab, data: tabData });
+      return res.json({
+        tab: currentTab,
+        data: tabData,
+        tabTitle,
+        followersCount,
+        followingCount,
+      });
     }
 
     // Nếu yêu cầu từ trình duyệt, render trang HTML
     res.render("profile", {
       user,
-      isNewUser, // Truyền `isNewUser` vào template
+      isNewUser,
       currentTab,
       tabData,
       tabTitle,
+      followers,
+      following,
+      followersCount,
+      followingCount,
     });
   } catch (error) {
     console.error("Error fetching profile:", error);

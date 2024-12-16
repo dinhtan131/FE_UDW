@@ -21,6 +21,10 @@ const commentSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  parentComment: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "Comment", default: null 
+  },
 });
 
 // Tạo model từ schema

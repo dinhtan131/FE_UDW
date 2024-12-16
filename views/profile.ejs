@@ -26,9 +26,9 @@
                     <div style="margin-left: 20px;">
                         <h5 class="mb-0"><%= user.username %></h5>
                         <small><%= user.bio && user.bio.trim() !== '' ? user.bio : 'No bio available' %></small><br>
-                        <a onclick="openModal()" class="pointer">0 followers</a>
+                        <a onclick="openModal()" class="pointer"><%= followersCount %> Followers</a>
                     </div>
-                    <img src="<%='/icons/profile.svg' %>" alt="User Profile Picture" 
+                    <img src="<%=user.avatar || '/icons/profile.svg' %>" alt="User Profile Picture" 
                          class="rounded-circle" style="width: 60px; height: 60px; margin-right: 20px;">
                 </div>
                 
@@ -81,7 +81,7 @@
                     display: block; 
                     }
                 </style>
-                <!-- Tabs Navigation -->
+                <!-- Tabs Post, Reply, Repost -->
                 <ul class="nav nav-tabs justify-content-center mb-3" data-user-id="<%= user._id %>">
                     <li class="nav-item">
                     <a class="nav-link nav-link-profile <%= currentTab === 'threads' ? 'active' : '' %>" href="#" data-tab="threads">Threads</a>
@@ -95,17 +95,6 @@
                 </ul>
                 <!-- Tab Content -->
                 <div id="tab-content" data-user-id="<%= user._id %>">
-                    <h4><%= tabTitle %></h4>
-                    <% if (tabData.length > 0) { %>
-                    <% tabData.forEach(item => { %>
-                        <div class="post-item">
-                        <p><strong>Content:</strong> <%= item.content %></p>
-                        <small>Created at: <%= new Date(item.createdAt).toLocaleString() %></small>
-                        </div>
-                    <% }); %>
-                    <% } else { %>
-                    <p>You don't have any <%= currentTab %> yet.</p>
-                    <% } %>
                 </div>
   
                 
