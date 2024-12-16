@@ -35,7 +35,7 @@
                                 <img src="<%= post.author.avatar ? post.author.avatar : '/icons/profile.svg' %>" 
                                     alt="Profile Icon" class="rounded-circle" style="width: 40px; height: 40px;">    
                             </a>
-                            <a class="ml-2">
+                            <a class="ml-2" href="/profile/<%= post.author._id %>">
                                 <h5 class="card-title mb-0" style="color: #333;"><%= post.author.username %></h5>
                                 <small class="text-muted"><%= new Date(post.createdAt).toLocaleString() %></small>
                             </a>
@@ -57,18 +57,29 @@
                         <!-- Các nút like, comment, share -->
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <button class="btn btn-link like-button <%= post.likes.some(user => user._id.toString() === currentUserId) ? 'liked' : '' %>">
-                                    <i class="bi bi-heart <%= post.likes.some(user => user._id.toString() === currentUserId) ? 'text-danger' : '' %>"></i>
-                                    <span class="like-count"><%= post.likes.length %></span>
-                                </button>
+                                <button class="btn btn-link like-button <%= post.likes.some(user => user._id.toString() === currentUserId) ? 'liked' : '' %>" 
+                                    data-post-id="<%= post._id %>">
+                                    <img src="<%= post.likes.some(user => user._id.toString() === currentUserId) ? '/icons/heart_active.svg' : '/icons/heart.svg' %>" 
+                                        alt="Like" 
+                                        class="like-icon" 
+                                        style="width: 20px; height: 20px;">
+                                <span class="like-count"><%= post.likes.length %></span>
+                            </button>
+                            
+                                
                                 <button class="btn btn-link comment-button" data-toggle="modal" data-target="#commentModal" data-post-id="<%= post._id %>">
-                                    <i class="bi bi-chat"></i>
+                                    <img src="/icons/comment_1.svg" 
+                                         alt="Comment" 
+                                         class="comment-icon" 
+                                         style="width: 20px; height: 20px;">
                                     <span class="comment-count"><%= post.comments.length %></span>
-                                </button>
+                                  </button>
+                                  
                                 <button class="btn btn-link repost-button" data-post-id="<%= post._id %>">
-                                    <i class="bi bi-repeat"></i>
+                                    <img src="/icons/rePost.svg" alt="Repost" style="width: 20px; height: 20px;">
                                     <span class="repost-count"><%= post.reposts ? post.reposts.length : 0 %></span>
-                                </button>
+                                  </button>
+                                  
                                 <button class="btn btn-link">
                                     <i class="bi bi-share"></i>
                                 </button>

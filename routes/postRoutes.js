@@ -111,6 +111,7 @@ router.post("/post/:postId/comments", authenticateToken, async (req, res) => {
 
     // Kiểm tra bài viết tồn tại
     const post = await Post.findById(postId);
+    console.log("Received Post ID:", postId);
     if (!post) {
       return res.status(404).json({ error: "Post not found" });
     }
@@ -159,6 +160,7 @@ router.post("/post/:postId/comments", authenticateToken, async (req, res) => {
     await notification.save();
 
     res.status(201).json({
+      post,
       message: "Comment added successfully",
       comment,
       commentsCount: post.comments.length,
@@ -197,38 +199,52 @@ router.post("/post/:postId/like", authenticateToken, async (req, res) => {
     const { postId } = req.params;
     const userId = req.user._id;
 
+    // Tìm bài viết
     const post = await Post.findById(postId);
     if (!post) {
       return res.status(404).json({ error: "Post not found" });
     }
 
+    // Kiểm tra xem user đã like bài viết chưa
     const hasLiked = post.likes.includes(userId);
-    const postAuthor = post.author; // Tìm tác giả bài viết
+    let isLiked = false; // Trạng thái like
 
     if (!hasLiked) {
+      // Người dùng chưa like => thêm like
       post.likes.push(userId);
-      await post.save();
+      isLiked = true;
 
       // Tạo thông báo khi like
       const notification = new Notification({
-        user: postAuthor._id, // Người nhận thông báo là tác giả bài viết
-        initiator: userId, // Người thực hiện hành động like
-        type: 'like',
-        message: `${postAuthor.username} đã thích bài viết của bạn.`,
+        user: post.author._id, // Người nhận thông báo
+        initiator: userId, // Người thực hiện like
+        type: "like",
+        message: `${req.user.username} đã thích bài viết của bạn.`,
         link: `/post/${postId}`,
       });
 
       await notification.save();
+    } else {
+      // Người dùng đã like => xóa like (unlike)
+      post.likes = post.likes.filter((id) => id.toString() !== userId.toString());
+      isLiked = false;
     }
 
-    return res
-      .status(200)
-      .json({ message: "Post liked", likesCount: post.likes.length });
+    // Lưu bài viết
+    await post.save();
+
+    // Trả về dữ liệu cho frontend
+    return res.status(200).json({
+      message: isLiked ? "Post liked" : "Post unliked",
+      likesCount: post.likes.length,
+      isLiked: isLiked,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 
 
