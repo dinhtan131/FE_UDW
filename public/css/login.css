@@ -6,7 +6,7 @@ body {
 
 .login-container {
     width: 90%;
-    max-width: 700px; /* Limit maximum size for larger screens */
+    max-width: 600px; /* Limit maximum size for larger screens */
     background-color: #000;
     padding: 20px;
     border-radius: 10px;
@@ -15,7 +15,7 @@ body {
 
 .logo {
     width: 80%; /* Scale logo size relative to screen width */
-    max-width: 600px;
+    max-width: 400px;
     height: auto;
     margin-top: -50px;
 }
@@ -45,15 +45,15 @@ body {
 }
 
 .nav-link {
-    font-size: 1rem;
+    font-size: 1.2rem;
 }
 
 .text-primary {
-    font-size: 1rem;
+    font-size: 1.2rem;
 }
 
 .text-light {
-    font-size: 1rem;
+    font-size: 1.2rem;
 }
 
 /* Smaller screens (likes phones...) */
