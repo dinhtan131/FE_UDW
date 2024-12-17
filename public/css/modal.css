@@ -1,4 +1,4 @@
-/* Modal overlay */
+/* Modal Overlay */
 .custom-modal {
     display: flex;
     align-items: center;
@@ -8,54 +8,76 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.3); /* Mờ nhẹ */
+    background-color: rgba(0, 0, 0, 0.3); /* Mờ nền */
     z-index: 1050;
 }
 
 /* Modal Content */
-.light-modal-content {
-    background-color: #fff; /* Nền trắng */
-    color: #000; /* Chữ đen */
-    border-radius: 12px;
-    width: 600px;
+.dark-modal-content {
+    background-color: #ffffff !important; /* Nền trắng */
+    border-radius: 30px !important; /* Bo tròn nhẹ hơn */
+    width: 700px; /* Modal dài hơn */
     max-width: 100%;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 0; /* Bỏ padding gốc */
+}
+.modal-dialog{
+    width: 100% !important;
+}
+.modal-content{
+    width: 95% !important;
+    height: 350px !important;
+    border-radius: 30px !important;
 }
 
-/* Header */
+/* Modal Header */
 .modal-header {
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #e0e0e0;
     padding: 15px 20px;
 }
 
-.modal-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-}
-
-.close-btn,
-.btn-close-icon {
+.modal-header .close-btn {
+    color: #000 !important; /* Nút Cancel đậm hơn */
+    font-weight: bold;
     background: none;
     border: none;
-    color: #000;
     font-size: 1rem;
     cursor: pointer;
 }
 
-.btn-close-icon i {
-    font-size: 1.2rem;
+.modal-header .modal-title {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #000;
+    margin: 0 auto; /* Căn giữa */
+}
+
+.btn-close-icon {
+    display: none; /* Ẩn nút X */
+}
+
+/* Modal Body */
+.modal-body {
+    padding: 15px 20px;
 }
 
 /* User Info */
+.user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
 .user-info .avatar {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     margin-right: 10px;
 }
 
-.username {
+.user-info .username {
     font-weight: bold;
+    color: #000;
     font-size: 1rem;
 }
 
@@ -65,19 +87,27 @@
     resize: none;
     width: 100%;
     font-size: 1rem;
-    color: #333;
+    color: #000;
+    background-color: transparent;
     outline: none;
+    padding: 5px 0;
 }
 
 .thread-input::placeholder {
     color: #aaa;
 }
 
-/* Icons */
+/* Icon Options */
+.icon-options {
+    margin-top: 2rem !important;
+    display: flex;
+    justify-content: flex-start;
+}
+
 .icon-options i {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     margin-right: 15px;
-    color: #555;
+    color: #6c757d; /* Màu xám nhạt */
     cursor: pointer;
 }
 
@@ -85,16 +115,18 @@
     color: #000;
 }
 
-.add-to-thread {
-    color: #aaa;
-    font-size: 0.9rem;
-    margin-top: 10px;
-}
-
 /* Footer */
 .modal-footer {
-    border-top: none;
     padding: 10px 20px;
+    border-top: none;
+}
+
+.post-btn.active {
+    opacity: 1;
+    cursor: pointer;
+    color:#2fa755 !important;
+    background-color: #d3f1d7 !important;
+
 }
 
 .post-btn {
@@ -104,11 +136,108 @@
     border: none;
     border-radius: 20px;
     padding: 5px 15px;
-    opacity: 0.5;
+    opacity: 0.3;
     cursor: not-allowed;
 }
+#imagePreview{
+    height: 30px !important;
+}
 
-.post-btn.active {
-    opacity: 1;
-    cursor: pointer;
+
+
+/* Responsive cho màn hình nhỏ */
+@media (max-width: 768px) {
+    .custom-modal {
+        padding: 0 10px; /* Giảm padding ngoài modal */
+        width: 100% !important;
+    }
+    .modal-dialog{
+        width: 100% !important;
+    }
+    .modal-content {
+        width: 95% !important; /* Modal chiếm 95% chiều rộng màn hình */
+        height: auto !important; /* Chiều cao tự động */
+        border-radius: 20px !important; /* Bo tròn nhẹ hơn */
+        margin: 0 auto; /* Căn giữa */
+    }
+
+    .modal-header {
+        padding: 12px 15px; /* Giảm padding header */
+    }
+
+    .modal-header .modal-title {
+        font-size: 1rem; /* Tiêu đề phù hợp */
+        text-align: center;
+    }
+
+    .modal-header .close-btn {
+        font-size: 1rem; /* Nút Cancel nhỏ hơn */
+        color: #000 !important;
+    }
+
+    .user-info .avatar {
+        width: 32px; /* Thu nhỏ avatar */
+        height: 32px;
+    }
+
+    .thread-input {
+        font-size: 1rem; /* Chữ phù hợp cho mobile */
+        padding: 8px;
+        min-height: 80px; /* Chiều cao tối thiểu cho textarea */
+    }
+
+    .icon-options {
+        margin-top: 1rem !important; /* Giảm khoảng cách phía trên icon */
+    }
+
+    .icon-options i {
+        font-size: 1.1rem; /* Thu nhỏ icon */
+        margin-right: 12px; /* Giảm khoảng cách giữa các icon */
+    }
+
+    .modal-footer {
+        padding: 10px 15px; /* Footer gọn hơn */
+    }
+
+    .post-btn {
+        font-size: 0.9rem; /* Kích thước nút nhỏ hơn */
+        padding: 6px 10px;
+        border-radius: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        width: 100% !important; /* Modal chiếm toàn bộ màn hình nhỏ */
+        margin: 0; /* Không cần margin */
+        border-radius: 15px !important;
+    }
+
+    .modal-header {
+        padding: 10px 12px; /* Header nhỏ gọn */
+    }
+
+    .modal-header .modal-title {
+        font-size: 0.9rem;
+    }
+
+    .user-info .avatar {
+        width: 28px;
+        height: 28px;
+    }
+
+    .thread-input {
+        font-size: 0.9rem;
+        min-height: 70px; /* Chiều cao tối thiểu cho input */
+    }
+
+    .icon-options i {
+        font-size: 1rem;
+        margin-right: 8px;
+    }
+
+    .post-btn {
+        font-size: 0.85rem;
+        padding: 5px 8px;
+    }
 }

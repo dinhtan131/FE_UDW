@@ -87,35 +87,97 @@ $('.like-button').click(function (e) {
 
 
 
-$(document).ready(function() {
-  $('.view-activity').click(function(e) {
+// $(document).ready(function() {
+//   $('.view-activity').click(function(e) {
+//     e.preventDefault();
+//     const postId = $(this).data('post-id');
+
+//     // Đoạn AJAX của bạn đặt ở đây
+//     $.ajax({
+//       url: `/post/${postId}/like`,
+//       method: 'GET',
+//       success: function(response) {
+//         const modalBody = $('#postActivityModal .modal-body');
+//         modalBody.empty();
+
+//         const headerHtml = `
+//           <div>
+//             <p>Views: ???</p>
+//             <p>Likes: ${response.likesCount}</p>
+//           </div>
+//         `;
+//         modalBody.append(headerHtml);
+
+//         response.likes.forEach(user => {
+//           const userHtml = `
+//             <div class="d-flex align-items-center mb-2">
+//               <img src="${'/icons/profile.svg'}" alt="Avatar" class="rounded-circle mr-3" style="width: 40px; height: 40px;">
+//               <div>
+//                 <h6 class="mb-0">${user.username}</h6>
+//                 <button class="btn btn-sm btn-outline-primary">Follow</button>
+//               </div>
+//             </div>
+//           `;
+//           modalBody.append(userHtml);
+//         });
+
+//         $('#postActivityModal').modal('show');
+//       },
+//       error: function(xhr) {
+//         alert(xhr.responseJSON.error || 'Error loading activity');
+//       }
+//     });
+//   });
+// });
+
+
+$(document).ready(function () {
+  $('.view-activity').click(function (e) {
     e.preventDefault();
     const postId = $(this).data('post-id');
 
-    // Đoạn AJAX của bạn đặt ở đây
     $.ajax({
-      url: `/post/${postId}/like`,
+      url: `/post/${postId}/activity`,
       method: 'GET',
-      success: function(response) {
+      success: function (response) {
         const modalBody = $('#postActivityModal .modal-body');
         modalBody.empty();
 
+        // Header thống kê Views, Likes, Reposts
         const headerHtml = `
-          <div>
-            <p>Views: ???</p>
-            <p>Likes: ${response.likesCount}</p>
+          <div class="activity-stats">
+            <p><strong>Views:</strong> ${response.viewsCount}</p>
+            <p><strong>Likes:</strong> ${response.likesCount}</p>
+            <p><strong>Reposts:</strong> ${response.repostsCount}</p>
           </div>
         `;
         modalBody.append(headerHtml);
 
+        // Danh sách người dùng Likes
+        modalBody.append('<h6>Likes</h6>');
         response.likes.forEach(user => {
           const userHtml = `
             <div class="d-flex align-items-center mb-2">
-              <img src="${'/icons/profile.svg'}" alt="Avatar" class="rounded-circle mr-3" style="width: 40px; height: 40px;">
-              <div>
+              <img src="${user.avatar}" alt="Avatar" class="rounded-circle me-3" style="width: 40px; height: 40px;">
+              <div class="me-auto">
                 <h6 class="mb-0">${user.username}</h6>
-                <button class="btn btn-sm btn-outline-primary">Follow</button>
               </div>
+              <button class="btn btn-sm btn-outline-primary">Follow</button>
+            </div>
+          `;
+          modalBody.append(userHtml);
+        });
+
+        // Danh sách người dùng Reposts
+        modalBody.append('<h6>Reposts</h6>');
+        response.reposts.forEach(user => {
+          const userHtml = `
+            <div class="d-flex align-items-center mb-2">
+              <img src="${user.avatar}" alt="Avatar" class="rounded-circle me-3" style="width: 40px; height: 40px;">
+              <div class="me-auto">
+                <h6 class="mb-0">${user.username}</h6>
+              </div>
+              <button class="btn btn-sm btn-outline-primary">Follow</button>
             </div>
           `;
           modalBody.append(userHtml);
@@ -123,7 +185,7 @@ $(document).ready(function() {
 
         $('#postActivityModal').modal('show');
       },
-      error: function(xhr) {
+      error: function (xhr) {
         alert(xhr.responseJSON.error || 'Error loading activity');
       }
     });

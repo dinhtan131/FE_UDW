@@ -1,0 +1,46 @@
+/* Modal Tổng Thể */
+#postActivityModal .modal-content {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Header Modal */
+  #postActivityModal .modal-header {
+    background-color: #f8f9fa;
+    border-bottom: none;
+  }
+  
+  #postActivityModal .modal-title {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  /* Thống Kê */
+  .activity-stats p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: #555;
+  }
+  
+  /* User Item */
+  #postActivityModal .modal-body h6 {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  
+  #postActivityModal .d-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  #postActivityModal img.rounded-circle {
+    object-fit: cover;
+  }
+  
+  #postActivityModal .btn-outline-primary {
+    padding: 3px 10px;
+    font-size: 0.8rem;
+  }
+  

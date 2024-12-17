@@ -297,6 +297,41 @@ router.get("/post/:postId", authenticateToken, async (req, res) => {
   }
 });
 
+router.get("/post/:postId/activity", authenticateToken, async (req, res) => {
+  try {
+    const { postId } = req.params;
+
+    // Tìm bài viết trong MongoDB
+    const post = await Post.findById(postId)
+      .populate("author", "username avatar")
+      .populate("likes", "username avatar")
+      .populate("reposts", "username avatar");
+
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    // Dữ liệu trả về
+    const data = {
+      viewsCount: post.views || 0,
+      likesCount: post.likes.length,
+      likes: post.likes.map(user => ({
+        username: user.username,
+        avatar: user.avatar || "/icons/profile.svg",
+      })),
+      repostsCount: post.reposts.length,
+      reposts: post.reposts.map(user => ({
+        username: user.username,
+        avatar: user.avatar || "/icons/profile.svg",
+      })),
+    };
+
+    res.json(data); // Gửi dữ liệu JSON
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 
 router.get('/repost/:postId', authenticateToken, async (req, res) => {
