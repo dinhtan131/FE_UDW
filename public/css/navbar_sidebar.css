@@ -90,7 +90,6 @@
     top: 0;
     width: 30%; /* Chiếm toàn bộ chiều rộng của .content-wrapper */
     z-index: 1000;
-    background-color: #ffffff;
     border-bottom: none;
     color: #333;
     display: flex;
@@ -100,6 +99,9 @@
     box-sizing: border-box;
 }
 
+.navbar-light{
+    background-color: rgba(250, 250, 250, 1) !important;
+}
 /* Dropdown căn giữa */
 .dropdown-menu-center {
     left: 50%;

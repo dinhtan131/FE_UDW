@@ -49,15 +49,13 @@ router.get("/notifications", authenticateToken, async (req, res) => {
   try {
     const userId = req.user._id;
 
-    // Lấy tất cả thông báo
+    // Lấy tất cả thông báo và sắp xếp theo trạng thái isRead và createdAt
     const notifications = await Notification.find({ user: userId })
       .populate("initiator", "username avatar")
-      .sort({ createdAt: -1 });
+      .sort({ isRead: 1, createdAt: -1 }); // 1: isRead false trước, -1: mới nhất trước
 
-    // Mặc định navbarTitle là "All" cho route chính
+    // NavbarTitle và dropdownOptions (giữ nguyên logic cũ)
     const navbarTitle = "All";
-
-    // Dropdown options giống như ở route phụ
     const dropdownOptions = [
       { href: "/notifications/all", label: "All", type: "all", active: true },
       { href: "/notifications/follow", label: "Follows", type: "follow", active: false },
@@ -68,13 +66,14 @@ router.get("/notifications", authenticateToken, async (req, res) => {
       { href: "/notifications/verified", label: "Verified", type: "verified", active: false },
     ];
 
+    // Render trang activity với danh sách đã được sắp xếp
     res.render("activity", {
       notifications,
       navbarTitle,
       dropdownOptions,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching notifications:", error);
     res.status(500).render("activity", {
       notifications: [],
       navbarTitle: "All",
@@ -130,6 +129,29 @@ router.get('/notifications/:type?', authenticateToken, async (req, res) => {
       dropdownOptions: [],
       error: 'Lỗi hệ thống khi tải thông báo.',
     });
+  }
+});
+
+router.post('/notifications/mark-as-read/:id', authenticateToken, async (req, res) => {
+  try {
+    const notificationId = req.params.id; // Lấy ID từ URL
+    const userId = req.user._id; // Lấy ID của người dùng hiện tại
+
+    const notification = await Notification.findOneAndUpdate(
+      { _id: notificationId, user: userId }, // Kiểm tra quyền sở hữu thông báo
+      { isRead: true }, // Đánh dấu thông báo đã đọc
+      { new: true } // Trả về thông báo đã cập nhật
+    );
+
+    if (!notification) {
+      return res.status(404).json({ error: "Notification not found or unauthorized" });
+    }
+
+    console.log("Notification marked as read:", notification);
+    res.status(200).json({ message: "Notification marked as read" });
+  } catch (error) {
+    console.error("Error marking notification as read:", error);
+    res.status(500).json({ error: "Failed to mark notification as read" });
   }
 });
 
@@ -271,13 +293,16 @@ router.get('/search', authenticateToken, async (req, res) => {
       const currentUserId = req.user._id; // Lấy ID của người dùng hiện tại từ middleware
       const users = await User.find(({ _id: { $ne: currentUserId } }))
           .populate('followers', '_id') // Lấy danh sách ID của followers
-          .select('username email followers');
-
+          .select('username email bio followers avatar displayName');
+      
       console.log('Users from database:', users);
 
       const followList = users.map(user => ({
           _id: user._id,
           username: user.username,
+          displayName: user.displayName,
+          bio: user.bio,
+          avatar: user.avatar,
           email: user.email,
           followersCount: user.followers.length, // Số lượng followers
           isFollowing: user.followers.some(follower => follower._id.toString() === currentUserId.toString()) // Kiểm tra nếu đã follow

@@ -182,99 +182,109 @@ $(document).ready(function () {
 
 
 
-
-
-// Mở modal và lấy nội dung gốc
-$(document).on("click", ".comment-button", function () {
-  const button = $(this);
-  const postId = button.data("post-id");
-  const commentId = button.data("comment-id"); 
-
-  const modal = $("#commentModal");
-  const originalCommentContainer = modal.find(".original-comment");
-  const replyInput = modal.find(".reply-input");
-  const submitButton = $("#submitReply");
-
-  modal.data("post-id", postId);
-  originalCommentContainer.empty();
-  replyInput.val("");
-  submitButton.prop("disabled", true).removeClass("active"); // Reset nút Post
-
-  const url = commentId ? `/api/comment/${commentId}` : `/api/post/${postId}`;
-
-  $.ajax({
-    url: url,
-    method: "GET",
-    success: function (response) {
-      const data = response.comment || response.post;
-
-      const html = `
-        <div class="media">
-          <img src="${data.author.avatar || '/icons/profile.svg'}" class="mr-3 rounded-circle" alt="Avatar" style="width: 40px; height: 40px;">
-          <div class="media-body">
-            <h6 class="mt-0">${data.author.username}</h6>
-            <p>${data.content}</p>
-            <small class="text-muted">${new Date(data.createdAt).toLocaleString()}</small>
-          </div>
-        </div>
-      `;
-      originalCommentContainer.html(html);
-    },
-    error: function (err) {
-      console.error("Error fetching comment/post:", err);
-      originalCommentContainer.html('<p class="text-muted">Error loading content.</p>');
-    },
+$(document).ready(function () {
+  // Đóng modal khi click vào backdrop (bên ngoài modal-dialog)
+  $('#commentModal').on('click', function (event) {
+    if (!$(event.target).closest('.modal-dialog').length) {
+      $('#commentModal').modal('hide'); // Chỉ đóng khi click ra ngoài modal-dialog
+    }
   });
 
-  modal.modal("show");
+  // Đóng modal khi nhấn nút Post
+  $('#submitReply').on('click', function () {
+    console.log("Nút Post đã được nhấn!"); // Ghi log nếu cần
+    $('#commentModal').modal('hide'); // Đóng modal
+  });
 });
 
-// Kích hoạt nút Post khi nhập liệu
-$(document).on("input", ".reply-input", function () {
-  const content = $(this).val().trim();
-  const submitButton = $("#submitReply");
 
-  if (content.length > 0) {
-    submitButton.prop("disabled", false).addClass("active");
-  } else {
+$(document).ready(function () {
+  // Mở modal và lấy nội dung gốc từ API
+  $(document).on("click", ".comment-button", function () {
+    const button = $(this);
+    const postId = button.data("post-id");
+    const commentId = button.data("comment-id");
+
+    const modal = $("#commentModal");
+    const originalCommentContainer = modal.find(".original-comment");
+    const replyInput = modal.find(".reply-input");
+    const submitButton = $("#submitReply");
+
+    // Reset modal trước khi tải nội dung
+    modal.data("post-id", postId);
+    originalCommentContainer.empty();
+    replyInput.val("");
     submitButton.prop("disabled", true).removeClass("active");
-  }
-});
 
-// Xử lý gửi bình luận
-$(document).on("click", "#submitReply", function (e) {
-  e.preventDefault();
+    // Mở modal
+    modal.modal("show");
 
-  const modal = $("#commentModal");
-  const postId = modal.data("post-id");
-  console.log("Submit Post ID:", postId);
+    // URL API để tải comment hoặc post
+    const url = commentId ? `/api/comment/${commentId}` : `/api/post/${postId}`;
 
-  if (!postId) {
-    alert("Post ID is missing.");
-    return;
-  }
+    // Gửi AJAX request
+    $.ajax({
+      url: url,
+      method: "GET",
+      success: function (response) {
+        const data = response.comment || response.post;
 
-  const content = $("#reply-content").val().trim();
-  if (!content) {
-    alert("Reply cannot be empty.");
-    return;
-  }
+        // Tạo nội dung hiển thị
+        const html = `
+          <div class="media">
+            <img src="${data.author.avatar || '/icons/profile.svg'}" 
+                 class="mr-3 rounded-circle" 
+                 alt="Avatar" style="width: 40px; height: 40px;">
+            <div class="media-body">
+              <h6 class="mt-0">${data.author.username}</h6>
+              <p>${data.content}</p>
+              <small class="text-muted">${new Date(data.createdAt).toLocaleString()}</small>
+            </div>
+          </div>
+        `;
+        originalCommentContainer.html(html);
+      },
+      error: function (err) {
+        console.error("Error fetching comment/post:", err);
+        originalCommentContainer.html(
+          '<p class="text-muted">Error loading content.</p>'
+        );
+      },
+    });
+  });
 
-  const url = `/post/${postId}/comments`;
+  // Kích hoạt nút Post khi nội dung thay đổi
+  $("#reply-content").on("input", function () {
+    const content = $(this).val().trim();
+    const submitButton = $("#submitReply");
+    if (content.length > 0) {
+      submitButton.prop("disabled", false).addClass("active");
+    } else {
+      submitButton.prop("disabled", true).removeClass("active");
+    }
+  });
 
-  // Gửi AJAX request
-  $.ajax({
-    url: url,
-    method: "POST",
-    data: { content },
-    success: function (response) {
-      alert("Comment added successfully!");
-      modal.modal("hide");
-      location.reload();
-    },
-    error: function (xhr) {
-      alert(xhr.responseJSON?.error || "An error occurred while adding comment.");
-    },
+  // Xử lý khi nhấn nút Post
+  $("#submitReply").on("click", function () {
+    const postId = $("#commentModal").data("post-id");
+    const content = $("#reply-content").val().trim();
+
+    if (!content) return; // Đảm bảo không gửi nội dung rỗng
+
+    $.ajax({
+      url: `/post/${postId}/comments`,
+      method: "POST",
+      data: { content: content },
+      success: function (response) {
+        $("#commentModal").modal("hide"); // Đóng modal
+        location.reload();
+      },
+      error: function (err) {
+        console.error("Error posting reply:", err);
+        alert("Failed to post reply.");
+        location.reload();
+      },
+    });
   });
 });
 
@@ -499,6 +509,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const selectedTab = tab.getAttribute("data-tab");
       loadTabData(selectedTab);
+    });
+  });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const notificationItems = document.querySelectorAll('.notification-item');
+
+  notificationItems.forEach(item => {
+    item.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      const notificationId = this.dataset.notificationId;
+
+      // Gửi AJAX request để đánh dấu thông báo là đã đọc
+      fetch(`/notifications/mark-as-read/${notificationId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      }).then(response => {
+        if (response.ok) {
+          // Thêm class 'read' để đổi CSS
+          this.classList.add('read');
+
+          // Thêm class 'fade-out' để tạo hiệu ứng
+          this.classList.add('fade-out');
+
+          // Đợi 0.5s để hiệu ứng hoàn tất trước khi xóa khỏi DOM
+          setTimeout(() => {
+            this.remove();
+          }, 500);
+        } else {
+          console.error('Failed to mark notification as read');
+        }
+      }).catch(err => {
+        console.error('Error:', err);
+      });
     });
   });
 });
