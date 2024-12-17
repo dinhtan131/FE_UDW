@@ -140,49 +140,37 @@ $(document).ready(function () {
       url: `/post/${postId}/activity`,
       method: 'GET',
       success: function (response) {
-        const modalBody = $('#postActivityModal .modal-body');
-        modalBody.empty();
-
-        // Header thống kê Views, Likes, Reposts
-        const headerHtml = `
-          <div class="activity-stats">
-            <p><strong>Views:</strong> ${response.viewsCount}</p>
-            <p><strong>Likes:</strong> ${response.likesCount}</p>
-            <p><strong>Reposts:</strong> ${response.repostsCount}</p>
-          </div>
-        `;
-        modalBody.append(headerHtml);
-
-        // Danh sách người dùng Likes
-        modalBody.append('<h6>Likes</h6>');
+        // Đổ dữ liệu Likes vào tab
+        const likesList = $('#likes-list');
+        likesList.empty();
         response.likes.forEach(user => {
-          const userHtml = `
-            <div class="d-flex align-items-center mb-2">
-              <img src="${user.avatar}" alt="Avatar" class="rounded-circle me-3" style="width: 40px; height: 40px;">
-              <div class="me-auto">
-                <h6 class="mb-0">${user.username}</h6>
+          likesList.append(`
+            <div class="user-item">
+              <div class="d-flex align-items-center">
+                <img src="${user.avatar}" alt="Avatar">
+                <h6 class="ms-2">${user.username}</h6>
               </div>
-              <button class="btn btn-sm btn-outline-primary">Follow</button>
+              <button class="btn btn-sm btn-outline-primary btn-follow">Follow</button>
             </div>
-          `;
-          modalBody.append(userHtml);
+          `);
         });
 
-        // Danh sách người dùng Reposts
-        modalBody.append('<h6>Reposts</h6>');
+        // Đổ dữ liệu Reposts vào tab
+        const repostsList = $('#reposts-list');
+        repostsList.empty();
         response.reposts.forEach(user => {
-          const userHtml = `
-            <div class="d-flex align-items-center mb-2">
-              <img src="${user.avatar}" alt="Avatar" class="rounded-circle me-3" style="width: 40px; height: 40px;">
-              <div class="me-auto">
-                <h6 class="mb-0">${user.username}</h6>
+          repostsList.append(`
+            <div class="user-item">
+              <div class="d-flex align-items-center">
+                <img src="${user.avatar}" alt="Avatar">
+                <h6 class="ms-2">${user.username}</h6>
               </div>
-              <button class="btn btn-sm btn-outline-primary">Follow</button>
+              <button class="btn btn-sm btn-outline-primary btn-follow">Follow</button>
             </div>
-          `;
-          modalBody.append(userHtml);
+          `);
         });
 
+        // Hiển thị modal
         $('#postActivityModal').modal('show');
       },
       error: function (xhr) {
@@ -195,24 +183,25 @@ $(document).ready(function () {
 
 
 
+
+// Mở modal và lấy nội dung gốc
 $(document).on("click", ".comment-button", function () {
   const button = $(this);
   const postId = button.data("post-id");
-  console.log(postId);
-  const commentId = button.data("comment-id"); // Nếu là trả lời comment, lấy ID comment
+  const commentId = button.data("comment-id"); 
 
   const modal = $("#commentModal");
   const originalCommentContainer = modal.find(".original-comment");
   const replyInput = modal.find(".reply-input");
+  const submitButton = $("#submitReply");
+
   modal.data("post-id", postId);
-  // Xóa nội dung cũ mỗi khi mở modal
   originalCommentContainer.empty();
   replyInput.val("");
+  submitButton.prop("disabled", true).removeClass("active"); // Reset nút Post
 
-  // Nếu commentId tồn tại, lấy thông tin comment cha, ngược lại lấy thông tin bài viết
   const url = commentId ? `/api/comment/${commentId}` : `/api/post/${postId}`;
 
-  // Gửi AJAX để lấy nội dung gốc
   $.ajax({
     url: url,
     method: "GET",
@@ -240,8 +229,20 @@ $(document).on("click", ".comment-button", function () {
   modal.modal("show");
 });
 
+// Kích hoạt nút Post khi nhập liệu
+$(document).on("input", ".reply-input", function () {
+  const content = $(this).val().trim();
+  const submitButton = $("#submitReply");
 
-$(document).on("submit", ".reply-form", function (e) {
+  if (content.length > 0) {
+    submitButton.prop("disabled", false).addClass("active");
+  } else {
+    submitButton.prop("disabled", true).removeClass("active");
+  }
+});
+
+// Xử lý gửi bình luận
+$(document).on("click", "#submitReply", function (e) {
   e.preventDefault();
 
   const modal = $("#commentModal");
@@ -253,13 +254,15 @@ $(document).on("submit", ".reply-form", function (e) {
     return;
   }
 
-  const content = modal.find(".reply-input").val().trim();
+  const content = $("#reply-content").val().trim();
   if (!content) {
     alert("Reply cannot be empty.");
     return;
   }
 
   const url = `/post/${postId}/comments`;
+
+  // Gửi AJAX request
   $.ajax({
     url: url,
     method: "POST",
@@ -270,11 +273,10 @@ $(document).on("submit", ".reply-form", function (e) {
       location.reload();
     },
     error: function (xhr) {
-      alert(xhr.responseJSON.error || "An error occurred while adding comment.");
+      alert(xhr.responseJSON?.error || "An error occurred while adding comment.");
     },
   });
 });
-
 
 
 
@@ -359,6 +361,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const profileContainer = document.getElementById("profile-container");
   const userId = profileContainer.getAttribute("data-user-id");
 
+  if (!profileContainer) {
+    console.warn("Profile container not found. Exiting tab logic.");
+    return;
+  }
   if (!tabContent) {
     console.error("Tab content container (#tab-content) not found in DOM.");
     return;

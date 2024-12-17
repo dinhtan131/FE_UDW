@@ -1,46 +1,60 @@
-/* Modal Tổng Thể */
+/* Modal tổng thể */
 #postActivityModal .modal-content {
-    border-radius: 15px;
-    border: none;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-  
-  /* Header Modal */
-  #postActivityModal .modal-header {
-    background-color: #f8f9fa;
-    border-bottom: none;
-  }
-  
-  #postActivityModal .modal-title {
-    font-weight: bold;
-    color: #333;
-  }
-  
-  /* Thống Kê */
-  .activity-stats p {
-    margin: 5px 0;
-    font-size: 0.9rem;
-    color: #555;
-  }
-  
-  /* User Item */
-  #postActivityModal .modal-body h6 {
-    margin-top: 10px;
-    font-weight: bold;
-  }
-  
-  #postActivityModal .d-flex {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  #postActivityModal img.rounded-circle {
-    object-fit: cover;
-  }
-  
-  #postActivityModal .btn-outline-primary {
-    padding: 3px 10px;
-    font-size: 0.8rem;
-  }
-  
+  border-radius: 15px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Header Modal */
+#postActivityModal .modal-header {
+  background-color: #f8f9fa;
+  border-bottom: none;
+}
+
+#postActivityModal .modal-title {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Tabs */
+.nav-tabs .nav-link {
+  font-weight: bold;
+  color: #aaa;
+  border: none;
+}
+
+.nav-tabs .nav-link.active {
+  color: #000;
+  border-bottom: 2px solid #000;
+}
+
+/* Danh sách người dùng */
+#likes-list, #reposts-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.user-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.user-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-item h6 {
+  margin: 0;
+  font-weight: bold;
+}
+
+.btn-follow {
+  padding: 3px 10px;
+  font-size: 0.8rem;
+}

@@ -23,6 +23,7 @@ router.get("/home", authenticateToken, async (req, res) => {
     res.render("index", {
       posts,
       currentUserId: req.user._id.toString(), // Chuyển đổi ObjectId thành string
+      currentUserUsername : req.user.username,
     });
   } catch (error) {
     console.error(error);
@@ -130,6 +131,7 @@ router.post("/post/:postId/comments", authenticateToken, async (req, res) => {
       author: userId,
       post: postId,
       parentComment: parentComment || null, // Gán parentComment nếu có
+
     });
 
     await comment.save();
@@ -290,6 +292,7 @@ router.get("/post/:postId", authenticateToken, async (req, res) => {
     res.render("post", {
       post,
       currentUserId: req.user ? req.user._id.toString() : null,
+      currentUserUsername: req.user.username,
     });
   } catch (error) {
     console.error(error);

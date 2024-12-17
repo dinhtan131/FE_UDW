@@ -1,0 +1,137 @@
+/* Modal tổng thể */
+#commentModal .modal-content {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Header Modal */
+  #commentModal .modal-header {
+    border-bottom: none;
+    background-color: #f8f9fa;
+  }
+  
+  #commentModal .modal-title {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  /* Original Comment */
+  .original-comment {
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    color: #b5b5b5;
+  }
+  
+  .original-comment h6 {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .original-comment small {
+    font-size: 0.8rem;
+    color: #686666;
+  }
+  
+  /* Khu vực nhập liệu */
+  .reply-section .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .reply-section{
+    padding-left: 2rem;
+  }
+
+
+  .reply-input {
+    resize: none;
+    border: 1px solid #7cd4ad;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 1rem;
+  }
+  
+  .icon-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .icon-options i {
+    font-size: 1.2rem;
+    margin-right: 15px;
+    color: #6c757d;
+    cursor: pointer;
+  }
+  
+  .icon-options i:hover {
+    color: #000;
+  }
+  
+  /* Nút Post */
+  .reply-post-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 20px;
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .reply-post-btn.active {
+    opacity: 1;
+    cursor: pointer;
+  }
+  
+  /* Hiển thị hình ảnh tải lên
+  /* Container tổng thể */
+.original-comment .media {
+    display: flex;
+    align-items: flex-start;
+    padding: 10px;
+    background-color: #f8f9fa; /* Màu nền nhẹ */
+    border: 1px solid #e0e0e0; /* Viền xám nhạt */
+    border-radius: 10px; /* Bo tròn */
+  }
+  
+  /* Avatar */
+  .original-comment .media img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* Bo tròn avatar */
+    object-fit: cover; /* Hiển thị hình ảnh gọn gàng */
+    margin-right: 10px;
+  }
+  
+  /* Nội dung bình luận */
+  .original-comment .media-body {
+    flex: 1; /* Chiếm phần còn lại của container */
+  }
+  
+  .original-comment .media-body h6 {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 0.95rem;
+    color: #333; /* Màu chữ đậm */
+  }
+  
+  .original-comment .media-body p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #555; /* Màu chữ xám đậm */
+    line-height: 1.5;
+  }
+  
+  /* Thời gian */
+  .original-comment .media-body small {
+    font-size: 0.8rem;
+    color: #999; /* Màu chữ xám nhạt */
+    display: block;
+    margin-top: 5px;
+  }
+  
