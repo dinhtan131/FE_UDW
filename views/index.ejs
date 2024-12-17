@@ -33,7 +33,7 @@
                             <!-- Hiển thị ảnh đại diện người dùng -->
                             <a class="avatar" href="/profile/<%= post.author._id %>">
                                 <img src="<%= post.author.avatar ? post.author.avatar : '/icons/profile.svg' %>" 
-                                     alt="Profile Icon" class="rounded-circle" style="width: 40px; height: 40px;">    
+                                    alt="Profile Icon" class="rounded-circle" style="width: 40px; height: 40px;">    
                             </a>
                             <a class="ml-2" href="/profile/<%= post.author._id %>">
                                 <h5 class="card-title mb-0" style="color: #333;"><%= post.author.username %></h5>
