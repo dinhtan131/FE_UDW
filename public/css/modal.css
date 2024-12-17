@@ -208,9 +208,7 @@
 
 @media (max-width: 480px) {
     .modal-content {
-        width: 100% !important; /* Modal chiếm toàn bộ màn hình nhỏ */
         margin: 0; /* Không cần margin */
-        border-radius: 15px !important;
     }
 
     .modal-header {

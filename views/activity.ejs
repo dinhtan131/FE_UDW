@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <%- include('partials/header') %>
-
+    <link rel="stylesheet" href="/css/notifications.css">
 <body>
     <!-- Sidebar -->
     <%- include('partials/sidebar') %>
@@ -26,18 +26,28 @@
 
         <div class="post-feed">
             <div class="activity-list">
-                <h5>Thông báo của bạn</h1>
+                <h5>Thông báo của bạn</h5>
                 <ul>
-                <% notifications.forEach(notification => { %>
-                    <strong><%= notification.initiator.username %></strong>
-                    <p><%= notification.message %></p>
-                    <a href="<%= notification.link %>">Xem chi tiết</a>
-                    <p><small><%= notification.createdAt.toLocaleString() %></small></p>
-                <% }) %>
+                    <% notifications.forEach(notification => { %>
+                        <li class="d-flex align-items-center notification-item <% if (notification.isRead) { %>read<% } %>"data-notification-id="<%= notification._id %>">
+                           
+                            <div>
+                                <img src="<%= notification.initiator.avatar || '/icons/profile.svg' %>" 
+                                alt="Avatar" 
+                                class="avatar-img rounded-circle mr-2">
+                                <!-- Tên người dùng và nội dung -->
+                                <strong><%= notification.initiator.username %></strong>
+                                <p class="mb-1"><%= notification.message %></p>
+                                <a href="<%= notification.link %>">Xem chi tiết</a>
+                                <p><small><%= notification.createdAt.toLocaleString() %></small></p>
+                            </div>
+                        </li>
+                    <% }) %>
                 </ul>
-
-            </div>  
+            </div>
         </div>
+        
+        
     </main>
     <%- include('partials/modal', {
         modalId: 'postModal',

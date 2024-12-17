@@ -1,0 +1,105 @@
+/* Search Bar */
+.post-feed .search-bar input {
+    background-color: #f8f9fa;
+    color: #000;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 10px 15px;
+    font-size: 1rem;
+}
+
+.post-feed .search-bar input::placeholder {
+    color: #999;
+}
+
+/* Follow Suggestions Title */
+.post-feed h6 {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Suggestion Card */
+.post-feed .suggestion-list .card {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 10px 15px;
+}
+
+.post-feed .suggestion-list .card-body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Giữa nội dung và nút Follow */
+    padding: 0;
+}
+
+.post-feed .suggestion-list .user-info {
+    display: flex;
+    align-items: center;
+}
+
+.post-feed .suggestion-list .user-info img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.post-feed .suggestion-list .user-info h6 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #000;
+}
+
+.post-feed .suggestion-list .user-info small {
+    color: #777;
+    font-size: 0.85rem;
+}
+
+/* Follow Button */
+.post-feed .suggestion-list .follow-button {
+    background-color: #fff;
+    color: #000;
+    border: 2px solid #ddd;
+    border-radius: 20px;
+    padding: 5px 15px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    white-space: nowrap; /* Ngăn nút xuống hàng */
+}
+
+.post-feed .suggestion-list .follow-button:hover {
+    background-color: #f0f0f0;
+    border-color: #bbb;
+}
+
+/* Following Button (Active State) */
+.post-feed .suggestion-list .follow-button.following {
+    background-color: #ffebeb;
+    color: #fff;
+    border: none;
+}
+
+.post-feed .suggestion-list .follow-button.following:hover {
+    background-color: none;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .post-feed .suggestion-list .card-body {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .post-feed .suggestion-list .follow-button {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+    }
+}

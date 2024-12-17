@@ -1,20 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
     <%- include('partials/header') %>
-
+    <link rel="stylesheet" href="/css/search.css">
 <body>
     <!-- Sidebar -->
     <%- include('partials/sidebar') %>
     <%- include('partials/bottom_bar') %>
-
+     
     <div class="content-wrapper">
     </div>
     
     <main class="main-container">
         <%- include('partials/navbar', { showDropdown: false, navbarTitle: "Search" }) %>
-
-
-        <div class="post-feed">
             <div class="post-feed">
  
                 <div class="search-bar mb-3 p-2">
@@ -26,29 +23,32 @@
                 <!-- Danh sách gợi ý tài khoản -->
                 <div class="suggestion-list">
                     <% followList.forEach(user => { %>
-                        <div class="card mb-3 " style="background-color: #ffffff !important;">
+                        <div class="card mb-3" style="background-color: #ffffff !important;">
                             <div class="card-body d-flex justify-content-between align-items-center" data-user-id="<%= user._id %>">
+                                <!-- Thông tin người dùng -->
                                 <div class="d-flex align-items-center">
                                     <img src="/icons/profile.svg" alt="Avatar" class="rounded-circle mr-3" style="width: 40px; height: 40px;">
                                     <div>
-                                        <h6 class="mb-1" style="color: #000000"><%= user.username %></h6>
-                                        <small style="color: #000000"><%= user.followersCount %> Follower(s)</small>
+                                        <h6 class="mb-1" style="color: #000000">User Name: <%= user.username %></h6>
+                                        <small class="mb-1" style="color: #000000">User Display Name: <%= user.displayName %></small>
+                                        <h6 style="color: #777;">Bio: <%= user.bio %></h6>
+                                        <small style="color: #777;"><%= user.followersCount %> Follower(s)</small>
+                                        
                                     </div>
                                 </div>
+                                <!-- Nút Follow -->
+                                <button 
+                                    class="btn follow-button <% if (user.isFollowing) { %>following<% } %>" 
+                                    style="color: #000000; border: 2px solid #e2dcdc;" 
+                                    data-user-id="<%= user._id %>" 
+                                    data-is-following="<%= user.isFollowing %>">
+                                    <%= user.isFollowing ? 'Unfollow' : 'Follow' %>
+                                </button>
                             </div>
-                            <button 
-                                class="btn btn-outline-light btn-sm follow-button <% if (user.isFollowing) { %>following<% } %>" 
-                                style="color: #000000; border: 2px solid #e2dcdc;" 
-                                data-user-id="<%= user._id %>" 
-                                data-is-following="<%= user.isFollowing %>">
-                                <%= user.isFollowing ? 'Unfollow' : 'Follow' %>
-                            </button>
                         </div>
                     <% }); %>
                 </div>
                 
-                
-            </div>
             
         </div>
     </main>
