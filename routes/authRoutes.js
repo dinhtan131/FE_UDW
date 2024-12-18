@@ -9,15 +9,15 @@ const { authenticateToken } = require("../middleware/token");
 const nodemailer = require('nodemailer'); // Dùng để gửi email
 
 // Route gốc, chuyển hướng dựa trên trạng thái đăng nhập
-router.get("/",authenticateToken, (req, res) => {
+router.get("/",authenticateToken(false), (req, res) => {
   const token = req.cookies.token || req.session.token;
   if (!token) {
-    return res.redirect("/login");
+    return res.redirect("/home");
   }
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
-      return res.redirect("/login");
+      return res.redirect("/home");
     }
     return res.redirect("/home");
   });
@@ -142,14 +142,14 @@ router.post("/register", async (req, res) => {
 });
 
 // Route GET logout
-router.get("/logout",authenticateToken, (req, res) => {
+router.get("/logout",authenticateToken(true), (req, res) => {
   res.clearCookie("token");
   req.session.destroy((err) => {
     if (err) {
       console.error("Lỗi khi đăng xuất:", err);
-      return res.status(500).render("login", { error: "Lỗi khi đăng xuất." });
+      return res.status(500).render("home", { error: "Lỗi khi đăng xuất." });
     }
-    return res.redirect("/login");
+    return res.redirect("/home");
   });
 });
 
@@ -160,8 +160,8 @@ router.post("/logout",authenticateToken, (req, res) => {
     if (err) {
       return res.status(500).json({ message: "Logout failed" });
     }
-    res.status(200).json({ message: "Logout successful" });
   });
+  res.redirect("/home");
 });
 
 
