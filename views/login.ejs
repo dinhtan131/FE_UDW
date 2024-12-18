@@ -12,11 +12,7 @@
     
     <div class="login-container text-center p-4 rounded">
         <img src="../img/threads-icon.png" alt="Threads Logo" class="logo mb-4">
-        <% if (error) { %>
-            <div class="alert alert-danger" role="alert">
-                <%= error %>
-            </div>
-            <% } %>
+
         <form action="/login" method="POST">
             <div class="form-group">
                 <input type="text" class="form-control" name="usernameOrEmail" placeholder="Tên người dùng, email/ số di động" required>

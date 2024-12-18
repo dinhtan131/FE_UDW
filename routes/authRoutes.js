@@ -70,16 +70,21 @@ router.post("/login", async (req, res) => {
     });
 
     if (!user) {
-      return res.render("login", {
-        error: "Tên người dùng hoặc email không tồn tại.",
-      });
+      return res.render("login", { error: "Tên người dùng hoặc email không tồn tại." });
     }
 
+    // Kiểm tra xem tài khoản đã được xác thực chưa
+    if (!user.isVerified) {
+      return res.render("login", { error: "Tài khoản chưa được xác thực. Vui lòng kiểm tra email." });
+    }
+    
+    // So sánh mật khẩu đã nhập với mật khẩu đã mã hóa
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.render("login", { error: "Mật khẩu không đúng." });
     }
 
+    // Tạo token và thực hiện đăng nhập
     const token = jwt.sign(
       { userId: user._id, username: user.username },
       process.env.JWT_SECRET,
@@ -94,7 +99,23 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// Đăng ký
+
+// Thêm hàm gửi email xác thực
+const sendVerificationEmail = async (user, req) => {
+  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+  const verificationLink = `${process.env.APP_URL}/auth/verify-email/${token}`;
+
+  const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: user.email,
+      subject: "Xác thực tài khoản",
+      text: `Nhấn vào liên kết sau để xác thực tài khoản của bạn: ${verificationLink}`,
+  };
+
+  await transporter.sendMail(mailOptions);
+};
+
+// Cập nhật route đăng ký
 router.post("/register", async (req, res) => {
   const { username, email, password, confirmPassword } = req.body;
 
@@ -123,21 +144,45 @@ router.post("/register", async (req, res) => {
       username,
       email,
       password,
+      isVerified:false
     });
 
     await newUser.save();
 
-    const token = jwt.sign(
-      { userId: newUser._id, username: newUser.username },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
+    // Gửi email xác thực
+    await sendVerificationEmail(newUser, req);
 
-    res.cookie("token", token, { httpOnly: false, maxAge: 3600000 });
-    return res.redirect("/home");
+    return res.render("register", { error: null, message: "Email xác thực đã được gửi, vui lòng kiểm tra hộp thư!" });
   } catch (error) {
     console.error(error);
     return res.render("register", { error: "Lỗi hệ thống khi đăng ký." });
+  }
+});
+
+
+// Route xác thực email
+router.get("/verify-email/:token", async (req, res) => {
+  const { token } = req.params;
+
+  try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const user = await User.findById(decoded.userId);
+
+      if (!user) {
+          return res.status(404).send("Người dùng không tồn tại.");
+      }
+
+      if (user.isVerified) {
+          return res.send("Tài khoản đã được xác thực trước đó.");
+      }
+
+      user.isVerified = true;
+      await user.save();
+
+      return res.send("Tài khoản của bạn đã được xác thực thành công!");
+  } catch (error) {
+      console.error("Lỗi xác thực email:", error);
+      return res.status(400).send("Link xác thực không hợp lệ hoặc đã hết hạn.");
   }
 });
 
@@ -282,6 +327,18 @@ router.post('/reset-password', async (req, res) => {
       console.error('Lỗi khi đặt lại mật khẩu:', error);
       res.status(500).send('Đã xảy ra lỗi, vui lòng thử lại sau.');
   }
+});
+// Hiện tại
+router.get("/register", (req, res) => {
+  const token = req.cookies.token || req.session.token;
+  if (token) {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+      if (!err) {
+        return res.redirect("/home");
+      }
+    });
+  }
+  res.render("register", { error: null }); // Thêm cả message: null
 });
 
 module.exports = router;

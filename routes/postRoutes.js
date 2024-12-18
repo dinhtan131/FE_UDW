@@ -24,6 +24,7 @@ router.get("/home", authenticateToken, async (req, res) => {
       posts,
       currentUserId: req.user._id.toString(), // Chuyển đổi ObjectId thành string
       currentUserUsername : req.user.username,
+      currentUserAvatar: req.user.avatar,
     });
   } catch (error) {
     console.error(error);
@@ -76,177 +77,59 @@ router.post(
 
 
 
-router.get("/post/:postId/comments", async (req, res) => {
+router.post("/:type/:id/like", authenticateToken, async (req, res) => {
   try {
-    const { postId } = req.params;
-
-    // Tìm các comment gốc và populate đầy đủ thông tin
-    const comments = await Comment.find({ post: postId, parentComment: null })
-      .populate("author", "username avatar") // Tác giả của comment
-      .populate({
-        path: "parentComment",
-        populate: { path: "author", select: "username avatar" }, // Tác giả của comment cha (nếu có)
-      })
-      .sort({ createdAt: -1 }); // Sắp xếp comment mới nhất lên đầu
-
-    res.status(200).json({
-      message: "Comments fetched successfully",
-      comments,
-    });
-  } catch (error) {
-    console.error("Error fetching comments:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-
-router.post("/post/:postId/comments", authenticateToken, async (req, res) => {
-  try {
-    const { postId } = req.params;
-    const { content, parentComment } = req.body; // parentComment là optional
+    const { type, id } = req.params; // `type` là "post" hoặc "comment"
     const userId = req.user._id;
 
-    if (!content || content.trim() === "") {
-      return res.status(400).json({ error: "Comment content cannot be empty" });
+    let target = null;
+
+    if (type === "post") {
+      target = await Post.findById(id);
+    } else if (type === "comment") {
+      target = await Comment.findById(id);
     }
 
-    // Kiểm tra bài viết tồn tại
-    const post = await Post.findById(postId);
-    console.log("Received Post ID:", postId);
-    if (!post) {
-      return res.status(404).json({ error: "Post not found" });
+    if (!target) {
+      return res.status(404).json({ error: `${type.charAt(0).toUpperCase() + type.slice(1)} not found` });
     }
 
-    // Nếu có parentComment, kiểm tra comment cha có tồn tại không
-    if (parentComment) {
-      const parent = await Comment.findById(parentComment);
-      if (!parent) {
-        return res.status(404).json({ error: "Parent comment not found" });
-      }
-    }
-
-    // Tạo comment mới
-    const comment = new Comment({
-      content,
-      author: userId,
-      post: postId,
-      parentComment: parentComment || null, // Gán parentComment nếu có
-
-    });
-
-    await comment.save();
-
-    // Thêm comment vào bài viết
-    post.comments.push(comment._id);
-    await post.save();
-
-    // Populate author của comment trước khi gửi phản hồi
-    await comment.populate("author", "username avatar");
-
-    // Tạo thông báo comment (nếu là phản hồi thì thông báo cho tác giả comment cha)
-    let notificationRecipient = post.author; // Mặc định thông báo cho tác giả bài viết
-
-    if (parentComment) {
-      const parent = await Comment.findById(parentComment).populate("author");
-      notificationRecipient = parent.author; // Nếu là phản hồi, thông báo cho tác giả comment cha
-    }
-
-    const notification = new Notification({
-      user: notificationRecipient._id,
-      initiator: userId,
-      type: 'comment',
-      message: `${req.user.username} đã ${parentComment ? "phản hồi" : "bình luận"} trên bài viết của bạn.`,
-      link: `/post/${postId}`, // Dẫn đến bài viết
-    });
-
-    await notification.save();
-
-    res.status(201).json({
-      post,
-      message: "Comment added successfully",
-      comment,
-      commentsCount: post.comments.length,
-    });
-  } catch (error) {
-    console.error("Error adding comment:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-
-
-
-router.get("/post/:postId/like", authenticateToken, async (req, res) => {
-  try {
-    const { postId } = req.params;
-    const post = await Post.findById(postId).populate(
-      "likes",
-      "username avatar"
-    );
-
-    if (!post) return res.status(404).json({ error: "Post not found" });
-
-    res.json({
-      likesCount: post.likes.length,
-      likes: post.likes,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-router.post("/post/:postId/like", authenticateToken, async (req, res) => {
-  try {
-    const { postId } = req.params;
-    const userId = req.user._id;
-
-    // Tìm bài viết
-    const post = await Post.findById(postId);
-    if (!post) {
-      return res.status(404).json({ error: "Post not found" });
-    }
-
-    // Kiểm tra xem user đã like bài viết chưa
-    const hasLiked = post.likes.includes(userId);
-    let isLiked = false; // Trạng thái like
+    // Kiểm tra trạng thái Like
+    const hasLiked = target.likes.includes(userId);
+    let isLiked = false;
 
     if (!hasLiked) {
-      // Người dùng chưa like => thêm like
-      post.likes.push(userId);
+      target.likes.push(userId);
       isLiked = true;
 
-      // Tạo thông báo khi like
-      const notification = new Notification({
-        user: post.author._id, // Người nhận thông báo
-        initiator: userId, // Người thực hiện like
-        type: "like",
-        message: `${req.user.username} đã thích bài viết của bạn.`,
-        link: `/post/${postId}`,
-      });
-
-      await notification.save();
+      // Thêm thông báo khi Like
+      if (type === "post" || type === "comment") {
+        const notification = new Notification({
+          user: target.author, // Người nhận thông báo
+          initiator: userId, // Người thực hiện Like
+          type: "like",
+          message: `${req.user.username} đã thích ${type === "post" ? "bài viết" : "bình luận"} của bạn.`,
+          link: `/${type}/${id}`, // Đường dẫn tới bài viết hoặc comment
+        });
+        await notification.save();
+      }
     } else {
-      // Người dùng đã like => xóa like (unlike)
-      post.likes = post.likes.filter((id) => id.toString() !== userId.toString());
-      isLiked = false;
+      target.likes = target.likes.filter((like) => like.toString() !== userId.toString());
     }
 
-    // Lưu bài viết
-    await post.save();
+    await target.save();
 
-    // Trả về dữ liệu cho frontend
-    return res.status(200).json({
-      message: isLiked ? "Post liked" : "Post unliked",
-      likesCount: post.likes.length,
-      isLiked: isLiked,
+    // Trả kết quả về frontend
+    res.status(200).json({
+      message: isLiked ? `${type.charAt(0).toUpperCase() + type.slice(1)} liked` : `${type.charAt(0).toUpperCase() + type.slice(1)} unliked`,
+      likesCount: target.likes.length,
+      isLiked,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error liking:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 
 
@@ -276,29 +159,44 @@ router.get("/post/:postId", authenticateToken, async (req, res) => {
   try {
     const { postId } = req.params;
 
-    // Tìm bài viết trong MongoDB
+    // Populate bài viết và tác giả
     const post = await Post.findById(postId)
       .populate("author", "username avatar")
-      .populate({
-        path: "comments",
-        populate: { path: "author", select: "username avatar" },
-      })
       .populate("likes", "username avatar");
 
     if (!post) {
       return res.status(404).json({ error: "Post not found" });
     }
 
+    // Lấy tất cả comment cha của bài viết (parentComment = null)
+    const parentComments = await Comment.find({ post: postId, parentComment: null })
+      .populate("author", "username avatar")
+      .lean(); // .lean() để chuyển sang object JSON
+
+    // Lấy tất cả replies liên quan đến comment cha
+    const commentIds = parentComments.map(comment => comment._id);
+    const replies = await Comment.find({ parentComment: { $in: commentIds } })
+      .populate("author", "username avatar")
+      .lean();
+
+    // Gán replies vào comment cha tương ứng
+    parentComments.forEach(comment => {
+      comment.replies = replies.filter(reply => reply.parentComment.toString() === comment._id.toString());
+    });
+
     res.render("post", {
       post,
+      parentComments,
       currentUserId: req.user ? req.user._id.toString() : null,
       currentUserUsername: req.user.username,
+      currentUserAvatar: req.user.avatar,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 router.get("/post/:postId/activity", authenticateToken, async (req, res) => {
   try {
@@ -382,7 +280,184 @@ router.get('/repost/:postId', authenticateToken, async (req, res) => {
   }
 });
 
+router.get("/post/:postId/comments", async (req, res) => {
+  try {
+    const { postId } = req.params;
 
+    const comments = await Comment.find({ post: postId, parentComment: null })
+      .populate("author", "username avatar")
+      .populate({
+        path: "replies",
+        populate: { path: "author", select: "username avatar" },
+      })
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      message: "Comments fetched successfully",
+      comments,
+    });
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+
+router.get("/api/comment/:commentId", async (req, res) => {
+  try {
+    const { commentId } = req.params;
+
+    const comment = await Comment.findById(commentId)
+      .populate("author", "username avatar")
+      .populate({
+        path: "replies",
+        populate: { path: "author", select: "username avatar" },
+      });
+
+    if (!comment) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+
+    res.status(200).json({
+      message: "Comment fetched successfully",
+      comment,
+    });
+  } catch (error) {
+    console.error("Error fetching comment:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+router.post("/post/:postId/comments", authenticateToken, async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const { content, parentCommentId } = req.body;
+    const userId = req.user._id;
+
+    if (!content || content.trim() === "") {
+      return res.status(400).json({ error: "Comment content cannot be empty" });
+    }
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    let parentComment = null;
+    if (parentCommentId) {
+      parentComment = await Comment.findById(parentCommentId);
+      if (!parentComment) {
+        return res.status(404).json({ error: "Parent comment not found" });
+      }
+    }
+
+    const newComment = new Comment({
+      content,
+      author: userId,
+      post: postId,
+      parentComment: parentCommentId || null,
+    });
+
+    await newComment.save();
+
+    if (parentComment) {
+      parentComment.replies.push(newComment._id); // Thêm ID của comment mới vào replies
+      await parentComment.save();
+    } else {
+      post.comments.push(newComment._id);
+      await post.save();
+    }
+
+    await newComment.populate("author", "username avatar");
+
+    res.status(201).json({
+      message: "Comment added successfully",
+      comment: newComment,
+    });
+  } catch (error) {
+    console.error("Error adding comment:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+router.get("/api/comment/:commentId", async (req, res) => {
+  try {
+    const { commentId } = req.params;
+
+    // Kiểm tra ObjectId hợp lệ
+    if (!mongoose.Types.ObjectId.isValid(commentId)) {
+      return res.status(400).json({ error: "Invalid comment ID" });
+    }
+
+    const comment = await Comment.findById(commentId)
+      .populate("author", "username avatar")
+      .populate({
+        path: "replies",
+        populate: { path: "author", select: "username avatar" },
+      });
+
+    if (!comment) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+
+    res.status(200).json({
+      message: "Comment fetched successfully",
+      comment,
+    });
+  } catch (error) {
+    console.error("Error fetching comment:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// POST /comment/:commentId/replies
+router.post("/comment/:commentId/replies", authenticateToken, async (req, res) => {
+  try {
+    const { commentId } = req.params;
+    const { content } = req.body;
+    const userId = req.user._id;
+
+    // Kiểm tra nội dung không rỗng
+    if (!content || content.trim() === "") {
+      return res.status(400).json({ error: "Reply content cannot be empty" });
+    }
+
+    // Tìm comment cha
+    const parentComment = await Comment.findById(commentId);
+    if (!parentComment) {
+      return res.status(404).json({ error: "Parent comment not found" });
+    }
+
+    // Tạo reply mới
+    const newReply = new Comment({
+      content,
+      author: userId,
+      post: parentComment.post, // Giữ ID bài viết gốc
+      parentComment: commentId, // Liên kết với comment cha
+    });
+
+    // Lưu reply mới
+    await newReply.save();
+
+    // Thêm reply vào mảng replies của comment cha
+    parentComment.replies.push(newReply._id);
+    await parentComment.save();
+
+    // Populate dữ liệu reply để gửi lại cho frontend
+    await newReply.populate("author", "username avatar");
+
+    res.status(201).json({
+      message: "Reply added successfully",
+      comment: newReply,
+    });
+  } catch (error) {
+    console.error("Error adding reply:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 
 

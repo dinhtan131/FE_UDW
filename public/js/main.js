@@ -57,18 +57,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
 $('.like-button').click(function (e) {
   e.preventDefault();
+
   const button = $(this);
-  const postId = button.data('post-id'); // Lấy ID bài post
+  const postId = button.data('post-id');
+  const commentId = button.data('comment-id');
+  const targetType = postId ? 'post' : 'comment';
+  const targetId = postId || commentId;
   const likeIcon = button.find("img.like-icon");
 
+  // Gửi yêu cầu AJAX
   $.ajax({
-    url: `/post/${postId}/like`,
+    url: `/${targetType}/${targetId}/like`,
     method: "POST",
     success: function (response) {
-      // Cập nhật số lượng like
+      // Cập nhật giao diện
       button.find(".like-count").text(response.likesCount);
 
-      // Thay đổi icon dựa trên trạng thái isLiked
       if (response.isLiked) {
         button.addClass("liked");
         likeIcon.attr("src", "/icons/heart_active.svg");
@@ -78,12 +82,10 @@ $('.like-button').click(function (e) {
       }
     },
     error: function (xhr) {
-      alert(xhr.responseJSON.error || "An error occurred while liking the post.");
+      alert(xhr.responseJSON.error || "An error occurred while liking the item.");
     },
   });
 });
-
-
 
 
 
@@ -181,7 +183,6 @@ $(document).ready(function () {
 });
 
 
-
 $(document).ready(function () {
   // Đóng modal khi click vào backdrop (bên ngoài modal-dialog)
   $('#commentModal').on('click', function (event) {
@@ -199,37 +200,160 @@ $(document).ready(function () {
 
 
 $(document).ready(function () {
-  // Mở modal và lấy nội dung gốc từ API
+  // Hàm fetch comments và render động
+  function fetchComments(postId) {
+    $.ajax({
+      url: `/post/${postId}/comments`,
+      method: "GET",
+      success: function (response) {
+        const commentsContainer = $(".comments-container");
+        commentsContainer.empty(); // Xóa các comments cũ
+
+        response.comments.forEach(comment => {
+          const commentHtml = generateCommentHTML(comment);
+          commentsContainer.append(commentHtml);
+        });
+      },
+      error: function (err) {
+        console.error("Error fetching comments:", err);
+        $(".comments-container").html("<p class='text-muted'>Failed to load comments.</p>");
+      }
+    });
+  }
+
+  // Hàm tạo HTML cho một comment và các reply
+  function generateCommentHTML(comment) {
+    let repliesHtml = "";
+
+    if (comment.replies && comment.replies.length > 0) {
+      repliesHtml = `
+        <div class="replies pl-4">
+          ${comment.replies.map(reply => `
+            <div class="card mb-2">
+              <div class="card-body">
+                <div class="d-flex align-items-center mb-2">
+                  <img src="${reply.author.avatar || '/icons/profile.svg'}" 
+                       alt="Avatar" class="rounded-circle mr-3" style="width: 35px; height: 35px;">
+                  <div>
+                    <h6 class="mb-0">${reply.author.username}</h6>
+                    <small class="text-muted">${new Date(reply.createdAt).toLocaleString()}</small>
+                  </div>
+                </div>
+                <p class="card-text">${reply.content}</p>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    return `
+      <div class="comment-block border-bottom mb-3">
+        <div class="card mb-2">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <div class="d-flex align-items-center">
+                <img src="${comment.author.avatar || '/icons/profile.svg'}" 
+                     alt="Avatar" class="rounded-circle mr-3" style="width: 40px; height: 40px;">
+                <div>
+                  <h6 class="mb-0">${comment.author.username}</h6>
+                  <small class="text-muted">${new Date(comment.createdAt).toLocaleString()}</small>
+                </div>
+              </div>
+            </div>
+            <p class="card-text">${comment.content}</p>
+            <div class="d-flex justify-content-start mt-2">
+              <button class="btn btn-link like-button" data-comment-id="${comment._id}">
+                <img src="/icons/heart.svg" alt="Like" class="like-icon" style="width: 20px; height: 20px;">
+                <span class="like-count">0</span>
+              </button>
+
+              <button class="btn btn-link comment-button ml-3" data-comment-id="${comment._id}">
+                <img src="/icons/comment.svg" alt="Comment" class="comment-icon" style="width: 20px; height: 20px;">
+                <span class="comment-count">${comment.replies.length}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        ${repliesHtml}
+      </div>
+    `;
+  }
+
+  // Fetch comments khi tải trang
+  const postId = $(".comment-button").data("post-id");
+  if (postId) fetchComments(postId);
+
+  // Xử lý sự kiện click comment-button (ví dụ mở modal)
   $(document).on("click", ".comment-button", function () {
     const button = $(this);
     const postId = button.data("post-id");
     const commentId = button.data("comment-id");
+    console.log("Comment button clicked:", { postId, commentId });
+    // Xử lý tiếp ở đây
+  });
+});
 
+
+
+$(document).ready(function () {
+  // Mở modal và lấy nội dung gốc từ API
+  $(document).on("click", ".comment-button", function () {
+    const button = $(this);
+    const postId = button.data("post-id");       // Lấy ID của bài viết
+    const commentId = button.data("comment-id"); // Lấy ID của comment (nếu có)
+  
     const modal = $("#commentModal");
     const originalCommentContainer = modal.find(".original-comment");
     const replyInput = modal.find(".reply-input");
     const submitButton = $("#submitReply");
-
-    // Reset modal trước khi tải nội dung
+  
+    // Kiểm tra xem ID có hợp lệ không
+    if (!postId && !commentId) {
+      console.error("Error: Missing postId or commentId");
+      return;
+    }
+  
+    console.log("Post ID:", postId);
+    console.log("Comment ID:", commentId);
+  
+    // Reset modal trước khi hiển thị
     modal.data("post-id", postId);
+    modal.data("parent-comment-id", commentId || null); // Gán ID comment cha nếu có
     originalCommentContainer.empty();
     replyInput.val("");
     submitButton.prop("disabled", true).removeClass("active");
-
+  
     // Mở modal
     modal.modal("show");
-
-    // URL API để tải comment hoặc post
-    const url = commentId ? `/api/comment/${commentId}` : `/api/post/${postId}`;
-
+  
+    // Xác định URL API để fetch dữ liệu
+    const url = commentId 
+      ? `/api/comment/${commentId}`   // Nếu commentId tồn tại, fetch nội dung comment
+      : `/api/post/${postId}`;        // Nếu không, fetch nội dung bài viết
+  
     // Gửi AJAX request
     $.ajax({
       url: url,
       method: "GET",
       success: function (response) {
-        const data = response.comment || response.post;
-
-        // Tạo nội dung hiển thị
+        let data = null;
+  
+        if (response.comment) {
+          data = response.comment; // Dữ liệu cho comment
+        } else if (response.post) {
+          data = response.post; // Dữ liệu cho bài viết
+        }
+  
+        if (!data) {
+          console.error("Error: No data received");
+          originalCommentContainer.html(
+            '<p class="text-muted">Error loading content.</p>'
+          );
+          return;
+        }
+  
+        // Hiển thị nội dung trong modal
         const html = `
           <div class="media">
             <img src="${data.author.avatar || '/icons/profile.svg'}" 
@@ -245,14 +369,14 @@ $(document).ready(function () {
         originalCommentContainer.html(html);
       },
       error: function (err) {
-        console.error("Error fetching comment/post:", err);
+        console.error("Error fetching content:", err);
         originalCommentContainer.html(
           '<p class="text-muted">Error loading content.</p>'
         );
       },
     });
   });
-
+  
   // Kích hoạt nút Post khi nội dung thay đổi
   $("#reply-content").on("input", function () {
     const content = $(this).val().trim();
@@ -264,29 +388,143 @@ $(document).ready(function () {
     }
   });
 
+  function generateRepliesHTML(replies, postId) {
+    let repliesHTML = '';
+  
+    replies.forEach(reply => {
+      repliesHTML += `
+        <div class="card mb-2">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-2">
+              <img src="${reply.author.avatar || '/icons/profile.svg'}" alt="Avatar" class="rounded-circle mr-3" style="width: 35px; height: 35px;">
+              <div>
+                <h6 class="mb-0">${reply.author.username}</h6>
+                <small class="text-muted">${new Date(reply.createdAt).toLocaleString()}</small>
+              </div>
+            </div>
+            <p class="card-text">${reply.content}</p>
+  
+            <!-- Nút tương tác -->
+            <div class="d-flex justify-content-start mt-2">
+              <button class="btn btn-link like-button" data-comment-id="${reply._id}" data-post-id="${postId}">
+                <img src="/icons/heart.svg" alt="Like" class="like-icon" style="width: 20px; height: 20px;">
+                <span class="like-count">0</span>
+              </button>
+  
+              <button class="btn btn-link comment-button ml-3" data-comment-id="${reply._id}" data-post-id="${postId}">
+                <img src="/icons/comment.svg" alt="Comment" class="comment-icon" style="width: 20px; height: 20px;">
+                <span class="comment-count">0</span>
+              </button>
+  
+              <button class="btn btn-link repost-button ml-3" data-comment-id="${reply._id}" data-post-id="${postId}">
+                <img src="/icons/repost.svg" alt="Repost" class="repost-icon" style="width: 20px; height: 20px;">
+                <span class="repost-count">0</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+  
+    return repliesHTML;
+  }
+  
   // Xử lý khi nhấn nút Post
   $("#submitReply").on("click", function () {
     const postId = $("#commentModal").data("post-id");
+    const parentCommentId = $("#commentModal").data("parent-comment-id"); // Lấy ID comment cha nếu có
     const content = $("#reply-content").val().trim();
-
+  
     if (!content) return; // Đảm bảo không gửi nội dung rỗng
-
+  
+    // Tạo payload cho request
+    const requestData = { content };
+  
+    // Gửi request đến route phù hợp
+    const url = parentCommentId 
+      ? `/comment/${parentCommentId}/replies` // Reply vào comment cha
+      : `/post/${postId}/comments`;          // Comment vào bài viết
+  
     $.ajax({
-      url: `/post/${postId}/comments`,
+      url: url,
       method: "POST",
-      data: { content: content },
+      data: requestData,
       success: function (response) {
         $("#commentModal").modal("hide"); // Đóng modal
-        location.reload();
+  
+        const comment = response.comment;
+  
+        // Tạo HTML sử dụng template có sẵn
+        const replyHTML = generateRepliesHTML([comment], postId);
+  
+        if (parentCommentId) {
+          // Nếu là reply, tìm phần replies của comment cha và thêm vào đó
+          const repliesContainer = $(`[data-comment-id='${parentCommentId}']`)
+            .closest(".comment-block")
+            .find(".replies");
+  
+          if (repliesContainer.length === 0) {
+            // Nếu chưa có phần replies, tạo mới
+            const repliesBlock = `<div class="replies pl-4">${replyHTML}</div>`;
+            $(`[data-comment-id='${parentCommentId}']`).closest(".comment-block").append(repliesBlock);
+          } else {
+            // Nếu đã có, thêm vào phần replies
+            repliesContainer.append(replyHTML);
+          }
+        } else {
+          // Nếu là comment mới, thêm vào danh sách comment chính
+          const newCommentHTML = `
+            <div class="comment-block border-bottom mb-3">
+              <div class="card mb-2">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex align-items-center">
+                      <img src="${comment.author.avatar || '/icons/profile.svg'}" alt="Avatar" class="rounded-circle mr-3" style="width: 40px; height: 40px;">
+                      <div>
+                        <h6 class="mb-0">${comment.author.username}</h6>
+                        <small class="text-muted">${new Date(comment.createdAt).toLocaleString()}</small>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="card-text">${comment.content}</p>
+  
+                  <!-- Nút tương tác -->
+                  <div class="d-flex justify-content-start mt-2">
+                    <button class="btn btn-link like-button" data-comment-id="${comment._id}" data-post-id="${postId}">
+                      <img src="/icons/heart.svg" alt="Like" class="like-icon" style="width: 20px; height: 20px;">
+                      <span class="like-count">0</span>
+                    </button>
+  
+                    <button class="btn btn-link comment-button ml-3" data-comment-id="${comment._id}" data-post-id="${postId}">
+                      <img src="/icons/comment.svg" alt="Comment" class="comment-icon" style="width: 20px; height: 20px;">
+                      <span class="comment-count">0</span>
+                    </button>
+  
+                    <button class="btn btn-link repost-button ml-3" data-comment-id="${comment._id}" data-post-id="${postId}">
+                      <img src="/icons/repost.svg" alt="Repost" class="repost-icon" style="width: 20px; height: 20px;">
+                      <span class="repost-count">0</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+  
+          $(".comments-container").prepend(newCommentHTML);
+        }
       },
       error: function (err) {
         console.error("Error posting reply:", err);
         alert("Failed to post reply.");
-        location.reload();
       },
     });
+    location.reload();
   });
+
 });
+
+
+
 
 
 
@@ -547,5 +785,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
-
 

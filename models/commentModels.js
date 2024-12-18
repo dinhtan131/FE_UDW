@@ -25,6 +25,15 @@ const commentSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, 
     ref: "Comment", default: null 
   },
+  likes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }], default: [],
+  replies: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment", // Liên kết tới các phản hồi (nested comments)
+    }],
 });
 
 // Tạo model từ schema
