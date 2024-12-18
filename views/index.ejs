@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <%- include('partials/header') %>
-
+    <link rel="stylesheet" href="/css/index.css">
 <body>
     <!-- Sidebar -->
     <%- include('partials/sidebar') %>  
@@ -46,13 +46,27 @@
         
                         <!-- Hiển thị hình ảnh đính kèm (nếu có) -->
                         <% if (post.postImage && post.postImage.length > 0) { %>
-                            <div class="post-images">
-                                <% post.postImage.forEach(image => { %>
-                                    <img src="<%= image %>" alt="Post Image" class="img-fluid mb-2" 
-                                         style="max-width: 100%; border-radius: 8px;">
+                            <div id="carousel-<%= post._id %>" class="carousel slide post-carousel" data-ride="carousel">
+                              <div class="carousel-inner">
+                                <% post.postImage.forEach((image, index) => { %>
+                                  <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                    <img src="<%= image %>" alt="Post Image" class="d-block w-100 post-image">
+                                  </div>
                                 <% }); %>
+                              </div>
+                              <% if (post.postImage.length > 1) { %>
+                                <a class="carousel-control-prev" href="#carousel-<%= post._id %>" role="button" data-slide="prev">
+                                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                  <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carousel-<%= post._id %>" role="button" data-slide="next">
+                                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                  <span class="sr-only">Next</span>
+                                </a>
+                              <% } %>
                             </div>
-                        <% } %>
+                          <% } %>
+                          
         
                         <!-- Các nút like, comment, share -->
                         <div class="d-flex justify-content-between align-items-center">

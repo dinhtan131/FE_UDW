@@ -43,12 +43,12 @@ p .plus-button{
     color: #000000;
     margin-bottom: 10px;
     border-bottom: 1px solid #ddd;
-    border-radius: 0;   
+    border-radius: 1rem;   
 }
 
 .post-feed .card-body {
     padding: 1rem;
-    border-bottom: 1px solid #e2dcdc;
+
 }
 
 .post-feed .card:last-child {
