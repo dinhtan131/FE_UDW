@@ -37,6 +37,10 @@ const userSchema = new mongoose.Schema({
     maxlength: 200,
     default: '',
   },
+  isVerified: {
+    type: Boolean, // Xác định người dùng đã xác thực email hay chưa
+    default: false,
+  },
   followers: [
     {
       type: mongoose.Schema.Types.ObjectId,
