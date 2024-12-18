@@ -46,12 +46,10 @@
         
                         <!-- Hiển thị hình ảnh đính kèm (nếu có) -->
                         <% if (post.postImage && post.postImage.length > 0) { %>
-                            <div id="carousel-<%= post._id %>" class="carousel slide post-carousel" data-ride="carousel">
-                              <div class="carousel-inner">
-                                <% post.postImage.forEach((image, index) => { %>
-                                  <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                                    <img src="<%= image %>" alt="Post Image" class="d-block w-100 post-image">
-                                  </div>
+                            <div class="post-images">
+                                <% post.postImage.forEach(image => { %>
+                                    <img src="<%= image %>" alt="Post Image" class="img-fluid mb-2" 
+                                         style="max-width: 100%; border-radius: 8px;">
                                 <% }); %>
                               </div>
                               <% if (post.postImage.length > 1) { %>
