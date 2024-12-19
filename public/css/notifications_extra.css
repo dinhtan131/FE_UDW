@@ -1,0 +1,118 @@
+@media (min-width: 1024px) {
+    /* Base font size and layout for desktop */
+    body {
+        font-size: 22px !important; 
+        line-height: 1.8 !important;
+    }
+
+    .navbar {
+        justify-content: center !important;
+        width: 1000px !important; /* Full width */
+    }
+
+    .navbar-brand {
+        font-size: 30px !important; /* Larger title size */
+    }
+
+    .main-container {
+        flex-direction: column !important; /* Column layout */
+        align-items: center !important; /* Center content */
+        width: 100% !important; /* Full width */
+        max-width: 1000px !important; /* Limit width */
+    }
+
+    /* Content container styling */
+    .content-container {
+        display: flex !important; /* Flex layout */
+        align-items: center !important; /* Center content */
+        justify-content: space-between !important; /* Spread elements */
+        padding: 20px !important; /* Add padding */
+        font-size: 20px !important; /* Increase font size */
+        margin-bottom: 20px !important; /* Add space below */
+    }
+
+    .content-container img {
+        width: 60px !important; /* Larger profile image */
+        height: 60px !important;
+        margin-right: 20px !important;
+    }
+
+    .content-container .btn {
+        font-size: 18px !important; /* Larger button text */
+        padding: 12px 24px !important; /* Larger button padding */
+    }
+
+    /* Notifications styling */
+    .post-feed {
+        max-width: 1200px !important; /* Wider notification feed */
+        margin: 0 auto !important; /* Center content */
+    }
+
+    .activity-list {
+        max-width: 1000px !important; /* Wider activity list */
+    }
+
+    .activity-list h5 {
+        font-size: 26px !important; /* Larger header font size */
+        font-weight: bold !important;
+        margin-bottom: 20px !important;
+    }
+
+    .activity-list ul {
+        list-style: none !important;
+        padding: 0 !important;
+    }
+
+    .notification-item {
+        display: flex !important; /* Flex layout for alignment */
+        align-items: center !important; /* Center items */
+        padding: 20px !important; /* Add padding inside */
+        margin-bottom: 15px !important; /* Space between notifications */
+        border: 1px solid #ccc !important; /* Add border */
+        border-radius: 12px !important; /* Rounded corners */
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2) !important; /* Subtle shadow */
+        background-color: #fff !important; /* White background */
+    }
+
+    .notification-item.read {
+        opacity: 0.7 !important; /* Dim read notifications */
+    }
+
+    .avatar-img {
+        width: 60px !important; /* Larger avatar size */
+        height: 60px !important;
+        margin-right: 20px !important;
+    }
+
+    .notification-item strong {
+        font-size: 22px !important; /* Larger username font */
+    }
+
+    .notification-item p {
+        font-size: 18px !important; /* Larger notification text */
+        color: #555 !important; /* Subtle text color */
+    }
+
+    .notification-item a {
+        font-size: 18px !important; /* Larger link font size */
+        color: #007bff !important; /* Link color */
+        text-decoration: none !important; /* No underline */
+    }
+
+    .notification-item a:hover {
+        text-decoration: underline !important; /* Underline on hover */
+    }
+
+    .notification-item small {
+        font-size: 16px !important; /* Smaller timestamp */
+        color: #888 !important;
+    }
+
+    /* Buttons for new threads */
+    .btn {
+        font-size: 18px !important; /* Larger button text */
+        padding: 12px 24px !important; /* Larger button padding */
+        border-radius: 8px !important; /* Rounded button */
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1) !important; /* Subtle shadow */
+    }
+}

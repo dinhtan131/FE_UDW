@@ -1,0 +1,75 @@
+@media (min-width: 1024px) {
+    /* Base font size and layout for desktop */
+    body {
+        font-size: 22px !important; 
+        line-height: 1.8 !important;
+    }
+
+    .navbar {
+        /* Center the navbar */
+        justify-content: center !important;
+        width: 1000px !important; /* Full width */
+    }
+
+    .navbar-brand {
+        font-size: 30px !important; /* Larger title size */
+    }
+
+    .main-container {
+        flex-direction: column !important; /* Column layout */
+        align-items: center !important; /* Center content */
+        width: 100% !important; /* Full width */
+        max-width: 1000px !important; /* Limit width */
+    }
+
+    /* Post feed styling */
+    .post-feed {
+        max-width: 1200px !important; /* Wider post feed */
+        margin: 0 auto !important; /* Center content */
+    }
+
+    /* Search bar styling */
+    .search-bar input {
+        font-size: 20px !important; /* Larger input text size */
+        padding: 15px !important; /* Bigger padding for the input */
+        border-radius: 12px !important; /* Rounded corners */
+        border: 2px solid #ccc !important; /* Visible border */
+    }
+
+    /* Follow suggestion header */
+    h6 {
+        font-size: 26px !important; /* Larger header font size */
+        font-weight: bold !important;
+        margin-bottom: 20px !important;
+    }
+
+    /* Suggestion list styling */
+    .suggestion-list .card {
+        max-width: 1000px !important; /* Wider card */
+        padding: 20px !important; /* Add padding inside card */
+        border-radius: 10px !important; /* Rounded corners */
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4) !important; /* Subtle shadow */
+    }
+
+    .suggestion-list .card img {
+        width: 60px !important; /* Larger avatar size */
+        height: 60px !important;
+        margin-right: 20px !important;
+    }
+
+    .suggestion-list .card h6 {
+        font-size: 22px !important; /* Larger username font */
+    }
+
+    .suggestion-list .card small {
+        font-size: 18px !important; /* Larger follower count */
+        color: #555 !important;
+    }
+
+    .suggestion-list .card .btn {
+        font-size: 18px !important; /* Larger button text */
+        padding: 12px 24px !important; /* Larger button padding */
+        border-radius: 8px !important; /* Rounded button */
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1) !important; /* Add shadow to button */
+    }
+}

@@ -1,0 +1,112 @@
+@media (min-width: 1024px) {
+    /* Base font size for desktop */
+    body {
+        font-size: 22px !important; 
+        line-height: 1.8 !important;
+    }
+
+    .navbar {
+        /* Put the navbar in the middle */
+        justify-content: center !important;
+        width: 1000px !important; /* Full width */
+    }
+
+    .navbar-brand {
+        font-size: 30px !important; /* Larger title size */
+    }
+
+    .main-container {
+        flex-direction: column !important; /* Column layout */
+        align-items: center !important; /* Center content */
+        width: 100% !important; /* Full width */
+        max-width: 1000px !important; /* Limit width */
+    }
+
+    /* Content container styling */
+    .content-container {
+        padding: 20px !important;
+        font-size: 50px !important;
+    }
+
+    .content-container img {
+        width: 60px !important; /* Larger profile image */
+        height: 60px !important;
+        margin-right: 20px !important;
+    }
+
+    .card-title {
+        font-size: 50px !important; /* Larger username */
+    }
+
+    .text-muted {
+        font-size: 20px !important;
+        color: #888 !important;
+    }
+
+    .content-container p {
+        font-size: 20px !important; /* Increase text size */
+    }
+
+    .content-container .btn {
+        font-size: 18px !important; /* Bigger button text */
+        padding: 12px 24px !important; /* Larger button padding */
+    }
+
+    /* Post feed styling */
+    .post-feed {
+        max-width: 1200px !important; /* Wider post feed */
+    }
+
+    .card {
+        max-width: 1000px !important; /* Expand card width */
+        padding: 30px !important; /* Increase padding inside the card */
+        border-radius: 12px !important; /* Larger border radius */
+        box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.4) !important; /* Add subtle shadow */
+    }
+
+    .card-info img {
+        width: 70px !important; /* Larger profile image in card */
+        height: 70px !important;
+    }
+
+    .card-info h5 {
+        font-size: 22px !important; /* Prominent username font size */
+    }
+
+    .card-text {
+        font-size: 28px !important; /* Larger post content font */
+    }
+
+    .btn-link img {
+        width: 40px !important; /* Larger icons for actions */
+        height: 40px !important;
+    }
+
+    .post-images img {
+        max-width: 100% !important; /* Ensure images are responsive */
+        border-radius: 10px !important;
+    }
+
+    /* Buttons for like, comment, repost */
+    .like-button,
+    .comment-button,
+    .repost-button {
+        font-size: 28px !important; /* Larger text size for buttons */
+    }
+
+    .like-button span,
+    .comment-button span,
+    .repost-button span {
+        font-size: 24px !important; /* Larger icon size */
+    }
+
+    i {
+        font-size: 28px !important; /* Larger icon size */
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        width: 40px !important;
+        height: 40px !important;
+    }
+}
