@@ -40,7 +40,10 @@
                 <!-- Nút tương tác -->
                 <div class="d-flex justify-content-start mt-2">
                   <button class="btn btn-link like-button" data-post-id="<%= post._id %>">
-                    <img src="/icons/heart.svg" alt="Like" class="like-icon" style="width: 20px; height: 20px;">
+                    <img src="<%= post.likes.some(user => user._id.toString() === currentUserId) ? '/icons/heart_active.svg' : '/icons/heart.svg' %>" 
+                                        alt="Like" 
+                                        class="like-icon" 
+                                        style="width: 20px; height: 20px;">
                     <span class="like-count"><%= post.likes.length %></span>
                   </button>
           

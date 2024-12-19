@@ -21,7 +21,11 @@
         }) %>
         
         <div class="content-container">
-            <img src="/icons/profile.svg" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;"> 
+            <img src="<%= user.avatar %>" 
+                    onerror="this.onerror=null;this.src='/icons/profile.svg';" 
+                    alt="Avatar" class="rounded-circle" 
+                    style="width: 40px; height: 40px; margin-right: 2rem;">
+
             <p class="plus-button" style ="opacity: 0.5;">What's new</p>
             <button class="btn btn-outline-secondary ml-auto plus-button">Post</button>
         </div>
@@ -33,8 +37,10 @@
                         <div class="card-info d-flex align-items-center mb-2" data-post-id="<%= post._id %>">
                             <!-- Hiển thị ảnh đại diện người dùng -->
                             <a class="avatar" href="/profile/<%= post.author._id %>">
-                                <img src="<%= post.author.avatar ? post.author.avatar : '/icons/profile.svg' %>" 
-                                    alt="Profile Icon" class="rounded-circle" style="width: 40px; height: 40px;">    
+                                <img src="<%= post.author.avatar %>" 
+                                    onerror="this.onerror=null;this.src='/icons/profile.svg';" 
+                                    alt="Avatar" class="rounded-circle" 
+                                    style="width: 40px; height: 40px; margin-right: 2rem;">   
                             </a>
                             <a class="ml-2" href="/profile/<%= post.author._id %>">
                                 <h5 class="card-title mb-0" style="color: #333;"><%= post.author.username %></h5>

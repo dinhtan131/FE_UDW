@@ -88,51 +88,6 @@ $('.like-button').click(function (e) {
 });
 
 
-
-// $(document).ready(function() {
-//   $('.view-activity').click(function(e) {
-//     e.preventDefault();
-//     const postId = $(this).data('post-id');
-
-//     // Đoạn AJAX của bạn đặt ở đây
-//     $.ajax({
-//       url: `/post/${postId}/like`,
-//       method: 'GET',
-//       success: function(response) {
-//         const modalBody = $('#postActivityModal .modal-body');
-//         modalBody.empty();
-
-//         const headerHtml = `
-//           <div>
-//             <p>Views: ???</p>
-//             <p>Likes: ${response.likesCount}</p>
-//           </div>
-//         `;
-//         modalBody.append(headerHtml);
-
-//         response.likes.forEach(user => {
-//           const userHtml = `
-//             <div class="d-flex align-items-center mb-2">
-//               <img src="${'/icons/profile.svg'}" alt="Avatar" class="rounded-circle mr-3" style="width: 40px; height: 40px;">
-//               <div>
-//                 <h6 class="mb-0">${user.username}</h6>
-//                 <button class="btn btn-sm btn-outline-primary">Follow</button>
-//               </div>
-//             </div>
-//           `;
-//           modalBody.append(userHtml);
-//         });
-
-//         $('#postActivityModal').modal('show');
-//       },
-//       error: function(xhr) {
-//         alert(xhr.responseJSON.error || 'Error loading activity');
-//       }
-//     });
-//   });
-// });
-
-
 $(document).ready(function () {
   $('.view-activity').click(function (e) {
     e.preventDefault();

@@ -36,8 +36,10 @@
                         <small><%= user.bio && user.bio.trim() !== '' ? user.bio : 'No bio available' %></small><br>
                         <a onclick="openModal()" class="pointer"><%= followersCount %> Followers</a>
                     </div>
-                    <img src="<%=user.avatar || '/icons/profile.svg' %>" alt="User Profile Picture" 
-                         class="rounded-circle" style="width: 60px; height: 60px; margin-right: 20px;">
+                    <img src="<%= user.avatar %>" 
+                    onerror="this.onerror=null;this.src='/icons/profile.svg';" 
+                    alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 2rem;">  
+               
                 </div>
                 
                 
@@ -47,7 +49,9 @@
                 </div>
 
                 <div class="d-flex align-items-center mb-3 px-3">
-                    <img src="/icons/profile.svg" alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px; margin-right: 10px;">
+                    <img src="<%= user.avatar %>" 
+                    onerror="this.onerror=null;this.src='/icons/profile.svg';" 
+                    alt="Avatar" class="rounded-circle" style="width: 40px; height: 40px;">
                     <input type="text" class="form-control bg-dark text-light plus-button" placeholder="What's new?" style="border: none;">
                     <button class="btn btn-outline-secondary ml-2 plus-button">Post</button>
                 </div>

@@ -2,36 +2,44 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/userModels"); // Import User model
 require("dotenv").config(); // Đảm bảo bạn đã cấu hình biến môi trường trong .env
 
-const authenticateToken = async (req, res, next) => {
-  const token =
-    req.cookies.token || req.headers["authorization"]?.split(" ")[1];
+const authenticateToken = (redirectOnFail = true) => {
+  return async (req, res, next) => {
+    const token =
+      req.cookies.token || req.headers["authorization"]?.split(" ")[1];
 
-  if (!token) {
-    console.log("Token missing, redirecting to /login");
-    return res.redirect("/login");
-  }
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    // Tìm người dùng từ token
-    const user = await User.findById(decoded.userId);
-    if (!user) {
-      console.log("User not found, redirecting to /login");
-      return res.redirect("/login");
+    if (!token) {
+      if (redirectOnFail) {
+        return res.redirect("/home");
+      } else {
+        req.user = null; // Không có token, trạng thái là khách
+        return next();
+      }
     }
 
-    // Gắn user vào req và res.locals
-    req.user = user;
-    res.locals.user = user; // Gắn vào res.locals để dùng trong EJS
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const user = await User.findById(decoded.userId);
+      if (!user) {
+        if (redirectOnFail) {
+          return res.redirect("/home");
+        } else {
+          req.user = null;
+          return next();
+        }
+      }
 
-    console.log("User authenticated:", user.username);
-    next();
-  } catch (error) {
-    console.error("Error in authenticateToken:", error);
-    return res.redirect("/login");
-  }
+      req.user = user;
+      res.locals.user = user;
+      next();
+    } catch (error) {
+      if (redirectOnFail) {
+        return res.redirect("/home");
+      } else {
+        req.user = null;
+        next();
+      }
+    }
+  };
 };
 
-
-module.exports = { authenticateToken };
+module.exports = { authenticateToken};

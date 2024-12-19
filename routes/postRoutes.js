@@ -6,36 +6,44 @@ const Comment = require("../models/commentModels");
 const Notification = require("../models/notificationModel"); // Import Notification model
 const { postImageUpload } = require('../middleware/upload');
 const { authenticateToken } = require("../middleware/token"); // Import middleware
-
-router.get("/home", authenticateToken, async (req, res) => {
+router.get("/home",authenticateToken(false), async (req, res) => {
   try {
-    // Tìm tất cả bài đăng và populate thông tin tác giả (author) từ User và likes từ User
-    const posts = await Post.find()
-      .populate("author", "username avatar") // Populate dữ liệu tác giả (username và avatar)
-      .populate("likes", "username avatar") // Populate danh sách người like
-      .populate({
-        path: "comments",
-        populate: { path: "author", select: "username avatar" },
-      }) // Populate comments và thông tin tác giả của comments
-      .sort({ createdAt: -1 }); // Sắp xếp bài đăng mới nhất lên đầu
+    if (req.user) {
+      // Người dùng đã đăng nhập
+      const posts = await Post.find()
+        .populate("author", "username avatar")
+        .populate("likes", "username avatar")
+        .populate({
+          path: "comments",
+          populate: { path: "author", select: "username avatar" },
+        })
+        .sort({ createdAt: -1 });
 
-    // Truyền currentUserId vào template EJS
-    res.render("index", {
-      posts,
-      currentUserId: req.user._id.toString(), // Chuyển đổi ObjectId thành string
-      currentUserUsername : req.user.username,
-      currentUserAvatar: req.user.avatar,
-    });
+      return res.render("index", {
+        posts,
+        currentUserId: req.user._id.toString(),
+        currentUserUsername: req.user.username,
+        currentUserAvatar: req.user.avatar,
+      });
+    } else {
+      // Người dùng chưa đăng nhập
+      const posts = await Post.find()
+        .populate("author", "username avatar")
+        .sort({ createdAt: -1 });
+
+      return res.render("index_guest", { posts });
+    }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
 
+
 router.post(
   "/create",
-  authenticateToken,
+  authenticateToken(true),
   postImageUpload.array("postImages", 5), // Cho phép upload tối đa 5 file
   async (req, res) => {
     try {
@@ -77,7 +85,7 @@ router.post(
 
 
 
-router.post("/:type/:id/like", authenticateToken, async (req, res) => {
+router.post("/:type/:id/like", authenticateToken(true), async (req, res) => {
   try {
     const { type, id } = req.params; // `type` là "post" hoặc "comment"
     const userId = req.user._id;
@@ -133,7 +141,7 @@ router.post("/:type/:id/like", authenticateToken, async (req, res) => {
 
 
 
-router.get("/api/post/:postId", authenticateToken, async (req, res) => {
+router.get("/api/post/:postId", authenticateToken(true), async (req, res) => {
   try {
     const { postId } = req.params;
     const post = await Post.findById(postId)
@@ -155,7 +163,7 @@ router.get("/api/post/:postId", authenticateToken, async (req, res) => {
   }
 });
 
-router.get("/post/:postId", authenticateToken, async (req, res) => {
+router.get("/post/:postId", authenticateToken(true), async (req, res) => {
   try {
     const { postId } = req.params;
 
@@ -198,7 +206,7 @@ router.get("/post/:postId", authenticateToken, async (req, res) => {
 });
 
 
-router.get("/post/:postId/activity", authenticateToken, async (req, res) => {
+router.get("/post/:postId/activity", authenticateToken(true), async (req, res) => {
   try {
     const { postId } = req.params;
 
@@ -235,7 +243,7 @@ router.get("/post/:postId/activity", authenticateToken, async (req, res) => {
 });
 
 
-router.get('/repost/:postId', authenticateToken, async (req, res) => {
+router.get('/repost/:postId', authenticateToken(true), async (req, res) => {
   try {
     // Lấy thông tin bài viết cần repost
     const postToRepost = await Post.findById(req.params.postId);
@@ -280,7 +288,7 @@ router.get('/repost/:postId', authenticateToken, async (req, res) => {
   }
 });
 
-router.get("/post/:postId/comments", async (req, res) => {
+router.get("/post/:postId/comments",authenticateToken(true), async (req, res) => {
   try {
     const { postId } = req.params;
 
@@ -304,7 +312,7 @@ router.get("/post/:postId/comments", async (req, res) => {
 
 
 
-router.get("/api/comment/:commentId", async (req, res) => {
+router.get("/api/comment/:commentId",authenticateToken(true), async (req, res) => {
   try {
     const { commentId } = req.params;
 
@@ -330,7 +338,7 @@ router.get("/api/comment/:commentId", async (req, res) => {
 });
 
 
-router.post("/post/:postId/comments", authenticateToken, async (req, res) => {
+router.post("/post/:postId/comments",authenticateToken(true), authenticateToken, async (req, res) => {
   try {
     const { postId } = req.params;
     const { content, parentCommentId } = req.body;
@@ -383,7 +391,7 @@ router.post("/post/:postId/comments", authenticateToken, async (req, res) => {
 });
 
 
-router.get("/api/comment/:commentId", async (req, res) => {
+router.get("/api/comment/:commentId",authenticateToken(true), async (req, res) => {
   try {
     const { commentId } = req.params;
 
@@ -414,7 +422,7 @@ router.get("/api/comment/:commentId", async (req, res) => {
 });
 
 // POST /comment/:commentId/replies
-router.post("/comment/:commentId/replies", authenticateToken, async (req, res) => {
+router.post("/comment/:commentId/replies", authenticateToken(true), async (req, res) => {
   try {
     const { commentId } = req.params;
     const { content } = req.body;

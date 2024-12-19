@@ -9,7 +9,7 @@ const { avatarUpload } = require("../middleware/upload"); // Import middleware a
 
 router.post(
   "/edit-profile",
-  authenticateToken,
+  authenticateToken(true),
   avatarUpload.single("avatar"), // Xử lý file upload (field name là 'avatar')
   async (req, res) => {
     try {
@@ -45,7 +45,7 @@ router.post(
 );
 
 
-router.get("/notifications", authenticateToken, async (req, res) => {
+router.get("/notifications", authenticateToken(true), async (req, res) => {
   try {
     const userId = req.user._id;
 
@@ -85,7 +85,7 @@ router.get("/notifications", authenticateToken, async (req, res) => {
 
 
 
-router.get('/notifications/:type?', authenticateToken, async (req, res) => {
+router.get('/notifications/:type?', authenticateToken(true), async (req, res) => {
   try {
     const currentUserId = req.user._id;
     const currentType = req.params.type || 'all'; // Loại thông báo (mặc định là "all")
@@ -132,7 +132,7 @@ router.get('/notifications/:type?', authenticateToken, async (req, res) => {
   }
 });
 
-router.post('/notifications/mark-as-read/:id', authenticateToken, async (req, res) => {
+router.post('/notifications/mark-as-read/:id', authenticateToken(true), async (req, res) => {
   try {
     const notificationId = req.params.id; // Lấy ID từ URL
     const userId = req.user._id; // Lấy ID của người dùng hiện tại
@@ -158,7 +158,7 @@ router.post('/notifications/mark-as-read/:id', authenticateToken, async (req, re
 
 
 
-router.get("/profile/:userId/:tab?", authenticateToken, async (req, res) => {
+router.get("/profile/:userId/:tab?", authenticateToken(true), async (req, res) => {
   try {
    
 
@@ -288,7 +288,7 @@ router.get("/profile/:userId/:tab?", authenticateToken, async (req, res) => {
 
 
 
-router.get('/search', authenticateToken, async (req, res) => {
+router.get('/search', authenticateToken(true), async (req, res) => {
   try {
       const currentUserId = req.user._id; // Lấy ID của người dùng hiện tại từ middleware
       const users = await User.find(({ _id: { $ne: currentUserId } }))
@@ -318,7 +318,7 @@ router.get('/search', authenticateToken, async (req, res) => {
 
 
 
-router.post("/user/:userId/follow", authenticateToken, async (req, res) => {
+router.post("/user/:userId/follow", authenticateToken(true), async (req, res) => {
   try {
     const { userId } = req.params;
     const currentUserId = req.user._id;
@@ -369,7 +369,7 @@ router.post("/user/:userId/follow", authenticateToken, async (req, res) => {
 });
 
 
-router.post("/user/:userId/unfollow", authenticateToken, async (req, res) => {
+router.post("/user/:userId/unfollow", authenticateToken(true), async (req, res) => {
   try {
     const { userId } = req.params; // ID của người cần unfollow
     const currentUserId = req.user._id; // ID của người đang thực hiện unfollow
