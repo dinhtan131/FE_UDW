@@ -5,7 +5,7 @@
         flex-direction: column !important; /* Column layout */
         align-items: center !important; /* Center content */
         width: 100% !important; /* Full width */
-        max-width: 1000px !important; /* Limit width */
+        max-width: 800px !important; /* Limit width */
     }
 
     /* Post feed styling */
@@ -22,7 +22,7 @@
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        max-width: 1000px !important;
+        max-width: 800px !important;
         margin: 0 auto !important;
         padding: 20px !important;
     }
@@ -83,7 +83,7 @@
     }
 
     ul li a {
-        font-size: 24px !important;
+        font-size: 24px !important; 
     }
 
     div .d-flex img {

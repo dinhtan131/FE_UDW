@@ -8,7 +8,7 @@
     .navbar {
         /* Center the navbar */
         justify-content: center !important;
-        width: 1000px !important; /* Full width */
+        width: 800px !important; /* Full width */
     }
 
     .navbar-brand {
@@ -19,7 +19,7 @@
         flex-direction: column !important; /* Column layout */
         align-items: center !important; /* Center content */
         width: 100% !important; /* Full width */
-        max-width: 1000px !important; /* Limit width */
+        max-width: 800px !important; /* Limit width */
     }
 
     /* Post feed styling */
