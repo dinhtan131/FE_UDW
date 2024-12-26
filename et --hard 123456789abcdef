@@ -1,0 +1,451 @@
+[33mcommit a9b2e76316cf78f3dbe99fc0cd9d7f84955d63ba[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: ro11 <khangpro216@gmail.com>
+Date:   Sat Dec 21 01:42:23 2024 +0700
+
+    smaller containers
+
+[33mcommit 2d1d5bc5f5e465496c60e3c4bde80b04b265a24f[m
+Author: Trần Đình Tân <118046109+dinhtan131@users.noreply.github.com>
+Date:   Sat Dec 21 01:22:17 2024 +0700
+
+    edit css modal edit profile
+
+[33mcommit 59ecfc9e7a9245d98d3cdbdf707108a20b3e6764[m
+Merge: def199e b06eb50
+Author: ro11 <khangpro216@gmail.com>
+Date:   Fri Dec 20 06:04:23 2024 +0700
+
+    Merge branch 'main' of https://github.com/dinhtan131/FE_UDW
+
+[33mcommit def199e93c66bc4470c11394389101c7a066fb98[m
+Author: ro11 <khangpro216@gmail.com>
+Date:   Fri Dec 20 06:04:17 2024 +0700
+
+    temp size change for desktop
+
+[33mcommit b06eb5065223d7554a100590863d216845204444[m
+Merge: 760dfaf d396390
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Wed Dec 18 23:59:28 2024 +0700
+
+    Merge branch 'main' of https://github.com/dinhtan131/FE_UDW
+
+[33mcommit 760dfaf07cd844915731884bbe99ee75d71981de[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Wed Dec 18 23:59:08 2024 +0700
+
+    exit to homepage
+
+[33mcommit 6d1ab5e275ac30796e9007b2726fb92b04320167[m
+Merge: 6a7efbb d396390
+Author: ro11 <khangpro216@gmail.com>
+Date:   Wed Dec 18 22:31:14 2024 +0700
+
+    Merge branch 'main' of https://github.com/dinhtan131/FE_UDW
+
+[33mcommit 6a7efbbcd672096963130e68f9fb28e9e06d8f2b[m
+Author: ro11 <khangpro216@gmail.com>
+Date:   Wed Dec 18 22:31:12 2024 +0700
+
+    temp commit
+
+[33mcommit d3963909284e2a68a40c39f581ab039d440726de[m
+Author: Trần Đình Tân <118046109+dinhtan131@users.noreply.github.com>
+Date:   Wed Dec 18 22:22:22 2024 +0700
+
+    Verified Email
+
+[33mcommit 01ec007298da2540cac365fd1d21f36e32f05bb9[m
+Merge: ceb8b9a 3d8a9a6
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Wed Dec 18 22:05:23 2024 +0700
+
+    improve UIUX
+
+[33mcommit ceb8b9a55212a54bc05dbf20a9bf42030ed0d0c9[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Wed Dec 18 22:03:01 2024 +0700
+
+    improve UI, UX
+
+[33mcommit 3d8a9a6975a88b4bd57ee46d212a0b3e5360511b[m
+Author: ro11 <khangpro216@gmail.com>
+Date:   Wed Dec 18 21:22:11 2024 +0700
+
+    change sidebar
+
+[33mcommit cee7300d7fa62163fd11bf6bb4f91de8acd9f87a[m
+Merge: 92a23af 5cdf598
+Author: ro11 <khangpro216@gmail.com>
+Date:   Wed Dec 18 02:08:27 2024 +0700
+
+    Merge branch 'main' of https://github.com/dinhtan131/FE_UDW
+
+[33mcommit 92a23af59204c198f48aca1a92770ca4089d9413[m
+Author: ro11 <khangpro216@gmail.com>
+Date:   Wed Dec 18 02:08:19 2024 +0700
+
+    fix size
+
+[33mcommit 5cdf5989c7f2c5d7cc63e1040a289c71a959d8d1[m[33m ([m[1;31morigin/temp[m[33m)[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Wed Dec 18 01:47:59 2024 +0700
+
+    improve UI and UX
+
+[33mcommit f1582043808387adf59cccdb7b352ca586c339a9[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Tue Dec 17 21:43:28 2024 +0700
+
+    fix UI bug
+
+[33mcommit bbb3a4fe35e1526858a53157d799f1d914221053[m
+Merge: 73eb5ac 0306823
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Tue Dec 17 13:12:00 2024 +0700
+
+    Merge branch 'main' of https://github.com/dinhtan131/FE_UDW
+
+[33mcommit 73eb5ace4891aa4b607a5938974885fb5973bf40[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Tue Dec 17 13:11:40 2024 +0700
+
+    re-css modal
+
+[33mcommit 0306823246e5ff0ebb238cf29c8b7565b9046569[m
+Merge: b0c7e06 b4b3cbb
+Author: ro11 <khangpro216@gmail.com>
+Date:   Tue Dec 17 01:33:38 2024 +0700
+
+    Merge branch 'main' of https://github.com/dinhtan131/FE_UDW
+
+[33mcommit b0c7e061a331be835d467539d1bbaeef881aa9c1[m
+Author: ro11 <khangpro216@gmail.com>
+Date:   Tue Dec 17 01:33:36 2024 +0700
+
+    update login screen
+    
+    Works with phones and desktop
+
+[33mcommit b4b3cbbe8fe9f8d429fe90feca2e90b6b04cd6fe[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Mon Dec 16 22:36:22 2024 +0700
+
+    add more functions
+
+[33mcommit ed4f469059ec4dfada52b2f014ebc2da58e737ff[m
+Merge: 22b8822 2f36e4c
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Mon Dec 16 11:15:29 2024 +0700
+
+    Merge branch 'main' of https://github.com/dinhtan131/FE_UDW
+
+[33mcommit 22b8822fb1d7e571bf3ef1e34e0f4aa8f6d9c7e8[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Mon Dec 16 11:14:38 2024 +0700
+
+    Profile tabs: threads, reply and repost. create a post with image, comment post and reply comment....
+
+[33mcommit 2f36e4c4fd2bd97cc7365510d4ee83d5896739f1[m
+Merge: 18b5cef 397a2d4
+Author: Trần Đình Tân <118046109+dinhtan131@users.noreply.github.com>
+Date:   Sun Dec 15 23:43:39 2024 +0700
+
+    Merge branch 'main' of https://github.com/dinhtan131/FE_UDW
+
+[33mcommit 18b5cefa29df110cf5813575c1b433a5523759d9[m
+Author: Trần Đình Tân <118046109+dinhtan131@users.noreply.github.com>
+Date:   Sun Dec 15 23:43:30 2024 +0700
+
+    fix link
+
+[33mcommit 397a2d40699ffabfb6870e4ce9b2e0517f35096b[m
+Merge: 20282df b65e7fa
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Sun Dec 15 22:04:26 2024 +0700
+
+    Merge branch 'main' of https://github.com/dinhtan131/FE_UDW
+
+[33mcommit 20282df9ef49b2dd8a603f55965bd817cbeef8a7[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Sun Dec 15 22:04:06 2024 +0700
+
+    notifications, profile-tab, search,...
+
+[33mcommit b65e7fad5c868189ca95e3e64bda34e7fc1da41d[m
+Author: Trần Đình Tân <118046109+dinhtan131@users.noreply.github.com>
+Date:   Sun Dec 15 21:54:46 2024 +0700
+
+    ResetPassword
+
+[33mcommit 82c007526f3731250f8808784c9aa15acd6ac955[m
+Author: Trần Đình Tân <118046109+dinhtan131@users.noreply.github.com>
+Date:   Sun Dec 15 14:10:47 2024 +0700
+
+    Add Logout
+
+[33mcommit d56ea35a44ca0482addaad98bba126c97e3b89eb[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Sat Dec 14 23:07:41 2024 +0700
+
+    back-end for follow, unfollow, see activity, search, like, comment, create post, see post, ...
+
+[33mcommit 1d0856e22733a3b00bedd058d13cb08372e216ba[m
+Author: Trần Đình Tân <118046109+dinhtan131@users.noreply.github.com>
+Date:   Sun Dec 8 22:01:16 2024 +0700
+
+    ProfileEdit
+
+[33mcommit bf80a2ccddb284987d0a692977f7529262e8cc42[m
+Author: Trần Đình Tân <118046109+dinhtan131@users.noreply.github.com>
+Date:   Sun Dec 8 17:01:11 2024 +0700
+
+    Profile Display
+
+[33mcommit 37b7093a0976d03f3acc64bdb0821e285c5b8160[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Sat Dec 7 03:20:55 2024 +0700
+
+    add logic for login, register, create posts
+
+[33mcommit afc343260155bf5fb5731b5fca6034f8259a0713[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Mon Nov 18 14:13:59 2024 +0700
+
+    done responsive
+
+[33mcommit b78338a6d1db86eca55b0dd958af7067d9b419da[m
+Merge: 2d4cc8b bda9479
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Mon Nov 18 13:47:37 2024 +0700
+
+    Merge branch 'main' of https://github.com/dinhtan131/FE_UDW
+
+[33mcommit 2d4cc8b6f65743707e37c303fac4f30334cfb8e8[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Mon Nov 18 13:46:44 2024 +0700
+
+    cập nhật responsive
+
+[33mcommit bda947984433437b00f1fc71d895c287f6593881[m
+Author: ro11 <140062994+dodgero11@users.noreply.github.com>
+Date:   Sun Nov 17 21:48:24 2024 +0700
+
+    Update README.md
+
+[33mcommit 1f8bf959a1008c600fdb1e55470c0d288f1e0693[m
+Author: ro11 <khangpro216@gmail.com>
+Date:   Sun Nov 17 21:47:43 2024 +0700
+
+    Added github contributions images
+
+[33mcommit 13693e84a3f726bfbb7e6747243ed5b68ed2c7f2[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Sun Nov 17 21:18:38 2024 +0700
+
+    done midterm
+
+[33mcommit d4a32fe818bdd427e4a62c412a89728521a4f3a4[m
+Merge: 26ee5f7 463ee10
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Sun Nov 17 21:14:21 2024 +0700
+
+    Merge branch 'main' of https://github.com/dinhtan131/FE_UDW
+
+[33mcommit 26ee5f7fd6a9a104f6134d1e78739dfd9b2ec6a6[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Sun Nov 17 21:13:41 2024 +0700
+
+    fix activity page
+
+[33mcommit 463ee10bff2f1966aaa1db0631f6bb176d8474f9[m
+Author: Trần Đình Tân <dinhtan131@gmail.com>
+Date:   Sun Nov 17 10:24:21 2024 +0700
+
+    Add login ...
+
+[33mcommit d1372c12509fe71a97b83d8a610636b7d53f78f7[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Sun Nov 17 09:22:50 2024 +0700
+
+    giữa kì
+
+[33mcommit f00eb6ec01ab8d098fc99044dd377d7ad30d2b34[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Sun Nov 17 07:56:22 2024 +0700
+
+    css lại các file
+
+[33mcommit b54dc4b2ed0f7a1d53d6ca53ed7bffdf77537b4f[m
+Author: ro11 <khangpro216@gmail.com>
+Date:   Sun Nov 17 06:05:58 2024 +0700
+
+    Changes to css files
+    
+    Slightly changed colors
+
+[33mcommit 21e79498d0189fb90c81d07cf677d4ecfed17673[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Sat Nov 16 18:39:00 2024 +0700
+
+    add readme
+
+[33mcommit d27b0611b132be4e82b3f8f9ae0813828cb2e602[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Sat Nov 16 18:30:55 2024 +0700
+
+    đập đi xây lại
+
+[33mcommit c7133c5e1d797024681660436c53e4915e33bed4[m
+Author: Trần Đình Tân <dinhtan131@gmail.com>
+Date:   Sat Nov 16 16:04:29 2024 +0700
+
+    Đồng bộ link
+
+[33mcommit 41c49504fdb23371e3e09f40a1f67122bae7b317[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Sat Nov 16 14:34:03 2024 +0700
+
+    sửa lại link giữa các trang
+
+[33mcommit 0cfcd8b4de1fd30df49b9df75da9275c4055f5a3[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Sat Nov 16 14:27:18 2024 +0700
+
+    commit
+
+[33mcommit 6e1914bcfa00030a01919fc00c4d155236b3bc1a[m
+Author: Trần Đình Tân <dinhtan131@gmail.com>
+Date:   Sat Nov 16 01:44:32 2024 +0700
+
+    upload for Thuan
+
+[33mcommit 1e0bfd5660c9a4dcf8e99b6ba5b844d0c35aff87[m
+Author: Trần Đình Tân <dinhtan131@gmail.com>
+Date:   Fri Nov 15 13:38:14 2024 +0700
+
+    merging
+
+[33mcommit 6a3674929c3361ca5d6f5063cf95f1f5b5d73106[m
+Author: Trần Đình Tân <dinhtan131@gmail.com>
+Date:   Fri Nov 15 13:27:35 2024 +0700
+
+    Remove
+
+[33mcommit 9068d403e63f151b35e0a680498068480b2d089e[m
+Author: Trần Đình Tân <dinhtan131@gmail.com>
+Date:   Fri Nov 15 13:22:31 2024 +0700
+
+    Remove
+
+[33mcommit b737d6a4d859753c17fd7b032fa75d3db465d4c3[m
+Author: Trần Đình Tân <dinhtan131@gmail.com>
+Date:   Fri Nov 15 13:22:22 2024 +0700
+
+    Create settings.json
+
+[33mcommit 3a27b08ed3e7f4e3f288a086f4ce09b18b6501c2[m
+Author: Trần Đình Tân <dinhtan131@gmail.com>
+Date:   Thu Nov 14 17:08:25 2024 +0700
+
+    Update profile.html
+
+[33mcommit 80617850bd26ce2bab3450fb0ae54272bf3c0142[m
+Author: Trần Đình Tân <dinhtan131@gmail.com>
+Date:   Thu Nov 14 17:05:12 2024 +0700
+
+    Create whitelogo.png
+
+[33mcommit 977ca712d872e35e90fccc64687d056af50220f1[m
+Author: Trần Đình Tân <dinhtan131@gmail.com>
+Date:   Thu Nov 14 17:03:54 2024 +0700
+
+    Finish Profile
+
+[33mcommit 5cb4056c360a08bf813397d95aff5764ab3ee7c7[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Wed Nov 13 19:06:12 2024 +0700
+
+    separate navbar, sidebar, done homepage, done post modal
+
+[33mcommit f6cb74f4354ea5d3188352419449188a0638f973[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Wed Nov 13 18:44:07 2024 +0700
+
+    separate navbar, sidebar, done homepage, add modal
+
+[33mcommit b79f02eed12f66a3ae633e0b9e44852acd2d8e27[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Wed Nov 13 17:42:48 2024 +0700
+
+    separate navbar, sidebar, done homepage
+
+[33mcommit 2c72c61c8659a9aa8b5c44e50754c1b90e0cce11[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Wed Nov 13 17:41:00 2024 +0700
+
+    separate navbar, sidebar, done homepage
+
+[33mcommit f7d4009771929f5c37556aa3f72a8dd0197cdee6[m
+Author: ro11 <khangpro216@gmail.com>
+Date:   Tue Nov 12 16:28:16 2024 +0700
+
+    Added notifications, search, temp navbar
+    
+    Navigation bar ở dưới cùng em thêm để tạm và còn thiếu vài đường link.
+
+[33mcommit c97d2d10aefbb25de4d7453f248a1d068b42a1c5[m
+Author: ddinhthuan <ndtthuan20@clc.fitus.edu.vn>
+Date:   Mon Nov 11 18:49:31 2024 +0700
+
+    commit 1st
+
+[33mcommit 0425b2a0aac209cc2844cddb87ec8fe42de3d068[m
+Author: Trần Đình Tân <dinhtan131@gmail.com>
+Date:   Sat Nov 9 22:53:08 2024 +0700
+
+    Create home.html
+
+[33mcommit 59c1f140638b905149ac7af4550ba4f1c7d19733[m
+Author: Trần Đình Tân <dinhtan131@gmail.com>
+Date:   Sat Nov 9 22:53:05 2024 +0700
+
+    Create style.css
+
+[33mcommit e46b34600218ce74dd9def8d86575a122a44c19d[m
+Author: Trần Đình Tân <dinhtan131@gmail.com>
+Date:   Sat Nov 9 22:53:02 2024 +0700
+
+    Create sign-up.html
+
+[33mcommit be0583ed2944895045997e1de35af37ad25dfc81[m
+Author: Trần Đình Tân <dinhtan131@gmail.com>
+Date:   Sat Nov 9 22:52:59 2024 +0700
+
+    Create reset.html
+
+[33mcommit bc7a2bc12f7f2ba0c1bc833c56ae2ac9270fe3d8[m
+Author: Trần Đình Tân <dinhtan131@gmail.com>
+Date:   Sat Nov 9 22:52:53 2024 +0700
+
+    Create threads-icon.png
+
+[33mcommit 49aeedf309da581322761c7595f4d7338c2a28ad[m
+Author: Trần Đình Tân <dinhtan131@gmail.com>
+Date:   Sat Nov 9 22:52:14 2024 +0700
+
+    Create styles.css
+
+[33mcommit 174dd32991ce9f2b37365468fb5e8e85232486a5[m
+Author: Trần Đình Tân <dinhtan131@gmail.com>
+Date:   Sat Nov 9 22:52:10 2024 +0700
+
+    Create index.html
+    
+    Login html
+
+[33mcommit fcca6424e14c0076cfa18e6af6cd9466df49a08e[m
+Author: Trần Đình Tân <dinhtan131@gmail.com>
+Date:   Sat Nov 9 16:29:40 2024 +0700
+
+    Initial commit

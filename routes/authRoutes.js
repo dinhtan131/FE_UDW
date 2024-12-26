@@ -7,6 +7,8 @@ const expressSession = require("express-session");
 require("dotenv").config();
 const { authenticateToken } = require("../middleware/token");
 const nodemailer = require('nodemailer'); // Dùng để gửi email
+const transporter = require('../config/nodemailer'); // Import file config nodemailer
+
 
 // Route gốc, chuyển hướng dựa trên trạng thái đăng nhập
 router.get("/",authenticateToken(false), (req, res) => {
@@ -36,7 +38,7 @@ router.get("/login", (req, res) => {
   res.render("login", { error: null });
 });
 
-// Route register
+// Hiện tại
 router.get("/register", (req, res) => {
   const token = req.cookies.token || req.session.token;
   if (token) {
@@ -46,8 +48,9 @@ router.get("/register", (req, res) => {
       }
     });
   }
-  res.render("register", { error: null });
+  res.render("register", { error: null }); // Thêm cả message: null
 });
+
 
 // Route forgot password
 router.get("/forgotPassWord", (req, res) => {
@@ -120,13 +123,11 @@ router.post("/register", async (req, res) => {
   const { username, email, password, confirmPassword } = req.body;
 
   if (!username || !email || !password || !confirmPassword) {
-    return res.render("register", { error: "Vui lòng điền đầy đủ thông tin." });
+    return res.redirect("/register");
   }
 
   if (password !== confirmPassword) {
-    return res.render("register", {
-      error: "Mật khẩu và xác thực mật khẩu không trùng khớp.",
-    });
+    return res.redirect("/register");
   }
 
   try {
@@ -135,29 +136,29 @@ router.post("/register", async (req, res) => {
     });
 
     if (existingUser) {
-      return res.render("register", {
-        error: "Email hoặc tên người dùng đã được sử dụng.",
-      });
+      return res.redirect("/register");
     }
 
     const newUser = new User({
       username,
       email,
       password,
-      isVerified:false
+      isVerified: false,
     });
 
+    // Lưu người dùng vào cơ sở dữ liệu sau khi tất cả điều kiện được thỏa mãn
     await newUser.save();
 
     // Gửi email xác thực
     await sendVerificationEmail(newUser, req);
 
-    return res.render("register", { error: null, message: "Email xác thực đã được gửi, vui lòng kiểm tra hộp thư!" });
+    return res.status(200, "Email xác thực đã được gửi, hãy kiểm tra email của bạn và đăng nhập lại").redirect("/login");
   } catch (error) {
     console.error(error);
-    return res.render("register", { error: "Lỗi hệ thống khi đăng ký." });
+    return res.redirect("/register");
   }
 });
+
 
 
 // Route xác thực email
@@ -257,7 +258,7 @@ router.get("/create-users",authenticateToken, async (req, res) => {
   }
 });
 
-const transporter = require('../config/nodemailer'); // Import file config nodemailer
+
 
 router.post('/forgot-password', async (req, res) => {
     const { email } = req.body;
@@ -327,18 +328,6 @@ router.post('/reset-password', async (req, res) => {
       console.error('Lỗi khi đặt lại mật khẩu:', error);
       res.status(500).send('Đã xảy ra lỗi, vui lòng thử lại sau.');
   }
-});
-// Hiện tại
-router.get("/register", (req, res) => {
-  const token = req.cookies.token || req.session.token;
-  if (token) {
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-      if (!err) {
-        return res.redirect("/home");
-      }
-    });
-  }
-  res.render("register", { error: null }); // Thêm cả message: null
 });
 
 module.exports = router;

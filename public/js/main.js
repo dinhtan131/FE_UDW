@@ -156,16 +156,16 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   // Hàm fetch comments và render động
-  function fetchComments(postId) {
+  function fetchComments(postId, currentUserId) {
     $.ajax({
-      url: `/post/${postId}/comments`,
+      url: `/post/${postId}/comments`, // Đảm bảo đường dẫn API đúng với server
       method: "GET",
       success: function (response) {
         const commentsContainer = $(".comments-container");
         commentsContainer.empty(); // Xóa các comments cũ
 
         response.comments.forEach(comment => {
-          const commentHtml = generateCommentHTML(comment);
+          const commentHtml = generateCommentHTML(comment, currentUserId);
           commentsContainer.append(commentHtml);
         });
       },
@@ -177,30 +177,18 @@ $(document).ready(function () {
   }
 
   // Hàm tạo HTML cho một comment và các reply
-  function generateCommentHTML(comment) {
+  function generateCommentHTML(comment, currentUserId) {
     let repliesHtml = "";
 
     if (comment.replies && comment.replies.length > 0) {
       repliesHtml = `
         <div class="replies pl-4">
-          ${comment.replies.map(reply => `
-            <div class="card mb-2">
-              <div class="card-body">
-                <div class="d-flex align-items-center mb-2">
-                  <img src="${reply.author.avatar || '/icons/profile.svg'}" 
-                       alt="Avatar" class="rounded-circle mr-3" style="width: 35px; height: 35px;">
-                  <div>
-                    <h6 class="mb-0">${reply.author.username}</h6>
-                    <small class="text-muted">${new Date(reply.createdAt).toLocaleString()}</small>
-                  </div>
-                </div>
-                <p class="card-text">${reply.content}</p>
-              </div>
-            </div>
-          `).join("")}
+          ${generateRepliesHTML(comment.replies, currentUserId)}
         </div>
       `;
     }
+
+    const isLiked = comment.likes.some(like => like._id.toString() === currentUserId);
 
     return `
       <div class="comment-block border-bottom mb-3">
@@ -218,9 +206,9 @@ $(document).ready(function () {
             </div>
             <p class="card-text">${comment.content}</p>
             <div class="d-flex justify-content-start mt-2">
-              <button class="btn btn-link like-button" data-comment-id="${comment._id}">
-                <img src="/icons/heart.svg" alt="Like" class="like-icon" style="width: 20px; height: 20px;">
-                <span class="like-count">0</span>
+              <button class="btn btn-link like-button ${isLiked ? 'liked' : ''}" data-comment-id="${comment._id}">
+                <img src="${isLiked ? '/icons/heart_active.svg' : '/icons/heart.svg'}" alt="Like" class="like-icon" style="width: 20px; height: 20px;">
+                <span class="like-count">${comment.likes.length}</span>
               </button>
 
               <button class="btn btn-link comment-button ml-3" data-comment-id="${comment._id}">
@@ -235,19 +223,100 @@ $(document).ready(function () {
     `;
   }
 
-  // Fetch comments khi tải trang
-  const postId = $(".comment-button").data("post-id");
-  if (postId) fetchComments(postId);
+  function generateRepliesHTML(replies, currentUserId) {
+    let repliesHTML = '';
 
-  // Xử lý sự kiện click comment-button (ví dụ mở modal)
-  $(document).on("click", ".comment-button", function () {
+    replies.forEach(reply => {
+      const isLiked = reply.likes.some(like => like._id.toString() === currentUserId);
+      repliesHTML += `
+        <div class="card mb-2">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-2">
+              <img src="${reply.author.avatar || '/icons/profile.svg'}" 
+                   alt="Avatar" class="rounded-circle mr-3" style="width: 35px; height: 35px;">
+              <div>
+                <h6 class="mb-0">${reply.author.username}</h6>
+                <small class="text-muted">${new Date(reply.createdAt).toLocaleString()}</small>
+              </div>
+            </div>
+            <p class="card-text">${reply.content}</p>
+
+            <!-- Nút tương tác -->
+            <div class="d-flex justify-content-start mt-2">
+              <button class="btn btn-link like-button ${isLiked ? 'liked' : ''}" data-comment-id="${reply._id}">
+                <img src="${isLiked ? '/icons/heart_active.svg' : '/icons/heart.svg'}" alt="Like" class="like-icon" style="width: 20px; height: 20px;">
+                <span class="like-count">${reply.likes.length}</span>
+              </button>
+
+              <button class="btn btn-link comment-button ml-3" data-comment-id="${reply._id}">
+                <img src="/icons/comment.svg" alt="Comment" class="comment-icon" style="width: 20px; height: 20px;">
+                <span class="comment-count">${reply.replies.length}</span>
+              </button>
+
+              <button class="btn btn-link repost-button ml-3" data-comment-id="${reply._id}">
+                <img src="/icons/repost.svg" alt="Repost" class="repost-icon" style="width: 20px; height: 20px;">
+                <span class="repost-count">${reply.reposts ? reply.reposts.length : 0}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    return repliesHTML;
+  }
+
+  // Fetch comments khi tải trang
+  console.log("Post ID:", postId);
+  console.log("Current User ID:", currentUserId);
+  if (postId) fetchComments(postId, currentUserId);
+
+  // Sử dụng event delegation để xử lý click trên các nút like
+  $('.comments-container').on('click', '.like-button', function (e) {
+    e.preventDefault();
+
     const button = $(this);
-    const postId = button.data("post-id");
-    const commentId = button.data("comment-id");
-    console.log("Comment button clicked:", { postId, commentId });
-    // Xử lý tiếp ở đây
+    const commentId = button.data('comment-id');
+
+    if (!commentId) {
+      console.error("Không xác định được commentId để like.");
+      return;
+    }
+
+    console.log(`Like button clicked for comment ID: ${commentId}`); // Log để kiểm tra
+
+    const likeIcon = button.find("img.like-icon");
+    const likeCountSpan = button.find(".like-count");
+
+    // Gửi yêu cầu AJAX
+    $.ajax({
+      url: `/comment/${commentId}/like`, // Đảm bảo đường dẫn đúng với server
+      method: "POST",
+      contentType: "application/json",
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}` // Thêm token nếu cần
+      },
+      success: function (response) {
+        console.log("Like response:", response); // Log để kiểm tra
+        // Cập nhật giao diện
+        likeCountSpan.text(response.likesCount);
+
+        if (response.isLiked) {
+          button.addClass("liked");
+          likeIcon.attr("src", "/icons/heart_active.svg");
+        } else {
+          button.removeClass("liked");
+          likeIcon.attr("src", "/icons/heart.svg");
+        }
+      },
+      error: function (xhr) {
+        console.error("Error liking comment:", xhr.responseJSON.error || "An error occurred while liking the comment.");
+        alert(xhr.responseJSON.error || "Đã xảy ra lỗi khi like bình luận.");
+      },
+    });
   });
 });
+
 
 
 
@@ -343,10 +412,11 @@ $(document).ready(function () {
     }
   });
 
-  function generateRepliesHTML(replies, postId) {
+  function generateRepliesHTML(replies, currentUserId) {
     let repliesHTML = '';
-  
+
     replies.forEach(reply => {
+      const isLiked = reply.likes.includes(currentUserId);
       repliesHTML += `
         <div class="card mb-2">
           <div class="card-body">
@@ -358,31 +428,32 @@ $(document).ready(function () {
               </div>
             </div>
             <p class="card-text">${reply.content}</p>
-  
+
             <!-- Nút tương tác -->
             <div class="d-flex justify-content-start mt-2">
-              <button class="btn btn-link like-button" data-comment-id="${reply._id}" data-post-id="${postId}">
-                <img src="/icons/heart.svg" alt="Like" class="like-icon" style="width: 20px; height: 20px;">
-                <span class="like-count">0</span>
+              <button class="btn btn-link like-button ${isLiked ? 'liked' : ''}" data-comment-id="${reply._id}">
+                <img src="${isLiked ? '/icons/heart_active.svg' : '/icons/heart.svg'}" alt="Like" class="like-icon" style="width: 20px; height: 20px;">
+                <span class="like-count">${reply.likes.length}</span>
               </button>
-  
-              <button class="btn btn-link comment-button ml-3" data-comment-id="${reply._id}" data-post-id="${postId}">
+
+              <button class="btn btn-link comment-button ml-3" data-comment-id="${reply._id}">
                 <img src="/icons/comment.svg" alt="Comment" class="comment-icon" style="width: 20px; height: 20px;">
-                <span class="comment-count">0</span>
+                <span class="comment-count">${reply.replies.length}</span>
               </button>
-  
-              <button class="btn btn-link repost-button ml-3" data-comment-id="${reply._id}" data-post-id="${postId}">
+
+              <button class="btn btn-link repost-button ml-3" data-comment-id="${reply._id}">
                 <img src="/icons/repost.svg" alt="Repost" class="repost-icon" style="width: 20px; height: 20px;">
-                <span class="repost-count">0</span>
+                <span class="repost-count">${reply.reposts ? reply.reposts.length : 0}</span>
               </button>
             </div>
           </div>
         </div>
       `;
     });
-  
+
     return repliesHTML;
-  }
+}
+
   
   // Xử lý khi nhấn nút Post
   $("#submitReply").on("click", function () {
@@ -473,13 +544,9 @@ $(document).ready(function () {
         alert("Failed to post reply.");
       },
     });
-    location.reload();
   });
 
 });
-
-
-
 
 
 
@@ -741,3 +808,36 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+$(document).on('click', '.repost-button', function (e) {
+  e.preventDefault();
+  const button = $(this);
+  const postId = button.data('post-id');
+
+  // Tạm thời hiển thị trạng thái đang xử lý
+  const originalHtml = button.html();
+  button.prop('disabled', true).html('<span>Processing...</span>');
+
+  $.ajax({
+    url: `/user/${postId}/repost`,
+    method: 'POST',
+    success: function (response) {
+      if (response.success) {
+        // Cập nhật số lượng repost
+        const repostCount = response.repost.reposts.length;
+        button.find('.repost-count').text(repostCount);
+        alert(response.message || 'Repost thành công!');
+      } else {
+        alert(response.message || 'Repost thất bại.');
+        button.html(originalHtml);
+      }
+    },
+    error: function (xhr) {
+      alert(xhr.responseJSON?.message || 'Lỗi khi thực hiện repost.');
+      button.html(originalHtml);
+    },
+    complete: function () {
+      // Trả lại trạng thái ban đầu của nút
+      button.html(originalHtml).prop('disabled', false);
+    }
+  });
+});

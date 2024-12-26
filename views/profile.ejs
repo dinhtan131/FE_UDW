@@ -5,7 +5,6 @@
     <title>Profile</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/profile.css">
-    <link rel="stylesheet" href="../css/profile_extra.css">
 </head>
 <html lang="en">
     <%- include('partials/header') %>
@@ -34,7 +33,7 @@
                     <div style="margin-left: 20px;">
                         <h5 class="mb-0"><%= user.username %></h5>
                         <small><%= user.bio && user.bio.trim() !== '' ? user.bio : 'No bio available' %></small><br>
-                        <a onclick="openModal()" class="pointer"><%= followersCount %> Followers</a>
+                        <a onclick="openModal()" class="pointer" style="color: #000000"><%= followersCount %> Followers</a>
                     </div>
                     <img src="<%= user.avatar %>" 
                     onerror="this.onerror=null;this.src='/icons/profile.svg';" 
@@ -44,9 +43,24 @@
                 
                 
                <!-- Nút chỉnh sửa hồ sơ -->
+               <% if (!isOwner) { %>
+                <!-- Nếu không phải chủ sở hữu -->
                 <div class="text-center my-3">
-                    <button class="btn btn-outline-secondary" onclick="openEditProfile()">Edit Profile</button>
+                  <button 
+                    class="btn follow-button <%= isFollowing ? 'following' : '' %>" 
+                    style="color: #000000; border: 2px solid #e2dcdc;" 
+                    data-user-id="<%= user._id %>" 
+                    data-is-following="<%= isFollowing %>">
+                    <%= isFollowing ? 'Unfollow' : 'Follow' %>
+                  </button>
                 </div>
+              <% } else { %>
+                <!-- Nếu là chủ sở hữu -->
+                <div class="text-center my-3">
+                  <button class="btn btn-outline-secondary" onclick="openEditProfile()">Edit Profile</button>
+                </div>
+              <% } %>
+              
 
                 <div class="d-flex align-items-center mb-3 px-3">
                     <img src="<%= user.avatar %>" 

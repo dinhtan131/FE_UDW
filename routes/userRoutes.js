@@ -44,7 +44,6 @@ router.post(
   }
 );
 
-
 router.get("/notifications", authenticateToken(true), async (req, res) => {
   try {
     const userId = req.user._id;
@@ -157,16 +156,14 @@ router.post('/notifications/mark-as-read/:id', authenticateToken(true), async (r
 
 
 
-
 router.get("/profile/:userId/:tab?", authenticateToken(true), async (req, res) => {
   try {
-   
-
     const userId = req.params.userId;
     const currentTab = req.params.tab || "threads";
-    if (!currentTab) {
-      return res.redirect(`/profile/${userId}/threads`);
-    }
+    const currentUserId = req.user._id.toString(); // ID của người dùng hiện tại
+
+    
+    // Lấy thông tin người dùng
     const user = await User.findById(userId)
       .populate({
         path: "posts",
@@ -190,7 +187,6 @@ router.get("/profile/:userId/:tab?", authenticateToken(true), async (req, res) =
           },
         ],
       })
-      
       .populate({
         path: "followers",
         select: "username avatar",
@@ -203,19 +199,28 @@ router.get("/profile/:userId/:tab?", authenticateToken(true), async (req, res) =
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
+    const followers = user.followers; // Lấy danh sách followers
+    const following = user.following; // Lấy danh sách following
+    // Xác định nếu là chủ sở hữu
+    const isOwner = currentUserId === userId;
+
+    // Kiểm tra trạng thái follow
+    const isFollowing = user.followers.some(
+      (follower) => follower._id.toString() === currentUserId
+    );
 
     const postsCount = user.posts.length;
     const repliesCount = user.replies.length;
     const repostsCount = user.reposts.length;
     const isNewUser = postsCount === 0 && repliesCount === 0 && repostsCount === 0;
 
-    const followers = user.followers; // Lấy danh sách followers
-    const following = user.following; // Lấy danh sách following
-    const followersCount = followers.length;
-    const followingCount = following.length;
+    const followersCount = user.followers.length;
+    const followingCount = user.following.length;
 
+    // Xử lý dữ liệu cho từng tab
     let tabData = [];
     let tabTitle = "Threads";
+
     switch (currentTab) {
       case "threads":
         tabData = await Post.find({ author: userId })
@@ -226,32 +231,33 @@ router.get("/profile/:userId/:tab?", authenticateToken(true), async (req, res) =
             select: "author content createdAt",
             populate: { path: "author", select: "username avatar" },
           })
-          .select("content postImage likes comments createdAt") // Thêm postImage vào kết quả
+          .select("content postImage likes comments createdAt")
           .sort({ createdAt: -1 });
-        tabTitle = "Your Threads";
+        tabTitle = "Threads";
         break;
-
 
       case "replies":
         tabData = await Comment.find({ author: userId })
-        .populate({
-          path: "post",
-          select: "content author",
-          populate: { path: "author", select: "username avatar" },
-        })
-        .populate({
-          path: "parentComment",
-          select: "content author",
-          populate: { path: "author", select: "username avatar" },
-        })
-        .populate("author", "username avatar")
-        .sort({ createdAt: -1 });
+          .populate({
+            path: "post",
+            select: "content author",
+            populate: { path: "author", select: "username avatar" },
+          })
+          .populate({
+            path: "parentComment",
+            select: "content author",
+            populate: { path: "author", select: "username avatar" },
+          })
+          .populate("author", "username avatar")
+          .sort({ createdAt: -1 });
+        tabTitle = "Replies";
         break;
-        
+
       case "reposts":
         tabData = user.reposts;
-        tabTitle = "Your Reposts";
+        tabTitle = "Reposts";
         break;
+
       default:
         return res.status(400).json({ message: "Invalid tab." });
     }
@@ -270,15 +276,18 @@ router.get("/profile/:userId/:tab?", authenticateToken(true), async (req, res) =
     // Nếu yêu cầu từ trình duyệt, render trang HTML
     res.render("profile", {
       user,
+      isOwner,
+      isFollowing,
       isNewUser,
       currentTab,
       tabData,
       tabTitle,
-      followers,
-      following,
+      followers, // Thêm danh sách followers
+      following, // Thêm danh sách following
       followersCount,
       followingCount,
     });
+    
   } catch (error) {
     console.error("Error fetching profile:", error);
     res.status(500).send("Server error.");

@@ -60,9 +60,9 @@
         font-size: 18px !important;
         padding: 10px 24px !important;
         border-radius: 8px !important;
-        border: 1px solid #007bff !important;
+        border: 1px solid #000000 !important;
         background-color: #fff !important;
-        color: #007bff !important;
+        color: #000000 !important;
         transition: all 0.3s ease !important;
     }
 
@@ -165,7 +165,7 @@
     }
     /* Profile Completion Cards */
     .profile-completion {
-        background-color: #007bff !important;
+        background-color: #ffffff !important;
         color: #fff !important;
         padding: 20px !important;
         border-radius: 12px !important;
@@ -183,12 +183,12 @@
 
     .profile-completion .card .btn {
         background-color: transparent !important;
-        color: #007bff !important;
-        border: 2px solid #007bff !important;
+        color: #000000 !important;
+        border: 2px solid #000000 !important;
     }
 
     .profile-completion .card .btn:hover {
-        background-color: #007bff !important;
+        background-color: #000000 !important;
         color: #fff !important;
     }
 

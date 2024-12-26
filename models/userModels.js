@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String, // URL hoặc tên file của avatar (nếu có)
-    default: 'icons/profile.svg',
+    default: '/icons/profile.svg',
   },
   bio: {
     type: String,

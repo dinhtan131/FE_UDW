@@ -2,7 +2,6 @@
 <html lang="en">
     <%- include('partials/header') %>
     <link rel="stylesheet" href="/css/notifications.css">
-    <link rel="stylesheet" href="/css/notifications_extra.css">
 <body>
     <!-- Sidebar -->
     <%- include('partials/sidebar') %>
@@ -31,11 +30,11 @@
                 <ul>
                     <% notifications.forEach(notification => { %>
                         <li class="d-flex align-items-center notification-item <% if (notification.isRead) { %>read<% } %>"data-notification-id="<%= notification._id %>">
-                           
                             <div>
-                                <img src="<%= notification.initiator.avatar || '/icons/profile.svg' %>" 
-                                alt="Avatar" 
-                                class="avatar-img rounded-circle mr-2">
+                                <img src="<%= notification.initiator.avatar %>" 
+                                    onerror="this.onerror=null;this.src='/icons/profile.svg';" 
+                                    alt="Avatar" class="rounded-circle" 
+                                    style="width: 40px; height: 40px;"> 
                                 <!-- Tên người dùng và nội dung -->
                                 <strong><%= notification.initiator.username %></strong>
                                 <p class="mb-1"><%= notification.message %></p>

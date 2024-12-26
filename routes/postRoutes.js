@@ -6,6 +6,8 @@ const Comment = require("../models/commentModels");
 const Notification = require("../models/notificationModel"); // Import Notification model
 const { postImageUpload } = require('../middleware/upload');
 const { authenticateToken } = require("../middleware/token"); // Import middleware
+
+
 router.get("/home",authenticateToken(false), async (req, res) => {
   try {
     if (req.user) {
@@ -41,11 +43,7 @@ router.get("/home",authenticateToken(false), async (req, res) => {
 
 
 
-router.post(
-  "/create",
-  authenticateToken(true),
-  postImageUpload.array("postImages", 5), // Cho phép upload tối đa 5 file
-  async (req, res) => {
+router.post("/create",authenticateToken(true),postImageUpload.array("postImages", 5),async (req, res) => {
     try {
       const authorId = req.user._id; // Lấy ID từ middleware
       const { content } = req.body; // Lấy nội dung bài đăng
@@ -84,7 +82,6 @@ router.post(
 );
 
 
-
 router.post("/:type/:id/like", authenticateToken(true), async (req, res) => {
   try {
     const { type, id } = req.params; // `type` là "post" hoặc "comment"
@@ -93,9 +90,9 @@ router.post("/:type/:id/like", authenticateToken(true), async (req, res) => {
     let target = null;
 
     if (type === "post") {
-      target = await Post.findById(id);
+      target = await Post.findById(id).populate('author');
     } else if (type === "comment") {
-      target = await Comment.findById(id);
+      target = await Comment.findById(id).populate('author');
     }
 
     if (!target) {
@@ -112,14 +109,17 @@ router.post("/:type/:id/like", authenticateToken(true), async (req, res) => {
 
       // Thêm thông báo khi Like
       if (type === "post" || type === "comment") {
-        const notification = new Notification({
-          user: target.author, // Người nhận thông báo
-          initiator: userId, // Người thực hiện Like
-          type: "like",
-          message: `${req.user.username} đã thích ${type === "post" ? "bài viết" : "bình luận"} của bạn.`,
-          link: `/${type}/${id}`, // Đường dẫn tới bài viết hoặc comment
-        });
-        await notification.save();
+        // Kiểm tra không gửi thông báo cho chính người dùng thực hiện hành động
+        if (target.author._id.toString() !== userId.toString()) {
+          const notification = new Notification({
+            user: target.author._id, // Người nhận thông báo
+            initiator: userId, // Người thực hiện Like
+            type: "like",
+            message: `${req.user.username} đã thích ${type === "post" ? "bài viết" : "bình luận"} của bạn.`,
+            link: `/${type}/${id}`, // Đường dẫn tới bài viết hoặc comment
+          });
+          await notification.save();
+        }
       }
     } else {
       target.likes = target.likes.filter((like) => like.toString() !== userId.toString());
@@ -138,7 +138,6 @@ router.post("/:type/:id/like", authenticateToken(true), async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 
 router.get("/api/post/:postId", authenticateToken(true), async (req, res) => {
@@ -288,15 +287,19 @@ router.get('/repost/:postId', authenticateToken(true), async (req, res) => {
   }
 });
 
-router.get("/post/:postId/comments",authenticateToken(true), async (req, res) => {
+router.get("/post/:postId/comments", authenticateToken(true), async (req, res) => {
   try {
     const { postId } = req.params;
 
     const comments = await Comment.find({ post: postId, parentComment: null })
       .populate("author", "username avatar")
+      .populate("likes", "username avatar") // Populate likes cho bình luận
       .populate({
         path: "replies",
-        populate: { path: "author", select: "username avatar" },
+        populate: [
+          { path: "author", select: "username avatar" },
+          { path: "likes", select: "username avatar" } // Populate likes cho replies
+        ],
       })
       .sort({ createdAt: -1 });
 
@@ -309,6 +312,7 @@ router.get("/post/:postId/comments",authenticateToken(true), async (req, res) =>
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 
 
@@ -338,7 +342,8 @@ router.get("/api/comment/:commentId",authenticateToken(true), async (req, res) =
 });
 
 
-router.post("/post/:postId/comments",authenticateToken(true), authenticateToken, async (req, res) => {
+
+router.post("/post/:postId/comments", authenticateToken(true), async (req, res) => {
   try {
     const { postId } = req.params;
     const { content, parentCommentId } = req.body;
@@ -348,14 +353,14 @@ router.post("/post/:postId/comments",authenticateToken(true), authenticateToken,
       return res.status(400).json({ error: "Comment content cannot be empty" });
     }
 
-    const post = await Post.findById(postId);
+    const post = await Post.findById(postId).populate('author');
     if (!post) {
       return res.status(404).json({ error: "Post not found" });
     }
 
     let parentComment = null;
     if (parentCommentId) {
-      parentComment = await Comment.findById(parentCommentId);
+      parentComment = await Comment.findById(parentCommentId).populate('author');
       if (!parentComment) {
         return res.status(404).json({ error: "Parent comment not found" });
       }
@@ -378,7 +383,37 @@ router.post("/post/:postId/comments",authenticateToken(true), authenticateToken,
       await post.save();
     }
 
+    // Sử dụng `await` trực tiếp mà không cần `execPopulate()`
     await newComment.populate("author", "username avatar");
+
+    // Thêm thông báo khi Comment
+    if (parentComment) {
+      // Comment vào một bình luận
+      // Kiểm tra không gửi thông báo cho chính người dùng thực hiện hành động
+      if (parentComment.author._id.toString() !== userId.toString()) {
+        const notification = new Notification({
+          user: parentComment.author._id, // Người nhận thông báo là người viết comment cha
+          initiator: userId, // Người thực hiện Comment
+          type: "comment",
+          message: `${req.user.username} đã bình luận vào bình luận của bạn.`,
+          link: `/comment/${parentComment._id}`, // Đường dẫn tới bình luận cha
+        });
+        await notification.save();
+      }
+    } else {
+      // Comment vào một bài viết
+      // Kiểm tra không gửi thông báo cho chính người dùng thực hiện hành động
+      if (post.author._id.toString() !== userId.toString()) {
+        const notification = new Notification({
+          user: post.author._id, // Người nhận thông báo là người viết bài viết
+          initiator: userId, // Người thực hiện Comment
+          type: "comment",
+          message: `${req.user.username} đã bình luận vào bài viết của bạn.`,
+          link: `/post/${post._id}`, // Đường dẫn tới bài viết
+        });
+        await notification.save();
+      }
+    }
 
     res.status(201).json({
       message: "Comment added successfully",
@@ -467,6 +502,65 @@ router.post("/comment/:commentId/replies", authenticateToken(true), async (req, 
   }
 });
 
+// Route để thực hiện Repost
+router.post("/user/:postId/repost", authenticateToken(true), async (req, res) => {
+  try {
+    const { postId } = req.params; // ID của bài viết cần repost
+    const currentUserId = req.user._id; // ID của người dùng hiện tại
 
+    // Tìm bài viết gốc
+    const originalPost = await Post.findById(postId).populate('author', 'username avatar');
+    if (!originalPost) {
+      return res.status(404).json({ success: false, message: "Bài viết không tồn tại." });
+    }
+
+    // Kiểm tra xem người dùng đã repost bài viết này chưa
+    const existingRepost = await Post.findOne({
+      author: currentUserId,
+      originalPost: originalPost._id,
+    });
+
+    if (existingRepost) {
+      return res.status(400).json({ success: false, message: "Bạn đã repost bài viết này." });
+    }
+
+    // Tạo một bài viết mới như là Repost
+    const newRepost = new Post({
+      content: originalPost.content, // Hoặc bạn có thể để trống nếu muốn
+      author: currentUserId,
+      originalPost: originalPost._id,
+      postImage: originalPost.postImage, // Sao chép hình ảnh nếu cần
+      // Các trường khác sẽ được tự động gán giá trị mặc định
+    });
+
+    await newRepost.save();
+
+    // Thêm bài viết mới vào danh sách reposts của người dùng
+    const currentUser = await User.findById(currentUserId);
+    currentUser.reposts.push(newRepost._id);
+    await currentUser.save();
+
+    // Thêm người dùng hiện tại vào danh sách reposts của bài viết gốc
+    originalPost.reposts.push(currentUserId);
+    await originalPost.save();
+
+    // Tạo thông báo cho tác giả của bài viết gốc
+    if (!originalPost.author._id.equals(currentUserId)) { // Tránh thông báo nếu người dùng repost chính họ
+      const notification = new Notification({
+        user: originalPost.author._id, // Người nhận thông báo
+        initiator: currentUserId, // Người thực hiện hành động
+        type: 'repost',
+        message: `${currentUser.username} đã repost bài viết của bạn.`,
+        link: `/profile/${currentUserId}/threads`, // Link đến bài repost hoặc trang người dùng
+      });
+      await notification.save();
+    }
+
+    return res.status(200).json({ success: true, message: "Repost thành công!", repost: newRepost });
+  } catch (error) {
+    console.error("Error during repost:", error);
+    return res.status(500).json({ success: false, message: "Lỗi hệ thống khi repost." });
+  }
+});
 
 module.exports = router;
