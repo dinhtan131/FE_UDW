@@ -81,8 +81,8 @@
                                         alt="Like" 
                                         class="like-icon" 
                                         style="width: 20px; height: 20px;">
-                                <span class="like-count"><%= post.likes.length %></span>
-                            </button>
+                                    <span class="like-count"><%= post.likes.length %></span>
+                                </button>
                             
                                 
                                 <button class="btn btn-link comment-button" data-toggle="modal" data-target="#commentModal" data-post-id="<%= post._id %>">
@@ -98,13 +98,7 @@
                                     <span class="repost-count"><%= post.reposts ? post.reposts.length : 0 %></span>
                                   </button>
                                   
-                                <button class="btn btn-link">
-                                    <i class="bi bi-share"></i>
-                                </button>
                             </div>
-                            <button class="btn btn-link more-options">
-                                <i class="bi bi-three-dots"></i>
-                            </button>
                         </div>
                     </div>
                 </div>
