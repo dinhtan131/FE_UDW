@@ -255,7 +255,7 @@ $(document).ready(function () {
 
               <button class="btn btn-link repost-button ml-3" data-comment-id="${reply._id}">
                 <img src="/icons/repost.svg" alt="Repost" class="repost-icon" style="width: 20px; height: 20px;">
-                <span class="repost-count">${reply.reposts ? reply.reposts.length : 0}</span>
+                <span class="rePost-count">${reply.reposts ? reply.reposts.length : 0}</span>
               </button>
             </div>
           </div>

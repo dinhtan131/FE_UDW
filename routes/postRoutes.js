@@ -42,11 +42,14 @@ router.get("/home",authenticateToken(false), async (req, res) => {
 });
 
 
-
-router.post("/create",authenticateToken(true),postImageUpload.array("postImages", 5),async (req, res) => {
+router.post(
+  "/create",
+  authenticateToken(true),
+  postImageUpload.array("postImages", 5),
+  async (req, res) => {
     try {
-      const authorId = req.user._id; // Lấy ID từ middleware
-      const { content } = req.body; // Lấy nội dung bài đăng
+      const authorId = req.user._id;
+      const { content } = req.body;
 
       // Kiểm tra nội dung bài đăng
       if (!content && req.files.length === 0) {
@@ -55,31 +58,31 @@ router.post("/create",authenticateToken(true),postImageUpload.array("postImages"
         });
       }
 
-      // Tạo đường dẫn đến các ảnh upload
-      const uploadedImages = req.files.map((file) => `/postImage/${file.filename}`);
+      // Lấy URL từ Cloudinary
+      const uploadedImages = req.files.map((file) => file.path);
 
-      // Tạo bài đăng mới với nội dung và ảnh
+      // Tạo bài đăng mới
       const newPost = new Post({
         content,
         author: authorId,
-        postImage: uploadedImages, // Đẩy mảng đường dẫn ảnh vào postImage
+        postImage: uploadedImages, // URL từ Cloudinary
       });
 
-      // Lưu bài đăng vào database
       await newPost.save();
 
-      // Cập nhật trường "posts" trong người dùng (thêm ID bài viết vào danh sách posts)
+      // Cập nhật danh sách bài viết trong tài khoản người dùng
       const user = await User.findById(authorId);
-      user.posts.push(newPost._id); // Thêm ID bài viết vào mảng posts của người dùng
+      user.posts.push(newPost._id);
       await user.save();
 
-      res.status(201).json(newPost); // Trả về bài đăng đã tạo
+      res.status(201).json(newPost);
     } catch (error) {
       console.error("Error creating post:", error);
       res.status(500).json({ message: "Server error" });
     }
   }
 );
+
 
 
 router.post("/:type/:id/like", authenticateToken(true), async (req, res) => {

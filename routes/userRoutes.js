@@ -7,26 +7,26 @@ const Comment = require('../models/commentModels')
 const { authenticateToken } = require("../middleware/token"); // Import middleware
 const { avatarUpload } = require("../middleware/upload"); // Import middleware avatarUpload
 
+
 router.post(
   "/edit-profile",
   authenticateToken(true),
-  avatarUpload.single("avatar"), // Xử lý file upload (field name là 'avatar')
+  avatarUpload.single("avatar"), // Sử dụng middleware mới
   async (req, res) => {
     try {
-      const userId = req.user._id; // Lấy ID từ middleware
-      const { displayName, bio } = req.body; // Lấy thông tin từ form
+      const userId = req.user._id;
+      const { displayName, bio } = req.body;
 
       // Cập nhật avatar nếu có upload
-      let avatarUrl = req.body.currentAvatar; // Giữ nguyên avatar cũ nếu không có file mới
+      let avatarUrl = req.body.currentAvatar; // Avatar cũ
       if (req.file) {
-        avatarUrl = `/avatars/${req.file.filename}`; // Lưu đường dẫn avatar mới
+        avatarUrl = req.file.path; // URL từ Cloudinary
       }
 
-      // Cập nhật thông tin người dùng trong database
       const updatedUser = await User.findByIdAndUpdate(
         userId,
         { displayName, bio, avatar: avatarUrl },
-        { new: true, runValidators: true } // Trả về thông tin đã cập nhật
+        { new: true, runValidators: true }
       );
 
       if (!updatedUser) {
@@ -43,6 +43,7 @@ router.post(
     }
   }
 );
+
 
 router.get("/notifications", authenticateToken(true), async (req, res) => {
   try {
