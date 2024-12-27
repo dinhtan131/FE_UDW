@@ -68,26 +68,59 @@
                     style="width: 40px; height: 40px; margin-right: 2rem;">
 
             <p class="plus-button" style ="opacity: 0.5;">Sign in for a more complete experience</p>
-            <a style="" href="/login"><button class="btn btn-outline-secondary ml-auto plus-button" >Sign in</button></a>
+            <a href="/login"><button class="btn btn-outline-secondary ml-auto plus-button" >Sign in</button></a>
         </div>
 
-        <% posts.forEach(post => { %>
-            <div class="card mb-3">
-              <div class="card-body">
-                <div class="d-flex align-items-center mb-2">
-                  <img src="<%= post.author.avatar || '/icons/profile.svg' %>" 
-                       onerror="this.onerror=null;this.src='/icons/profile.svg';" 
-                       alt="Avatar" class="rounded-circle" 
-                       style="width: 40px; height: 40px;">
-                  <div>
-                    <h5 class="card-title"><%= post.author.username %></h5>
-                    <small class="text-muted"><%= new Date(post.createdAt).toLocaleString() %></small>
-                  </div>
-                </div>
-                <p class="card-text"><%= post.content %></p>
-              </div>
-            </div>
-          <% }); %>
+        <div class="post-feed">
+            <% if (posts && posts.length > 0) { %>
+                <% posts.forEach(post => { %>
+                    <div class="card mb-3" data-post-id="<%= post._id %>">
+                        <div class="card-body">
+                            <div class="card-info d-flex align-items-center mb-2" data-post-id="<%= post._id %>">
+                                <% if (post.author) { %>
+                                    <a class="avatar" href="/profile/<%= post.author._id %>">
+                                        <img src="<%= post.author.avatar || '/icons/profile.svg' %>"
+                                             onerror="this.onerror=null;this.src='/icons/profile.svg';"
+                                             alt="Avatar" class="rounded-circle"
+                                             style="width: 40px; height: 40px; margin-right: 2rem;">   
+                                    </a>
+                                    <a class="ml-2" href="/profile/<%= post.author._id %>">
+                                        <h5 class="card-title mb-0" style="color: #333;"><%= post.author.username %></h5>
+                                        <small class="text-muted"><%= new Date(post.createdAt).toLocaleString() %></small>
+                                    </a>
+                                <% } else { %>
+                                    <h5 class="card-title mb-0 text-muted">Unknown Author</h5>
+                                <% } %>
+                            </div>
+                            <!-- Hiển thị nội dung bài viết -->
+                            <p class="card-text card-info" data-post-id="<%= post._id %>"><%= post.content || 'No content' %></p>
+                            <% if (post.postImage && post.postImage.length > 0) { %>
+                                <div class="post-images">
+                                    <% post.postImage.forEach(image => { %>
+                                        <img src="<%= image %>" alt="Post Image" class="img-fluid mb-2" 
+                                            style="max-width: 100%; border-radius: 8px;">
+                                    <% }); %>
+                                </div>
+                                <% if (post.postImage.length > 1) { %>
+                                    <a class="carousel-control-prev" href="#carousel-<%= post._id %>" role="button" data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                    </a>
+                                    <a class="carousel-control-next" href="#carousel-<%= post._id %>" role="button" data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                    </a>
+                                <% } %>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p class="text-center text-muted">No posts available. Be the first to create one!</p>
+            <% } %>
+        </div>
+        
           
         
     </main>

@@ -8,38 +8,37 @@ const { postImageUpload } = require('../middleware/upload');
 const { authenticateToken } = require("../middleware/token"); // Import middleware
 
 
-router.get("/home",authenticateToken(false), async (req, res) => {
+router.get("/home", authenticateToken(false), async (req, res) => {
   try {
+    const posts = await Post.find()
+      .populate("author", "username avatar")
+      .populate("likes", "username avatar")
+      .populate({
+        path: "comments",
+        populate: { path: "author", select: "username avatar" },
+      })
+      .sort({ createdAt: -1 });
+
+    const validPosts = posts.filter(post => post.author); // Lọc bài viết có author hợp lệ
+
     if (req.user) {
       // Người dùng đã đăng nhập
-      const posts = await Post.find()
-        .populate("author", "username avatar")
-        .populate("likes", "username avatar")
-        .populate({
-          path: "comments",
-          populate: { path: "author", select: "username avatar" },
-        })
-        .sort({ createdAt: -1 });
-
       return res.render("index", {
-        posts,
+        posts: validPosts,
         currentUserId: req.user._id.toString(),
         currentUserUsername: req.user.username,
         currentUserAvatar: req.user.avatar,
       });
     } else {
       // Người dùng chưa đăng nhập
-      const posts = await Post.find()
-        .populate("author", "username avatar")
-        .sort({ createdAt: -1 });
-
-      return res.render("index_guest", { posts });
+      return res.render("index_guest", { posts: validPosts });
     }
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching posts:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 
 router.post(
