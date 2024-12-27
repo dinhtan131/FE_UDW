@@ -10,27 +10,58 @@ const { authenticateToken } = require("../middleware/token"); // Import middlewa
 
 router.get("/home", authenticateToken(false), async (req, res) => {
   try {
-    const posts = await Post.find()
-      .populate("author", "username avatar")
-      .populate("likes", "username avatar")
-      .populate({
-        path: "comments",
-        populate: { path: "author", select: "username avatar" },
-      })
-      .sort({ createdAt: -1 });
-
-    const validPosts = posts.filter(post => post.author); // Lọc bài viết có author hợp lệ
+    const type = req.query.type || 'all'; // Lấy loại lọc từ query parameter, mặc định là 'all'
+    let posts = [];
 
     if (req.user) {
-      // Người dùng đã đăng nhập
+      if (type === 'follow') {
+        // Lấy danh sách người dùng mà hiện tại đang follow
+        const currentUser = await User.findById(req.user._id).populate('following', '_id');
+        const followingIds = currentUser.following.map(user => user._id);
+
+        // Lấy các bài viết từ những người đang follow
+        posts = await Post.find({ author: { $in: followingIds } })
+          .populate("author", "username avatar")
+          .populate("likes", "username avatar")
+          .populate({
+            path: "comments",
+            populate: { path: "author", select: "username avatar" },
+          })
+          .sort({ createdAt: -1 });
+      } else { // 'all'
+        // Lấy tất cả các bài viết
+        posts = await Post.find()
+          .populate("author", "username avatar")
+          .populate("likes", "username avatar")
+          .populate({
+            path: "comments",
+            populate: { path: "author", select: "username avatar" },
+          })
+          .sort({ createdAt: -1 });
+      }
+
+      // Lọc các bài viết có tác giả hợp lệ
+      const validPosts = posts.filter(post => post.author);
+
       return res.render("index", {
         posts: validPosts,
         currentUserId: req.user._id.toString(),
         currentUserUsername: req.user.username,
         currentUserAvatar: req.user.avatar,
+        navbarTitle: type === 'follow' ? 'Follow' : 'For You',
+        dropdownOptions: [
+          { href: "/home?type=all", label: "For You", type: "all", active: type !== "follow" },
+          { href: "/home?type=follow", label: "Follow", type: "follow", active: type === "follow" },
+        ],
       });
     } else {
       // Người dùng chưa đăng nhập
+      posts = await Post.find()
+        .populate("author", "username avatar")
+        .sort({ createdAt: -1 });
+
+      const validPosts = posts.filter(post => post.author);
+
       return res.render("index_guest", { posts: validPosts });
     }
   } catch (error) {
@@ -38,7 +69,6 @@ router.get("/home", authenticateToken(false), async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 
 router.post(

@@ -13,10 +13,8 @@
     <main class="main-container">
         <%- include('partials/navbar', { 
             showDropdown: true, 
-            navbarTitle: "For You", 
-            dropdownOptions: [
-                { href: "#", label: "Follow", type: "follow", active: false }
-            ]
+            navbarTitle: navbarTitle, // Sử dụng biến từ route
+            dropdownOptions: dropdownOptions // Sử dụng biến từ route
         }) %>
         
         <div class="content-container">
@@ -32,73 +30,135 @@
         <div class="post-feed">
             <% if (posts && posts.length > 0) { %>
                 <% posts.forEach(post => { %>
-                    <div class="card mb-3" data-post-id="<%= post._id %>">
-                        <div class="card-body">
-                            <div class="card-info d-flex align-items-center mb-2" data-post-id="<%= post._id %>">
-                                <!-- Hiển thị ảnh đại diện người dùng -->
-                                <a class="avatar" href="/profile/<%= post.author._id %>">
-                                    <img src="<%= post.author.avatar %>" 
-                                         onerror="this.onerror=null;this.src='/icons/profile.svg';" 
-                                         alt="Avatar" class="rounded-circle" 
-                                         style="width: 40px; height: 40px; margin-right: 2rem;">   
-                                </a>
-                                <a class="ml-2" href="/profile/<%= post.author._id %>">
-                                    <h5 class="card-title mb-0" style="color: #333;"><%= post.author.username %></h5>
-                                    <small class="text-muted"><%= new Date(post.createdAt).toLocaleString() %></small>
-                                </a>
-                            </div>
-        
-                            <!-- Hiển thị nội dung bài viết -->
-                            <p class="card-text card-info" data-post-id="<%= post._id %>"> <%= post.content %> </p>
-        
-                            <!-- Hiển thị hình ảnh đính kèm (nếu có) -->
-                            <% if (post.postImage && post.postImage.length > 0) { %>
-                                <div class="post-images">
-                                    <% post.postImage.forEach(image => { %>
-                                        <img src="<%= image %>" alt="Post Image" class="img-fluid mb-2" 
-                                             style="max-width: 100%; border-radius: 8px;">
-                                    <% }); %>
+                    <% if (post.author) { %> <!-- Kiểm tra nếu `post.author` tồn tại -->
+                        <div class="card mb-3" data-post-id="<%= post._id %>">
+                            <div class="card-body">
+                                <div class="card-info d-flex align-items-center mb-2">
+                                    <!-- Hiển thị ảnh đại diện người dùng -->
+                                    <a class="avatar" href="/profile/<%= post.author._id %>">
+                                        <img src="<%= post.author.avatar %>" 
+                                             onerror="this.onerror=null;this.src='/icons/profile.svg';" 
+                                             alt="Avatar" class="rounded-circle" 
+                                             style="width: 40px; height: 40px; margin-right: 2rem;">   
+                                    </a>
+                                    <a class="ml-2" href="/profile/<%= post.author._id %>">
+                                        <h5 class="card-title mb-0" style="color: #333;"><%= post.author.username %></h5>
+                                        <small class="text-muted"><%= new Date(post.createdAt).toLocaleString() %></small>
+                                    </a>
                                 </div>
-                                <% if (post.postImage.length > 1) { %>
-                                    <a class="carousel-control-prev" href="#carousel-<%= post._id %>" role="button" data-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span class="sr-only">Previous</span>
-                                    </a>
-                                    <a class="carousel-control-next" href="#carousel-<%= post._id %>" role="button" data-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span class="sr-only">Next</span>
-                                    </a>
+        
+                                <!-- Hiển thị nội dung bài viết -->
+                                <p class="card-text card-info" data-post-id="<%= post._id %>"> <%= post.content %> </p>
+        
+                                <!-- Hiển thị hình ảnh đính kèm (nếu có) -->
+                                <% if (post.postImage && post.postImage.length > 0) { %>
+                                    <div class="post-images">
+                                        <% post.postImage.forEach(image => { %>
+                                            <img src="<%= image %>" alt="Post Image" class="img-fluid mb-2" 
+                                                 style="max-width: 100%; border-radius: 8px;">
+                                        <% }); %>
+                                    </div>
+                                    <% if (post.postImage.length > 1) { %>
+                                        <a class="carousel-control-prev" href="#carousel-<%= post._id %>" role="button" data-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Previous</span>
+                                        </a>
+                                        <a class="carousel-control-next" href="#carousel-<%= post._id %>" role="button" data-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Next</span>
+                                        </a>
+                                    <% } %>
                                 <% } %>
-                            <% } %>
         
-                            <!-- Các nút like, comment, share -->
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <button class="btn btn-link like-button <%= post.likes.some(user => user._id.toString() === currentUserId) ? 'liked' : '' %>" 
-                                            data-post-id="<%= post._id %>">
-                                        <img src="<%= post.likes.some(user => user._id.toString() === currentUserId) ? '/icons/heart_active.svg' : '/icons/heart.svg' %>" 
-                                             alt="Like" 
-                                             class="like-icon" 
-                                             style="width: 20px; height: 20px;">
-                                        <span class="like-count"><%= post.likes.length %></span>
-                                    </button>
-        
-                                    <button class="btn btn-link comment-button" data-toggle="modal" data-target="#commentModal" data-post-id="<%= post._id %>">
-                                        <img src="/icons/comment_1.svg" 
-                                             alt="Comment" 
-                                             class="comment-icon" 
-                                             style="width: 20px; height: 20px;">
-                                        <span class="comment-count"><%= post.comments.length %></span>
-                                    </button>
-        
-                                    <button class="btn btn-link repost-button" data-post-id="<%= post._id %>">
-                                        <img src="/icons/rePost.svg" alt="Repost" style="width: 20px; height: 20px;">
-                                        <span class="repost-count"><%= post.reposts ? post.reposts.length : 0 %></span>
-                                    </button>
+                                <!-- Các nút like, comment, repost -->
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <button class="btn btn-link like-button <%= post.likes.some(user => user._id.toString() === currentUserId) ? 'liked' : '' %>" 
+                                                data-post-id="<%= post._id %>">
+                                            <img src="<%= post.likes.some(user => user._id.toString() === currentUserId) ? '/icons/heart_active.svg' : '/icons/heart.svg' %>" 
+                                                 alt="Like" 
+                                                 class="like-icon" 
+                                                 style="width: 20px; height: 20px;">
+                                            <span class="like-count"><%= post.likes.length %></span>
+                                        </button>
+            
+                                        <button class="btn btn-link comment-button" data-toggle="modal" data-target="#commentModal" data-post-id="<%= post._id %>">
+                                            <img src="/icons/comment_1.svg" 
+                                                 alt="Comment" 
+                                                 class="comment-icon" 
+                                                 style="width: 20px; height: 20px;">
+                                            <span class="comment-count"><%= post.comments.length %></span>
+                                        </button>
+            
+                                        <button class="btn btn-link repost-button" data-post-id="<%= post._id %>">
+                                            <img src="/icons/rePost.svg" alt="Repost" style="width: 20px; height: 20px;">
+                                            <span class="repost-count"><%= post.reposts ? post.reposts.length : 0 %></span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    <% } else { %>
+                        <!-- Hiển thị thông báo nếu bài viết không có tác giả -->
+                        <div class="card mb-3" data-post-id="<%= post._id %>">
+                            <div class="card-body">
+                                <div class="card-info d-flex align-items-center mb-2">
+                                    <h5 class="card-title mb-0 text-muted">Unknown Author</h5>
+                                    <small class="text-muted"><%= new Date(post.createdAt).toLocaleString() %></small>
+                                </div>
+        
+                                <!-- Hiển thị nội dung bài viết -->
+                                <p class="card-text card-info"><%= post.content %></p>
+        
+                                <!-- Hiển thị hình ảnh đính kèm (nếu có) -->
+                                <% if (post.postImage && post.postImage.length > 0) { %>
+                                    <div class="post-images">
+                                        <% post.postImage.forEach(image => { %>
+                                            <img src="<%= image %>" alt="Post Image" class="img-fluid mb-2" 
+                                                 style="max-width: 100%; border-radius: 8px;">
+                                        <% }); %>
+                                    </div>
+                                    <% if (post.postImage.length > 1) { %>
+                                        <a class="carousel-control-prev" href="#carousel-<%= post._id %>" role="button" data-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Previous</span>
+                                        </a>
+                                        <a class="carousel-control-next" href="#carousel-<%= post._id %>" role="button" data-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Next</span>
+                                        </a>
+                                    <% } %>
+                                <% } %>
+        
+                                <!-- Các nút like, comment, repost -->
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <button class="btn btn-link like-button <%= post.likes.some(user => user._id.toString() === currentUserId) ? 'liked' : '' %>" 
+                                                data-post-id="<%= post._id %>">
+                                            <img src="<%= post.likes.some(user => user._id.toString() === currentUserId) ? '/icons/heart_active.svg' : '/icons/heart.svg' %>" 
+                                                 alt="Like" 
+                                                 class="like-icon" 
+                                                 style="width: 20px; height: 20px;">
+                                            <span class="like-count"><%= post.likes.length %></span>
+                                        </button>
+            
+                                        <button class="btn btn-link comment-button" data-toggle="modal" data-target="#commentModal" data-post-id="<%= post._id %>">
+                                            <img src="/icons/comment_1.svg" 
+                                                 alt="Comment" 
+                                                 class="comment-icon" 
+                                                 style="width: 20px; height: 20px;">
+                                            <span class="comment-count"><%= post.comments.length %></span>
+                                        </button>
+            
+                                        <button class="btn btn-link repost-button" data-post-id="<%= post._id %>">
+                                            <img src="/icons/rePost.svg" alt="Repost" style="width: 20px; height: 20px;">
+                                            <span class="repost-count"><%= post.reposts ? post.reposts.length : 0 %></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
                 <% }); %>
             <% } else { %>
                 <p class="text-center text-muted">No posts available yet. Be the first to create one!</p>
