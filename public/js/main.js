@@ -254,8 +254,8 @@ $(document).ready(function () {
               </button>
 
               <button class="btn btn-link repost-button ml-3" data-comment-id="${reply._id}">
-                <img src="/icons/repost.svg" alt="Repost" class="repost-icon" style="width: 20px; height: 20px;">
-                <span class="rePost-count">${reply.reposts ? reply.reposts.length : 0}</span>
+                <img src="/icons/rePost.svg" alt="Repost" class="repost-icon" style="width: 20px; height: 20px;">
+                <span class="repost-count">${reply.reposts ? reply.reposts.length : 0}</span>
               </button>
             </div>
           </div>
@@ -442,7 +442,7 @@ $(document).ready(function () {
               </button>
 
               <button class="btn btn-link repost-button ml-3" data-comment-id="${reply._id}">
-                <img src="/icons/repost.svg" alt="Repost" class="repost-icon" style="width: 20px; height: 20px;">
+                <img src="/icons/rePost.svg" alt="Repost" class="repost-icon" style="width: 20px; height: 20px;">
                 <span class="repost-count">${reply.reposts ? reply.reposts.length : 0}</span>
               </button>
             </div>
@@ -527,7 +527,7 @@ $(document).ready(function () {
                     </button>
   
                     <button class="btn btn-link repost-button ml-3" data-comment-id="${comment._id}" data-post-id="${postId}">
-                      <img src="/icons/repost.svg" alt="Repost" class="repost-icon" style="width: 20px; height: 20px;">
+                      <img src="/icons/rePost.svg" alt="Repost" class="repost-icon" style="width: 20px; height: 20px;">
                       <span class="repost-count">0</span>
                     </button>
                   </div>
